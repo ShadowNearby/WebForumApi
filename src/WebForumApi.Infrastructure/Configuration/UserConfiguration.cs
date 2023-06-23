@@ -17,10 +17,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Username).IsRequired().HasMaxLength(254);
         builder.HasIndex(x => x.Username).IsUnique();
         builder.Property(x => x.Profile).HasMaxLength(254);
+        builder.Property(x => x.RegisterTime).IsRequired();
         builder.Property(x => x.Location).HasMaxLength(254);
         builder.Property(x => x.Avatar).HasMaxLength(254);
         builder.Property(x => x.Role).HasMaxLength(31);
         builder.Property(x => x.Profile).HasMaxLength(254);
         builder.Property(x => x.Profile).HasMaxLength(254);
+        builder.HasOne(x => x.Token).WithOne(x => x.User).HasForeignKey<Token>(u => u.UserId);
     }
 }

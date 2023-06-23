@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using System;
 using WebForumApi.Application.Common;
 
 namespace WebForumApi.Application.Features.Users.CreateUser;
@@ -14,7 +13,8 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
             .NotEmpty()
             .MaximumLength(254)
             .MustAsync(async (username, ct) =>
-                !await context.Users.AnyAsync(y => string.Equals(y.Username, username, StringComparison.Ordinal), ct))
+                !await context.Users.AnyAsync(
+                    y => y.Username.Equals(username), ct))
             .WithMessage("A user with this username already exists.");
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -26,7 +26,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
             .MaximumLength(254)
             .EmailAddress()
             .MustAsync(async (email, ct) =>
-                !await context.Users.AnyAsync(y => string.Equals(y.Email, email, StringComparison.Ordinal), ct))
+                !await context.Users.AnyAsync(y => y.Email.Equals(email), ct))
             .WithMessage("A user with this email already exists.");
     }
 }

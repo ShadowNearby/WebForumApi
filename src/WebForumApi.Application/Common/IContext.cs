@@ -14,6 +14,7 @@ public interface IContext : IAsyncDisposable, IDisposable
     public DbSet<User> Users { get; }
 
     public DbSet<Hero> Heroes { get; }
+    public DbSet<Token> Tokens { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

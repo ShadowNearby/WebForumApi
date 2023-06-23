@@ -22,5 +22,5 @@ public class User : Entity<UserId>
     public string? Profile { get; set; }
     public string Avatar { get; set; } = null!;
     public bool IsBanned { get; set; } = false;
-    public Token? Token { get; set; }
+    public Token? Token { get; init; }
 }

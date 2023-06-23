@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Common.Responses;
+using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;

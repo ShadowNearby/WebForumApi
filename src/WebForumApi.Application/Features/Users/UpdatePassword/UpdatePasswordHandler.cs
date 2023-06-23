@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
+using WebForumApi.Domain.Entities;
 using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Users.UpdatePassword;
@@ -21,7 +22,7 @@ public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordRequest, Resu
     public async Task<Result> Handle(UpdatePasswordRequest request, CancellationToken cancellationToken)
     {
         // Guaranteed to be valid, because it comes from the session.
-        var originalUser = await _context.Users
+        User originalUser = await _context.Users
             .FirstAsync(x => x.Id == request.Id, cancellationToken);
         originalUser.Password = BC.HashPassword(request.Password);
         _context.Users.Update(originalUser);

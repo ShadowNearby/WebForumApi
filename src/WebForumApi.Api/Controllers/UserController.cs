@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common.Responses;
+using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
+using WebForumApi.Application.Features.Auth.Refresh;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Application.Features.Users.DeleteUser;
@@ -24,8 +26,8 @@ namespace WebForumApi.Api.Controllers;
 [Authorize]
 public class UserController : ControllerBase
 {
-    private readonly ISession _session;
     private readonly IMediator _mediator;
+    private readonly ISession _session;
 
     public UserController(ISession session, IMediator mediator)
     {
@@ -34,24 +36,34 @@ public class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Authenticates the user and returns the token information.
+    ///     Authenticates the user and returns the token information.
     /// </summary>
     /// <param name="request">Email and password information</param>
     /// <returns>Token information</returns>
     [HttpPost]
-    [Route("authenticate")]
+    [Route("token")]
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result<Jwt>> Authenticate([FromBody] AuthenticateRequest request)
     {
-        var jwt = await _mediator.Send(request);
+        Result<Jwt> jwt = await _mediator.Send(request);
         return jwt;
     }
 
+    [HttpPost]
+    [Route("token/refresh")]
+    [AllowAnonymous]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result<Jwt>> Refresh([FromBody] RefreshRequest request)
+    {
+        Result<Jwt> jwt = await _mediator.Send(request);
+        return jwt;
+    }
 
     /// <summary>
-    /// Returns all users in the database
+    ///     Returns all users in the database
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -65,7 +77,7 @@ public class UserController : ControllerBase
 
 
     /// <summary>
-    /// Get one user by id from the database
+    ///     Get one user by id from the database
     /// </summary>
     /// <param name="id">The user's ID</param>
     /// <returns></returns>
@@ -76,17 +88,18 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<GetUserResponse>> GetUserById(UserId id)
     {
-        var result = await _mediator.Send(new GetUserByIdRequest(id));
+        Result<GetUserResponse> result = await _mediator.Send(new GetUserByIdRequest(id));
         return result;
     }
 
-    [Authorize(Roles = Roles.Admin)]
+    // [Authorize(Roles = Roles.Admin)]
+    [AllowAnonymous]
     [HttpPost]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result<GetUserResponse>> CreateUser(CreateUserRequest request)
     {
-        var result = await _mediator.Send(request);
+        Result<GetUserResponse> result = await _mediator.Send(request);
         return result;
     }
 
@@ -95,7 +108,7 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> UpdatePassword([FromBody] UpdatePasswordRequest request)
     {
-        var result = await _mediator.Send(request with { Id = _session.UserId });
+        Result result = await _mediator.Send(request with { Id = _session.UserId });
         return result;
     }
 
@@ -105,7 +118,7 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> DeleteUser(UserId id)
     {
-        var result = await _mediator.Send(new DeleteUserRequest(id));
+        Result result = await _mediator.Send(new DeleteUserRequest(id));
         return result;
     }
 }

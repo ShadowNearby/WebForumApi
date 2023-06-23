@@ -7,8 +7,10 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using WebForumApi.Api.Common;
 using WebForumApi.Api.Configurations;
+using WebForumApi.Application.Features.Auth;
+using WebForumApi.Application.Features.Auth.TokenService;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services
@@ -24,7 +26,7 @@ builder.Services
         });
     })
     .AddValidationSetup();
-
+builder.Services.AddTransient<ITokenService, TokenService>();
 // Authn / Authrz
 builder.Services.AddAuthSetup(builder.Configuration);
 
@@ -60,7 +62,7 @@ if (builder.Environment.EnvironmentName != "Testing")
 // Add opentelemetry
 builder.AddOpenTemeletrySetup();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseResponseCompression();
@@ -81,7 +83,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers()
-   .RequireAuthorization();
+    .RequireAuthorization();
 
 await app.Migrate();
 

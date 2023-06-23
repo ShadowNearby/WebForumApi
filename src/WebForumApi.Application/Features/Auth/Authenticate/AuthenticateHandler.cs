@@ -1,13 +1,9 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
@@ -19,52 +15,42 @@ namespace WebForumApi.Application.Features.Auth.Authenticate;
 
 public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<Jwt>>
 {
-    private readonly TokenConfiguration _appSettings;
     private readonly IContext _context;
+    private readonly ITokenService _tokenService;
 
-    public AuthenticateHandler(IOptions<TokenConfiguration> appSettings, IContext context)
+    public AuthenticateHandler(IContext context, ITokenService tokenService)
     {
         _context = context;
-        _appSettings = appSettings.Value;
+        _tokenService = tokenService;
     }
 
     public async Task<Result<Jwt>> Handle(AuthenticateRequest request, CancellationToken cancellationToken)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(
-            x => string.Equals(x.Username, request.Username, StringComparison.Ordinal), cancellationToken);
-        if (user == null || !BC.Verify(request.Password, user.Password))
+        var user = await _context.Users.Select(x => new { x.Id, x.Password, x.Username, x.Role }).FirstOrDefaultAsync(
+            x => x.Username.Equals(request.Username), cancellationToken);
+        if (user == null)
         {
             return Result.Invalid(new List<ValidationError>
             {
-                new()
-                {
-                    Identifier = $"{nameof(request.Password)}|{nameof(request.Username)}",
-                    ErrorMessage = "Username or password is incorrect"
-                }
+                new() { Identifier = $"{nameof(request.Username)}", ErrorMessage = "Username is incorrect" }
             });
         }
 
-        JwtSecurityTokenHandler tokenHandler = new();
-        byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-        ClaimsIdentity claims = new(new Claim[]
+        if (!BC.Verify(request.Password, user.Password))
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()), new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.Role, user.Role)
-        });
+            return Result.Invalid(new List<ValidationError>
+            {
+                new() { Identifier = $"{nameof(request.Password)}", ErrorMessage = "Password is incorrect" }
+            });
+        }
 
-        DateTime expDate = DateTime.UtcNow.AddHours(4);
-
-        SecurityTokenDescriptor tokenDescriptor = new()
-        {
-            Subject = claims,
-            Expires = expDate,
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Audience = _appSettings.Audience,
-            Issuer = _appSettings.Issuer
-        };
-        SecurityToken? token = tokenHandler.CreateToken(tokenDescriptor);
-
-        return new Jwt { AccessToken = tokenHandler.WriteToken(token), Expire = expDate };
+        Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
+        Token? token = await _context.Tokens.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+        token ??= new Token { UserId = user.Id };
+        token.RefreshToken = jwt.RefreshToken;
+        token.Expire = DateTime.Now.AddDays(1);
+        _context.Tokens.Update(token);
+        await _context.SaveChangesAsync(cancellationToken);
+        return jwt;
     }
 }

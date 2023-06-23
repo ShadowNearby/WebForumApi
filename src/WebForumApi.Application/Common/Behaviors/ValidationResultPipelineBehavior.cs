@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.FluentValidation;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,14 +20,14 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
-        var validator = _serviceProvider.GetService<IValidator<TRequest>>();
+        IValidator<TRequest>? validator = _serviceProvider.GetService<IValidator<TRequest>>();
 
         if (validator != null)
         {
-
-            var result = await validator.ValidateAsync(request, cancellationToken);
+            ValidationResult? result = await validator.ValidateAsync(request, cancellationToken);
 
             if (!result.IsValid)
             {
