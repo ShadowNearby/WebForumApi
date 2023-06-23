@@ -1,17 +1,17 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Heroes;
-using System.Threading.Tasks;
 using WebForumApi.Application.Features.Heroes.CreateHero;
 using WebForumApi.Application.Features.Heroes.DeleteHero;
 using WebForumApi.Application.Features.Heroes.GetAllHeroes;
 using WebForumApi.Application.Features.Heroes.GetHeroById;
 using WebForumApi.Application.Features.Heroes.UpdateHero;
 using WebForumApi.Domain.Entities.Common;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WebForumApi.Api.Controllers;
 

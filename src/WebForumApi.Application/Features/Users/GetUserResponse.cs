@@ -1,4 +1,5 @@
-﻿using WebForumApi.Domain.Entities.Common;
+﻿using System;
+using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Users;
 
@@ -8,5 +9,14 @@ public record GetUserResponse
 
     public string Email { get; init; } = null!;
 
+    public string Username { get; init; } = null!;
+
+    public DateTime LastLogin { get; set; }
+
+    public string? Location { get; set; }
+
+    public string? Profile { get; set; }
+
+    public string Avatar { get; set; } = null!;
     public bool IsAdmin { get; init; }
 }

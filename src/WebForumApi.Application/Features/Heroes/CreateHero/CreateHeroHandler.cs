@@ -10,8 +10,8 @@ namespace WebForumApi.Application.Features.Heroes.CreateHero;
 public class CreateHeroHandler : IRequestHandler<CreateHeroRequest, Result<GetHeroResponse>>
 {
     private readonly IContext _context;
-    
-    
+
+
     public CreateHeroHandler(IContext context)
     {
         _context = context;

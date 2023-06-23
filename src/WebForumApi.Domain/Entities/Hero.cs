@@ -1,6 +1,6 @@
-﻿using WebForumApi.Domain.Entities.Common;
+﻿using MassTransit;
+using WebForumApi.Domain.Entities.Common;
 using WebForumApi.Domain.Entities.Enums;
-using MassTransit;
 
 namespace WebForumApi.Domain.Entities;
 

@@ -1,5 +1,5 @@
-﻿using WebForumApi.Application.Common.Behaviors;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using WebForumApi.Application.Common.Behaviors;
 
 namespace WebForumApi.Api.Configurations;
 
@@ -12,7 +12,7 @@ public static class MediatRSetup
             config.RegisterServicesFromAssemblyContaining(typeof(WebForumApi.Application.IAssemblyMarker));
             config.AddOpenBehavior(typeof(ValidationResultPipelineBehavior<,>));
         });
-        
+
 
 
         return services;

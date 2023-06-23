@@ -1,12 +1,12 @@
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
-using WebForumApi.Api.Common;
-using WebForumApi.Api.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using WebForumApi.Api.Common;
+using WebForumApi.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 

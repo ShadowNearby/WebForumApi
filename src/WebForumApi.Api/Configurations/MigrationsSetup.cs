@@ -1,9 +1,9 @@
-﻿using WebForumApi.Application.Common;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using WebForumApi.Application.Common;
 
 namespace WebForumApi.Api.Configurations;
 

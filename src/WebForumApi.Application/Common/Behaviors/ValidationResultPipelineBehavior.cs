@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WebForumApi.Application.Common.Behaviors;
 
-public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly IServiceProvider _serviceProvider;
@@ -25,7 +25,7 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
 
         if (validator != null)
         {
-        
+
             var result = await validator.ValidateAsync(request, cancellationToken);
 
             if (!result.IsValid)
@@ -38,9 +38,7 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
                 return (TResponse)(dynamic)Result.Invalid(result.AsErrors());
             }
         }
-        
+
         return await next();
     }
 }
-
-

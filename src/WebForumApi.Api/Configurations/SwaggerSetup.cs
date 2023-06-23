@@ -1,5 +1,4 @@
-﻿using WebForumApi.Domain.Entities.Common;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -8,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Api.Configurations;
 
@@ -56,7 +56,7 @@ public static class SwaggerSetup
                 In = ParameterLocation.Header,
                 Description = "Enter your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
             });
-            
+
             // Maps all structured ids to the guid type to show correctly on swagger
             var allGuids = typeof(IGuid).Assembly.GetTypes().Where(type => typeof(IGuid).IsAssignableFrom(type) && !type.IsInterface)
                 .ToList();

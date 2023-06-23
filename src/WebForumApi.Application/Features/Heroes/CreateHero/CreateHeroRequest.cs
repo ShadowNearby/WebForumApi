@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
-using WebForumApi.Domain.Entities.Enums;
 using MediatR;
+using WebForumApi.Domain.Entities.Enums;
 
 namespace WebForumApi.Application.Features.Heroes.CreateHero;
 

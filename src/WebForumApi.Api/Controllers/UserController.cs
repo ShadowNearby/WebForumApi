@@ -1,7 +1,11 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
-using WebForumApi.Application.Common.Responses;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;
@@ -11,10 +15,6 @@ using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdatePassword;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities.Common;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Api.Controllers;
@@ -94,7 +94,7 @@ public class UserController : ControllerBase
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> UpdatePassword([FromBody] UpdatePasswordRequest request)
-    {            
+    {
         var result = await _mediator.Send(request with { Id = _session.UserId });
         return result;
     }

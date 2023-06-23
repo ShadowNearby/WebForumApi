@@ -1,5 +1,5 @@
-﻿using WebForumApi.Domain.Entities.Common;
-using System;
+﻿using System;
+using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Domain.Auth.Interfaces;
 

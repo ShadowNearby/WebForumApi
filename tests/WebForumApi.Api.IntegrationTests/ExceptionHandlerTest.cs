@@ -1,8 +1,8 @@
-﻿using WebForumApi.Application.Features.Heroes.GetAllHeroes;
-using FluentAssertions;
+﻿using FluentAssertions;
 using System.Linq;
 using System.Net;
 using WebForumApi.Api.IntegrationTests.Common;
+using WebForumApi.Application.Features.Heroes.GetAllHeroes;
 
 namespace WebForumApi.Api.IntegrationTests;
 
@@ -21,8 +21,8 @@ public class ExceptionHandlerTest : BaseTest
         var response = await GetAsync("/api/Hero", new GetAllHeroesRequest()
         {
             Name = string.Join("", Enumerable.Repeat("a", 5000))
-        });  
-        
+        });
+
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }

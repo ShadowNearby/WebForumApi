@@ -1,7 +1,4 @@
-﻿using WebForumApi.Application.Common;
-using WebForumApi.Application.MappingConfig;
-using WebForumApi.Infrastructure.Context;
-using FastExpressionCompiler;
+﻿using FastExpressionCompiler;
 using Mapster;
 using MassTransit;
 using MassTransit.NewIdProviders;
@@ -10,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using WebForumApi.Application.Common;
+using WebForumApi.Application.MappingConfig;
+using WebForumApi.Infrastructure.Context;
 
 namespace WebForumApi.Api.Configurations;
 
@@ -21,14 +21,15 @@ public static class ApplicationSetup
         NewId.SetProcessIdProvider(new CurrentProcessIdProvider());
         ApplyAllMappingConfigFromAssembly();
         TypeAdapterConfig.GlobalSettings.Compiler = exp => exp.CompileFast();
-        
+
         return services;
     }
-    
-    
-    private static IEnumerable<Type> GetTypesWithInterface<TInterface>(Assembly asm) {
-        var it = typeof (TInterface);
-        return asm.GetTypes().Where(x => it.IsAssignableFrom(x) && x is {IsInterface: false, IsAbstract: false});
+
+
+    private static IEnumerable<Type> GetTypesWithInterface<TInterface>(Assembly asm)
+    {
+        var it = typeof(TInterface);
+        return asm.GetTypes().Where(x => it.IsAssignableFrom(x) && x is { IsInterface: false, IsAbstract: false });
     }
 
 
@@ -41,5 +42,5 @@ public static class ApplicationSetup
             instance.ApplyConfig();
         }
     }
-    
+
 }

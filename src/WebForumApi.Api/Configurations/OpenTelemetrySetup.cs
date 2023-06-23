@@ -1,5 +1,4 @@
-﻿using WebForumApi.Application.Extensions;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -7,6 +6,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
 using System.Diagnostics;
+using WebForumApi.Application.Extensions;
 
 namespace WebForumApi.Api.Configurations;
 
@@ -38,7 +38,7 @@ public static class OpenTelemetrySetup
                     o.SetDbStatementForText = true;
                 });
 
-            if (jaegerConfig!= null && !string.IsNullOrWhiteSpace(jaegerConfig.GetValue<string>("AgentHost")))
+            if (jaegerConfig != null && !string.IsNullOrWhiteSpace(jaegerConfig.GetValue<string>("AgentHost")))
             {
                 telemetry.AddJaegerExporter(o =>
                 {
@@ -53,7 +53,7 @@ public static class OpenTelemetrySetup
                         ExporterTimeoutMilliseconds = 30000,
                         MaxExportBatchSize = 512,
                     };
-                });   
+                });
             }
         });
     }

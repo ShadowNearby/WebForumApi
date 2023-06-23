@@ -10,7 +10,7 @@ using System;
 namespace WebForumApi.Domain.Entities.Common;
 
 
-public interface IGuid {}
+public interface IGuid { }
 
 [StronglyTypedId]
 public partial struct HeroId : IGuid

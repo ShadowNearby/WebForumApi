@@ -1,28 +1,30 @@
 ﻿using Ardalis.Result;
-using WebForumApi.Domain.Entities;
 using Mapster;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
+using WebForumApi.Domain.Entities;
 using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Users.CreateUser;
 
 public class CreateUserHandler : IRequestHandler<CreateUserRequest, Result<GetUserResponse>>
 {
+    private const string DefaultAvatar = "https://pic2.zhimg.com/v2-eda9c6ea91435f99e850ba32743ef0fd_r.jpg";
     private readonly IContext _context;
-    
-    
-    public CreateUserHandler( IContext context)
+
+    public CreateUserHandler(IContext context)
     {
         _context = context;
     }
+
     public async Task<Result<GetUserResponse>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        var created = request.Adapt<User>();
+        User created = request.Adapt<User>();
         _context.Users.Add(created);
         created.Password = BC.HashPassword(request.Password);
+        created.Avatar = DefaultAvatar;
         await _context.SaveChangesAsync(cancellationToken);
         return created.Adapt<GetUserResponse>();
     }

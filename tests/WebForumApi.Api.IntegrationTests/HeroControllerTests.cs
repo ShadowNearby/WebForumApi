@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Net;
-using FluentAssertions;
+using System.Net.Http.Json;
+using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Heroes;
 using WebForumApi.Application.Features.Heroes.CreateHero;
@@ -8,14 +10,12 @@ using WebForumApi.Application.Features.Heroes.GetAllHeroes;
 using WebForumApi.Application.Features.Heroes.UpdateHero;
 using WebForumApi.Domain.Entities.Common;
 using WebForumApi.Domain.Entities.Enums;
-using System.Net.Http.Json;
-using WebForumApi.Api.IntegrationTests.Common;
 
 namespace WebForumApi.Api.IntegrationTests;
 
 public class HeroControllerTests : BaseTest
 {
-    
+
     public HeroControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
     {
     }
@@ -100,7 +100,7 @@ public class HeroControllerTests : BaseTest
         var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
         {
             Name = "Corban"
-        });        
+        });
 
         // Assert
         response.Should().NotBeNull();
@@ -166,7 +166,7 @@ public class HeroControllerTests : BaseTest
             Name = "Name hero success",
             HeroType = HeroType.Student,
             Individuality = "all for one"
-            
+
         };
         var response = await PostAsync("/api/Hero", newHero);
 
@@ -186,14 +186,14 @@ public class HeroControllerTests : BaseTest
         var newHero = new CreateHeroRequest()
         {
             Individuality = "Individuality hero badrequest",
-            
+
         };
         var response = await PostAsync("/api/Hero", newHero);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
-    
+
     [Fact]
     public async Task Post_Negative_Age_Hero_ReturnsBadRequest()
     {
@@ -203,13 +203,13 @@ public class HeroControllerTests : BaseTest
             Individuality = "Individuality hero badrequest",
             Name = "Test hero",
             Age = -1
-            
+
         };
         var response = await PostAsync("/api/Hero", newHero);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }  
+    }
 
     [Fact]
     public async Task Post_EmptyHero_ReturnsBadRequest()
@@ -231,7 +231,7 @@ public class HeroControllerTests : BaseTest
     public async Task Update_ValidHero_Should_Return_Ok()
     {
         // Arrange
-        
+
 
         // Act
         var newHero = new UpdateHeroRequest()
@@ -239,7 +239,7 @@ public class HeroControllerTests : BaseTest
             Name = "Name hero success",
             HeroType = HeroType.Villain,
             Individuality = "Invisibility"
-            
+
         };
         var response = await PutAsync("/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1", newHero);
 
@@ -316,7 +316,7 @@ public class HeroControllerTests : BaseTest
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
-    
+
     [Fact]
     public async Task DeleteHero_EmptyId_Should_Return_BadRequest()
     {

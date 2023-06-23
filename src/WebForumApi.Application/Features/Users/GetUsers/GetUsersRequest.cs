@@ -6,6 +6,6 @@ namespace WebForumApi.Application.Features.Users.GetUsers;
 
 public record GetUsersRequest : PaginatedRequest, IRequest<PaginatedList<GetUserResponse>>
 {
-    public string? Email { get; init; }
+    public string? Username { get; init; }
     public bool IsAdmin { get; init; }
 }

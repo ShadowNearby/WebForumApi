@@ -1,7 +1,7 @@
-﻿using WebForumApi.Domain.Entities.Enums;
-using MediatR;
+﻿using MediatR;
 using WebForumApi.Application.Common.Requests;
 using WebForumApi.Application.Common.Responses;
+using WebForumApi.Domain.Entities.Enums;
 
 namespace WebForumApi.Application.Features.Heroes.GetAllHeroes;
 

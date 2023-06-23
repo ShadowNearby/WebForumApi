@@ -28,7 +28,7 @@ public record PaginatedList<T>
     }
 }
 
-public static class PaginatedListHelper 
+public static class PaginatedListHelper
 {
 
     public const int DefaultPageSize = 15;

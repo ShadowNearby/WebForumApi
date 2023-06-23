@@ -1,7 +1,7 @@
-﻿using WebForumApi.Domain.Entities.Common;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
+using WebForumApi.Domain.Entities.Common;
 using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Application.Auth;
@@ -18,7 +18,7 @@ public class Session : ISession
 
         var nameIdentifier = user?.FindFirst(ClaimTypes.NameIdentifier);
 
-        if(nameIdentifier != null)
+        if (nameIdentifier != null)
         {
             UserId = new Guid(nameIdentifier.Value);
         }

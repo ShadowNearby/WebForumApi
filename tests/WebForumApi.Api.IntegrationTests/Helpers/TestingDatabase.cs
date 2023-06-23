@@ -1,9 +1,9 @@
-﻿using WebForumApi.Application.Common;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
 using WebForumApi.Domain.Entities.Enums;
-using Microsoft.EntityFrameworkCore;
 using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Api.IntegrationTests.Helpers;

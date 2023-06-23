@@ -1,7 +1,7 @@
-﻿using WebForumApi.Domain.Entities;
-using WebForumApi.Domain.Entities.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using WebForumApi.Domain.Entities;
+using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Infrastructure.Configuration;
 

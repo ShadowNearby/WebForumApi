@@ -1,10 +1,10 @@
-﻿using WebForumApi.Application.Common;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using WebForumApi.Application.Common;
 
 namespace WebForumApi.Api.Configurations;
 

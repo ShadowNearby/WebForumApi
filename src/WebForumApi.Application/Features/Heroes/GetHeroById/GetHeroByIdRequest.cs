@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
-using WebForumApi.Domain.Entities.Common;
 using MediatR;
+using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Heroes.GetHeroById;
 

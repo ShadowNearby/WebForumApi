@@ -1,5 +1,4 @@
-﻿using WebForumApi.Application.Extensions;
-using Mapster;
+﻿using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -7,13 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
+using WebForumApi.Application.Extensions;
 
 namespace WebForumApi.Application.Features.Heroes.GetAllHeroes;
 
 public class GetAllHeroesHandler : IRequestHandler<GetAllHeroesRequest, PaginatedList<GetHeroResponse>>
 {
     private readonly IContext _context;
-    
+
     public GetAllHeroesHandler(IContext context)
     {
         _context = context;

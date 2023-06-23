@@ -9,5 +9,5 @@ public class DeleteUserValidator : AbstractValidator<DeleteUserRequest>
         RuleFor(x => x.Id)
             .NotEmpty();
     }
-    
+
 }

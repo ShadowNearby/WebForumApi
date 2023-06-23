@@ -22,7 +22,7 @@ public static class UriExtensions
         // Concat all IEnumerable properties into a comma separated string
         foreach (var key in propertyNames)
         {
-            if(string.IsNullOrEmpty(key)) continue;
+            if (string.IsNullOrEmpty(key)) continue;
             var valueType = properties[key]!.GetType();
             var valueElemType = valueType.IsGenericType
                 ? valueType.GetGenericArguments()[0]
