@@ -21,22 +21,36 @@ public class ForgetHandler : IRequestHandler<ForgetRequest, Result>
 
     public async Task<Result> Handle(ForgetRequest request, CancellationToken cancellationToken)
     {
-        User? user =
-            await _context.Users.FirstOrDefaultAsync(x => request.Username.Equals(x.Username), cancellationToken);
+        User? user = await _context.Users.FirstOrDefaultAsync(
+            x => request.Username.Equals(x.Username),
+            cancellationToken
+        );
         if (user == null)
         {
-            return Result.Invalid(new List<ValidationError>
-            {
-                new() { Identifier = $"{nameof(request.Username)}", ErrorMessage = "Username is incorrect" }
-            });
+            return Result.Invalid(
+                new List<ValidationError>
+                {
+                    new()
+                    {
+                        Identifier = $"{nameof(request.Username)}",
+                        ErrorMessage = "Username is incorrect"
+                    }
+                }
+            );
         }
 
         if (user.Email != request.Email)
         {
-            return Result.Invalid(new List<ValidationError>
-            {
-                new() { Identifier = $"{nameof(request.Email)}", ErrorMessage = "Email is incorrect" }
-            });
+            return Result.Invalid(
+                new List<ValidationError>
+                {
+                    new()
+                    {
+                        Identifier = $"{nameof(request.Email)}",
+                        ErrorMessage = "Email is incorrect"
+                    }
+                }
+            );
         }
 
         user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);

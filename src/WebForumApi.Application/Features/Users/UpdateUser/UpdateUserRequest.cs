@@ -7,7 +7,8 @@ namespace WebForumApi.Application.Features.Users.UpdateUser;
 
 public record UpdateUserRequest : IRequest<Result>
 {
-    [JsonIgnore] public UserId Id { get; init; }
+    [JsonIgnore]
+    public UserId Id { get; init; }
 
     public string? Password { get; init; }
     public string? Username { get; init; }

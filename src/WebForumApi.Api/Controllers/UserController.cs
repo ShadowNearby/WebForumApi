@@ -36,7 +36,6 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
-
     /// <summary>
     ///     Returns all users in the database
     /// </summary>
@@ -45,11 +44,12 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(PaginatedList<GetUserResponse>), StatusCodes.Status200OK)]
     [Authorize(Roles = Roles.Admin)]
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<GetUserResponse>>> GetUsers([FromQuery] GetUsersRequest request)
+    public async Task<ActionResult<PaginatedList<GetUserResponse>>> GetUsers(
+        [FromQuery] GetUsersRequest request
+    )
     {
         return Ok(await _mediator.Send(request));
     }
-
 
     /// <summary>
     ///     Get one user by id from the database
@@ -66,7 +66,6 @@ public class UserController : ControllerBase
         Result<GetUserResponse> result = await _mediator.Send(new GetUserByIdRequest(id));
         return result;
     }
-
 
     [HttpPut("update")]
     [TranslateResultToActionResult]

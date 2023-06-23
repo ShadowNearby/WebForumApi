@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace WebForumApi.Application.Common.Behaviors;
 
-public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class ValidationResultPipelineBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly IServiceProvider _serviceProvider;
@@ -20,8 +21,11 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
         IValidator<TRequest>? validator = _serviceProvider.GetService<IValidator<TRequest>>();
 

@@ -23,9 +23,8 @@ public class UserControllerTests : BaseTest
 
     private static string? _userToken;
 
-    public UserControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
-    {
-    }
+    public UserControllerTests(CustomWebApplicationFactory apiFactory)
+        : base(apiFactory) { }
 
     public override async Task InitializeAsync()
     {
@@ -70,8 +69,10 @@ public class UserControllerTests : BaseTest
         UpdateBearerToken(newUserToken!.AccessToken);
 
         // Act
-        response = await PatchAsync("/api/User/password",
-            new UpdateUserRequest { Password = "mypasswordisverynice" });
+        response = await PatchAsync(
+            "/api/User/password",
+            new UpdateUserRequest { Password = "mypasswordisverynice" }
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -85,7 +86,9 @@ public class UserControllerTests : BaseTest
     public async Task Get_AllUsers_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>("/api/User");
+        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
+            "/api/User"
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -100,9 +103,10 @@ public class UserControllerTests : BaseTest
     public async Task Get_AllUsersWithPaginationFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response =
-            await GetAsync<PaginatedList<GetUserResponse>>("/api/User",
-                new GetUsersRequest { CurrentPage = 1, PageSize = 1 });
+        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
+            "/api/User",
+            new GetUsersRequest { CurrentPage = 1, PageSize = 1 }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -117,9 +121,10 @@ public class UserControllerTests : BaseTest
     public async Task Get_ExistingUsersWithFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response =
-            await GetAsync<PaginatedList<GetUserResponse>>("/api/User",
-                new GetUsersRequest { Username = "admin@boilerplate.com" });
+        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
+            "/api/User",
+            new GetUsersRequest { Username = "admin@boilerplate.com" }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -130,14 +135,14 @@ public class UserControllerTests : BaseTest
         response.TotalPages.Should().Be(1);
     }
 
-
     [Fact]
     public async Task Get_NonExistingUsersWithFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response =
-            await GetAsync<PaginatedList<GetUserResponse>>("/api/User",
-                new GetUsersRequest { Username = "admifsdfsdfsdjma" });
+        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
+            "/api/User",
+            new GetUsersRequest { Username = "admifsdfsdfsdjma" }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -151,7 +156,9 @@ public class UserControllerTests : BaseTest
     public async Task GetById_ExistingUser_ReturnsOk()
     {
         // Act
-        GetUserResponse? response = await GetAsync<GetUserResponse>("/api/User/2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37");
+        GetUserResponse? response = await GetAsync<GetUserResponse>(
+            "/api/User/2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37"
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -176,7 +183,8 @@ public class UserControllerTests : BaseTest
     public async Task<string> GetAdminToken()
     {
         // Act
-        AuthenticateRequest loginData = new() { Username = "admin@boilerplate.com", Password = "testpassword123" };
+        AuthenticateRequest loginData =
+            new() { Username = "admin@boilerplate.com", Password = "testpassword123" };
 
         Jwt? response = await PostAsync<Jwt>("/api/User/authenticate", loginData);
         response.Should().NotBeNull();
@@ -190,7 +198,8 @@ public class UserControllerTests : BaseTest
     public async Task<string> GetUserToken()
     {
         // Act
-        AuthenticateRequest loginData = new() { Username = "user@boilerplate.com", Password = "testpassword123" };
+        AuthenticateRequest loginData =
+            new() { Username = "user@boilerplate.com", Password = "testpassword123" };
 
         Jwt? response = await PostAsync<Jwt>("/api/User/authenticate", loginData);
         response.Should().NotBeNull();
@@ -210,7 +219,6 @@ public class UserControllerTests : BaseTest
         HttpResponseMessage response = await PostAsync("/api/User/authenticate", loginData);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
-
 
     [Fact]
     public async Task Post_ValidUser_ReturnsCreated()
@@ -277,7 +285,9 @@ public class UserControllerTests : BaseTest
     public async Task Delete_ValidUser_ReturnsNoContent()
     {
         // Act
-        HttpResponseMessage response = await DeleteAsync("/api/User/c68acd7b-9054-4dc3-b536-17a1b81fa7a3");
+        HttpResponseMessage response = await DeleteAsync(
+            "/api/User/c68acd7b-9054-4dc3-b536-17a1b81fa7a3"
+        );
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);

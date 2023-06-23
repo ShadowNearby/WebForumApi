@@ -12,16 +12,22 @@ public class GetHeroByIdHandler : IRequestHandler<GetHeroByIdRequest, Result<Get
 {
     private readonly IContext _context;
 
-
     public GetHeroByIdHandler(IContext context)
     {
         _context = context;
     }
-    public async Task<Result<GetHeroResponse>> Handle(GetHeroByIdRequest request, CancellationToken cancellationToken)
+
+    public async Task<Result<GetHeroResponse>> Handle(
+        GetHeroByIdRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        var hero = await _context.Heroes.FirstOrDefaultAsync(x => x.Id == request.Id,
-            cancellationToken: cancellationToken);
-        if (hero is null) return Result.NotFound();
+        var hero = await _context.Heroes.FirstOrDefaultAsync(
+            x => x.Id == request.Id,
+            cancellationToken: cancellationToken
+        );
+        if (hero is null)
+            return Result.NotFound();
         return hero.Adapt<GetHeroResponse>();
     }
 }

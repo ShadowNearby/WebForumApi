@@ -17,7 +17,8 @@ public static class SwaggerSetup
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1",
+            c.SwaggerDoc(
+                "v1",
                 new OpenApiInfo
                 {
                     Title = "WebForumApi.Api",
@@ -31,9 +32,12 @@ public static class SwaggerSetup
                     License = new OpenApiLicense
                     {
                         Name = "MIT",
-                        Url = new Uri("https://github.com/yanpitangui/dotnet-api-boilerplate/blob/main/LICENSE")
+                        Url = new Uri(
+                            "https://github.com/yanpitangui/dotnet-api-boilerplate/blob/main/LICENSE"
+                        )
                     }
-                });
+                }
+            );
             c.DescribeAllParametersInCamelCase();
             c.OrderActionsBy(x => x.RelativePath);
 
@@ -47,24 +51,29 @@ public static class SwaggerSetup
             c.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             c.OperationFilter<SecurityRequirementsOperationFilter>();
 
-            // To Enable authorization using Swagger (JWT)    
-            c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "Enter your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
-            });
+            // To Enable authorization using Swagger (JWT)
+            c.AddSecurityDefinition(
+                "oauth2",
+                new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description =
+                        "Enter your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+                }
+            );
 
             // Maps all structured ids to the guid type to show correctly on swagger
-            var allGuids = typeof(IGuid).Assembly.GetTypes().Where(type => typeof(IGuid).IsAssignableFrom(type) && !type.IsInterface)
+            var allGuids = typeof(IGuid).Assembly
+                .GetTypes()
+                .Where(type => typeof(IGuid).IsAssignableFrom(type) && !type.IsInterface)
                 .ToList();
             foreach (var guid in allGuids)
             {
                 c.MapType(guid, () => new OpenApiSchema { Type = "string", Format = "uuid" });
             }
-
         });
         return services;
     }

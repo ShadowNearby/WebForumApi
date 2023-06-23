@@ -9,17 +9,9 @@ public class ForgetValidator : AbstractValidator<ForgetRequest>
     public ForgetValidator(IContext context)
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
-        RuleFor(x => x.Username)
-            .NotEmpty()
-            .MaximumLength(254);
-        RuleFor(x => x.Password)
-            .NotEmpty()
-            .MinimumLength(5)
-            .MaximumLength(255);
+        RuleFor(x => x.Username).NotEmpty().MaximumLength(254);
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(5).MaximumLength(255);
 
-        RuleFor(x => x.Email)
-            .NotEmpty()
-            .MaximumLength(254)
-            .EmailAddress();
+        RuleFor(x => x.Email).NotEmpty().MaximumLength(254).EmailAddress();
     }
 }

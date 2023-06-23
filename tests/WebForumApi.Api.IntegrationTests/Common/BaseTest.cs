@@ -55,7 +55,11 @@ public abstract class BaseTest : IAsyncLifetime
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    protected async Task<HttpResponseMessage> PostAsync(string address, object? data = null, bool ensureSuccess = false)
+    protected async Task<HttpResponseMessage> PostAsync(
+        string address,
+        object? data = null,
+        bool ensureSuccess = false
+    )
     {
         var response = await RequestAsync(address, data, Client.PostAsync);
         if (ensureSuccess)
@@ -72,7 +76,11 @@ public abstract class BaseTest : IAsyncLifetime
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    protected async Task<HttpResponseMessage> PutAsync(string address, object? data = null, bool ensureSuccess = false)
+    protected async Task<HttpResponseMessage> PutAsync(
+        string address,
+        object? data = null,
+        bool ensureSuccess = false
+    )
     {
         var response = await RequestAsync(address, data, Client.PutAsync);
         if (ensureSuccess)
@@ -89,7 +97,11 @@ public abstract class BaseTest : IAsyncLifetime
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    protected async Task<HttpResponseMessage> PatchAsync(string address, object? data = null, bool ensureSuccess = false)
+    protected async Task<HttpResponseMessage> PatchAsync(
+        string address,
+        object? data = null,
+        bool ensureSuccess = false
+    )
     {
         var response = await RequestAsync(address, data, Client.PatchAsync);
         if (ensureSuccess)
@@ -99,7 +111,10 @@ public abstract class BaseTest : IAsyncLifetime
         return response;
     }
 
-    protected async Task<HttpResponseMessage> DeleteAsync(string address, bool ensureSuccess = false)
+    protected async Task<HttpResponseMessage> DeleteAsync(
+        string address,
+        bool ensureSuccess = false
+    )
     {
         var response = await Client.DeleteAsync(address);
         if (ensureSuccess)
@@ -109,9 +124,11 @@ public abstract class BaseTest : IAsyncLifetime
         return response;
     }
 
-
-
-    protected static async Task<HttpResponseMessage> RequestAsync(string address, object? data, Func<string, HttpContent, Task<HttpResponseMessage>> verb)
+    protected static async Task<HttpResponseMessage> RequestAsync(
+        string address,
+        object? data,
+        Func<string, HttpContent, Task<HttpResponseMessage>> verb
+    )
     {
         var json = JsonSerializer.Serialize(data);
 
@@ -129,5 +146,4 @@ public abstract class BaseTest : IAsyncLifetime
 
         return response;
     }
-
 }

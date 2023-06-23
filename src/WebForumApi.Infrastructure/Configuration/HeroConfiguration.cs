@@ -11,7 +11,6 @@ public class HeroConfiguration : IEntityTypeConfiguration<Hero>
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id)
-            .HasConversion<HeroId.EfCoreValueConverter>();
+        builder.Property(x => x.Id).HasConversion<HeroId.EfCoreValueConverter>();
     }
 }

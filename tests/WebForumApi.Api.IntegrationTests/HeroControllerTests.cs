@@ -15,10 +15,9 @@ namespace WebForumApi.Api.IntegrationTests;
 
 public class HeroControllerTests : BaseTest
 {
+    public HeroControllerTests(CustomWebApplicationFactory apiFactory)
+        : base(apiFactory) { }
 
-    public HeroControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
-    {
-    }
     #region GET
 
     [Fact]
@@ -40,11 +39,10 @@ public class HeroControllerTests : BaseTest
     public async Task Get_AllHeroesWithPaginationFilter_ReturnsOk()
     {
         // Act
-        var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
-        {
-            PageSize = 1,
-            CurrentPage = 1
-        });
+        var response = await GetAsync<PaginatedList<GetHeroResponse>>(
+            "/api/Hero",
+            new GetAllHeroesRequest() { PageSize = 1, CurrentPage = 1 }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -59,11 +57,10 @@ public class HeroControllerTests : BaseTest
     public async Task Get_AllHeroesWithNegativePageSize_ReturnsOk()
     {
         // Act
-        var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
-        {
-            PageSize = -1,
-            CurrentPage = 1
-        });
+        var response = await GetAsync<PaginatedList<GetHeroResponse>>(
+            "/api/Hero",
+            new GetAllHeroesRequest() { PageSize = -1, CurrentPage = 1 }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -78,11 +75,10 @@ public class HeroControllerTests : BaseTest
     public async Task Get_AllHeroesWithNegativeCurrentPage_ReturnsOk()
     {
         // Act
-        var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
-        {
-            PageSize = 15,
-            CurrentPage = -1
-        });
+        var response = await GetAsync<PaginatedList<GetHeroResponse>>(
+            "/api/Hero",
+            new GetAllHeroesRequest() { PageSize = 15, CurrentPage = -1 }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -97,10 +93,10 @@ public class HeroControllerTests : BaseTest
     public async Task Get_ExistingHeroesWithFilter_ReturnsOk()
     {
         // Act
-        var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
-        {
-            Name = "Corban"
-        });
+        var response = await GetAsync<PaginatedList<GetHeroResponse>>(
+            "/api/Hero",
+            new GetAllHeroesRequest() { Name = "Corban" }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -111,16 +107,14 @@ public class HeroControllerTests : BaseTest
         response.TotalPages.Should().Be(1);
     }
 
-
     [Fact]
     public async Task Get_NonExistingHeroesWithFilter_ReturnsOk()
     {
-
         // Act
-        var response = await GetAsync<PaginatedList<GetHeroResponse>>("/api/Hero", new GetAllHeroesRequest()
-        {
-            Name = "asdsadsadsadsadasdsasadsa"
-        });
+        var response = await GetAsync<PaginatedList<GetHeroResponse>>(
+            "/api/Hero",
+            new GetAllHeroesRequest() { Name = "asdsadsadsadsadasdsasadsa" }
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -134,7 +128,9 @@ public class HeroControllerTests : BaseTest
     public async Task GetById_ExistingHero_ReturnsOk()
     {
         // Act
-        var response = await GetAsync<GetHeroResponse>("/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1");
+        var response = await GetAsync<GetHeroResponse>(
+            "/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1"
+        );
 
         // Assert
         response.Should().NotBeNull();
@@ -166,7 +162,6 @@ public class HeroControllerTests : BaseTest
             Name = "Name hero success",
             HeroType = HeroType.Student,
             Individuality = "all for one"
-
         };
         var response = await PostAsync("/api/Hero", newHero);
 
@@ -183,11 +178,7 @@ public class HeroControllerTests : BaseTest
     public async Task Post_NamelessHero_ReturnsBadRequest()
     {
         // Act
-        var newHero = new CreateHeroRequest()
-        {
-            Individuality = "Individuality hero badrequest",
-
-        };
+        var newHero = new CreateHeroRequest() { Individuality = "Individuality hero badrequest", };
         var response = await PostAsync("/api/Hero", newHero);
 
         // Assert
@@ -203,7 +194,6 @@ public class HeroControllerTests : BaseTest
             Individuality = "Individuality hero badrequest",
             Name = "Test hero",
             Age = -1
-
         };
         var response = await PostAsync("/api/Hero", newHero);
 
@@ -239,7 +229,6 @@ public class HeroControllerTests : BaseTest
             Name = "Name hero success",
             HeroType = HeroType.Villain,
             Individuality = "Invisibility"
-
         };
         var response = await PutAsync("/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1", newHero);
 
@@ -247,15 +236,11 @@ public class HeroControllerTests : BaseTest
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-
     [Fact]
     public async Task Put_NamelessHero_ReturnsBadRequest()
     {
         // Act
-        var newHero = new UpdateHeroRequest()
-        {
-            HeroType = HeroType.Student
-        };
+        var newHero = new UpdateHeroRequest() { HeroType = HeroType.Student };
         var response = await PutAsync("/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1", newHero);
 
         // Assert
@@ -266,10 +251,7 @@ public class HeroControllerTests : BaseTest
     public async Task Put_Individualityless_ReturnsBadRequest()
     {
         // Act
-        var newHero = new UpdateHeroRequest()
-        {
-            Name = "Name hero badrequest"
-        };
+        var newHero = new UpdateHeroRequest() { Name = "Name hero badrequest" };
         var response = await PutAsync("/api/Hero/824a7a65-b769-4b70-bccb-91f880b6ddf1", newHero);
 
         // Assert
@@ -338,6 +320,4 @@ public class HeroControllerTests : BaseTest
     }
 
     #endregion
-
-
 }

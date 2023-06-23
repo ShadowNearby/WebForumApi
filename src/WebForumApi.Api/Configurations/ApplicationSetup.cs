@@ -25,13 +25,12 @@ public static class ApplicationSetup
         return services;
     }
 
-
     private static IEnumerable<Type> GetTypesWithInterface<TInterface>(Assembly asm)
     {
         var it = typeof(TInterface);
-        return asm.GetTypes().Where(x => it.IsAssignableFrom(x) && x is { IsInterface: false, IsAbstract: false });
+        return asm.GetTypes()
+            .Where(x => it.IsAssignableFrom(x) && x is { IsInterface: false, IsAbstract: false });
     }
-
 
     private static void ApplyAllMappingConfigFromAssembly()
     {
@@ -42,5 +41,4 @@ public static class ApplicationSetup
             instance.ApplyConfig();
         }
     }
-
 }

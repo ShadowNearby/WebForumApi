@@ -19,14 +19,21 @@ builder.Services
         options.AllowEmptyInputInBodyModelBinding = true;
         options.AddResultConvention(resultMap =>
         {
-            resultMap.AddDefaultMap()
-                .For(ResultStatus.Ok, HttpStatusCode.OK, resultStatusOptions => resultStatusOptions
-                    .For("POST", HttpStatusCode.Created)
-                    .For("DELETE", HttpStatusCode.NoContent));
+            resultMap
+                .AddDefaultMap()
+                .For(
+                    ResultStatus.Ok,
+                    HttpStatusCode.OK,
+                    resultStatusOptions =>
+                        resultStatusOptions
+                            .For("POST", HttpStatusCode.Created)
+                            .For("DELETE", HttpStatusCode.NoContent)
+                );
         });
     })
     .AddValidationSetup();
 builder.Services.AddTransient<ITokenService, TokenService>();
+
 // Authn / Authrz
 builder.Services.AddAuthSetup(builder.Configuration);
 
@@ -82,8 +89,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers()
-    .RequireAuthorization();
+app.MapControllers().RequireAuthorization();
 
 await app.Migrate();
 

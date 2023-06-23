@@ -21,13 +21,19 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, PaginatedList<Ge
         _context = context;
     }
 
-    public async Task<PaginatedList<GetUserResponse>> Handle(GetUsersRequest request,
-        CancellationToken cancellationToken)
+    public async Task<PaginatedList<GetUserResponse>> Handle(
+        GetUsersRequest request,
+        CancellationToken cancellationToken
+    )
     {
         IQueryable<User> users = _context.Users
-            .WhereIf(!string.IsNullOrEmpty(request.Username),
-                x => EF.Functions.Like(x.Username, $"%{request.Username}%"))
+            .WhereIf(
+                !string.IsNullOrEmpty(request.Username),
+                x => EF.Functions.Like(x.Username, $"%{request.Username}%")
+            )
             .WhereIf(request.IsAdmin, x => x.Role == Roles.Admin);
-        return await users.ProjectToType<GetUserResponse>().ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        return await users
+            .ProjectToType<GetUserResponse>()
+            .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

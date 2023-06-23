@@ -17,11 +17,17 @@ public class GetUserByIdHandler : IRequestHandler<GetUserByIdRequest, Result<Get
         _context = context;
     }
 
-    public async Task<Result<GetUserResponse>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetUserResponse>> Handle(
+        GetUserByIdRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        var result = await _context.Users
-            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        if (result is null) return Result.NotFound();
+        var result = await _context.Users.FirstOrDefaultAsync(
+            x => x.Id == request.Id,
+            cancellationToken
+        );
+        if (result is null)
+            return Result.NotFound();
         return result.Adapt<GetUserResponse>();
     }
 }

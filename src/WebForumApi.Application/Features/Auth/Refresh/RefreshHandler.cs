@@ -22,30 +22,53 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
         _tokenService = tokenService;
     }
 
-    public async Task<Result<Jwt>> Handle(RefreshRequest request, CancellationToken cancellationToken)
+    public async Task<Result<Jwt>> Handle(
+        RefreshRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        Token? token = await _context.Tokens
-                .FirstOrDefaultAsync(
-                    t => t.RefreshToken.Equals(request.RefreshToken),
-                    cancellationToken)
-            ;
+        Token? token = await _context.Tokens.FirstOrDefaultAsync(
+            t => t.RefreshToken.Equals(request.RefreshToken),
+            cancellationToken
+        );
         if (token == null)
         {
-            return Result.Invalid(new List<ValidationError>
-            {
-                new() { Identifier = $"{nameof(request.RefreshToken)}", ErrorMessage = "RefreshToken is incorrect" }
-            });
+            return Result.Invalid(
+                new List<ValidationError>
+                {
+                    new()
+                    {
+                        Identifier = $"{nameof(request.RefreshToken)}",
+                        ErrorMessage = "RefreshToken is incorrect"
+                    }
+                }
+            );
         }
 
         if (token.Expire.CompareTo(DateTime.Now) < 0)
         {
-            return Result.Invalid(new List<ValidationError>
-            {
-                new() { Identifier = $"{nameof(request.RefreshToken)}", ErrorMessage = "RefreshToken is expired" }
-            });
+            return Result.Invalid(
+                new List<ValidationError>
+                {
+                    new()
+                    {
+                        Identifier = $"{nameof(request.RefreshToken)}",
+                        ErrorMessage = "RefreshToken is expired"
+                    }
+                }
+            );
         }
 
-        var user = await _context.Users.Select(x => new { x.Id, x.Username, x.Role })
+        var user = await _context.Users
+            .Select(
+                x =>
+                    new
+                    {
+                        x.Id,
+                        x.Username,
+                        x.Role
+                    }
+            )
             .FirstAsync(x => x.Id == token.UserId, cancellationToken);
         Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
         token.RefreshToken = jwt.RefreshToken;

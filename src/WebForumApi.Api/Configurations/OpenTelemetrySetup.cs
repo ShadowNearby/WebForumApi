@@ -20,41 +20,48 @@ public static class OpenTelemetrySetup
 
         builder.Services
             .AddOpenTelemetry()
-            .ConfigureResource((rb) => rb
-                .AddService(serviceName: OpenTelemetryExtensions.ServiceName,
-                    serviceVersion: OpenTelemetryExtensions.ServiceVersion)
-                .AddTelemetrySdk()
-                .AddEnvironmentVariableDetector())
+            .ConfigureResource(
+                (rb) =>
+                    rb.AddService(
+                            serviceName: OpenTelemetryExtensions.ServiceName,
+                            serviceVersion: OpenTelemetryExtensions.ServiceVersion
+                        )
+                        .AddTelemetrySdk()
+                        .AddEnvironmentVariableDetector()
+            )
             .WithTracing(telemetry =>
-        {
-            telemetry
-                .AddSource(OpenTelemetryExtensions.ServiceName)
-                .AddAspNetCoreInstrumentation(o =>
-                {
-                    o.RecordException = true;
-                })
-                .AddEntityFrameworkCoreInstrumentation(o =>
-                {
-                    o.SetDbStatementForText = true;
-                });
-
-            if (jaegerConfig != null && !string.IsNullOrWhiteSpace(jaegerConfig.GetValue<string>("AgentHost")))
             {
-                telemetry.AddJaegerExporter(o =>
-                {
-                    o.AgentHost = jaegerConfig["AgentHost"];
-                    o.AgentPort = Convert.ToInt32(jaegerConfig["AgentPort"]);
-                    o.MaxPayloadSizeInBytes = 4096;
-                    o.ExportProcessorType = ExportProcessorType.Batch;
-                    o.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
+                telemetry
+                    .AddSource(OpenTelemetryExtensions.ServiceName)
+                    .AddAspNetCoreInstrumentation(o =>
                     {
-                        MaxQueueSize = 2048,
-                        ScheduledDelayMilliseconds = 5000,
-                        ExporterTimeoutMilliseconds = 30000,
-                        MaxExportBatchSize = 512,
-                    };
-                });
-            }
-        });
+                        o.RecordException = true;
+                    })
+                    .AddEntityFrameworkCoreInstrumentation(o =>
+                    {
+                        o.SetDbStatementForText = true;
+                    });
+
+                if (
+                    jaegerConfig != null
+                    && !string.IsNullOrWhiteSpace(jaegerConfig.GetValue<string>("AgentHost"))
+                )
+                {
+                    telemetry.AddJaegerExporter(o =>
+                    {
+                        o.AgentHost = jaegerConfig["AgentHost"];
+                        o.AgentPort = Convert.ToInt32(jaegerConfig["AgentPort"]);
+                        o.MaxPayloadSizeInBytes = 4096;
+                        o.ExportProcessorType = ExportProcessorType.Batch;
+                        o.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
+                        {
+                            MaxQueueSize = 2048,
+                            ScheduledDelayMilliseconds = 5000,
+                            ExporterTimeoutMilliseconds = 30000,
+                            MaxExportBatchSize = 512,
+                        };
+                    });
+                }
+            });
     }
 }

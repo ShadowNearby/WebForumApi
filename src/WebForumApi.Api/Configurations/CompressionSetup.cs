@@ -15,12 +15,12 @@ public static class CompressionSetup
             options.Providers.Add<GzipCompressionProvider>();
         });
 
-        services.Configure<BrotliCompressionProviderOptions>(options =>
-            options.Level = CompressionLevel.Fastest
+        services.Configure<BrotliCompressionProviderOptions>(
+            options => options.Level = CompressionLevel.Fastest
         );
 
-        services.Configure<GzipCompressionProviderOptions>(options =>
-            options.Level = CompressionLevel.Fastest
+        services.Configure<GzipCompressionProviderOptions>(
+            options => options.Level = CompressionLevel.Fastest
         );
 
         return services;

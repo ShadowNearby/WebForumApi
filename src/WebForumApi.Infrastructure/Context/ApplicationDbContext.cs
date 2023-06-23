@@ -11,7 +11,8 @@ namespace WebForumApi.Infrastructure.Context;
 
 public class ApplicationDbContext : DbContext, IContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options) { }
 
     public DbSet<Hero> Heroes { get; set; } = null!;
     public DbSet<Token> Tokens { get; set; } = null!;
@@ -21,7 +22,9 @@ public class ApplicationDbContext : DbContext, IContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.UseExceptionProcessor().LogTo(Console.WriteLine, LogLevel.Information)
+        optionsBuilder
+            .UseExceptionProcessor()
+            .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
         ;

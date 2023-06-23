@@ -10,7 +10,10 @@ namespace WebForumApi.Api.Configurations;
 
 public static class AuthSetup
 {
-    public static IServiceCollection AddAuthSetup(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthSetup(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         IConfigurationSection tokenConfig = configuration.GetRequiredSection("TokenConfiguration");
         services.Configure<TokenConfiguration>(tokenConfig);
@@ -18,7 +21,8 @@ public static class AuthSetup
         // configure jwt authentication
         TokenConfiguration? appSettings = tokenConfig.Get<TokenConfiguration>();
         byte[] key = Encoding.ASCII.GetBytes(appSettings!.Secret);
-        services.AddAuthentication(x =>
+        services
+            .AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,7 +42,6 @@ public static class AuthSetup
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
 
         #region Autorização
 

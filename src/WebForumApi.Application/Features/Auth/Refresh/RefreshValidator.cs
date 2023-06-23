@@ -7,7 +7,6 @@ public class RefreshValidator : AbstractValidator<RefreshRequest>
     public RefreshValidator()
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
-        RuleFor(x => x.RefreshToken)
-            .NotEmpty();
+        RuleFor(x => x.RefreshToken).NotEmpty();
     }
 }

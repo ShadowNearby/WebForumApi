@@ -23,5 +23,4 @@ public class Session : ISession
             UserId = new Guid(nameIdentifier.Value);
         }
     }
-
 }

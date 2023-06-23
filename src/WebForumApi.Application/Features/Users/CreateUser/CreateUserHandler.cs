@@ -11,7 +11,8 @@ namespace WebForumApi.Application.Features.Users.CreateUser;
 
 public class CreateUserHandler : IRequestHandler<CreateUserRequest, Result>
 {
-    private const string DefaultAvatar = "https://pic2.zhimg.com/v2-eda9c6ea91435f99e850ba32743ef0fd_r.jpg";
+    private const string DefaultAvatar =
+        "https://pic2.zhimg.com/v2-eda9c6ea91435f99e850ba32743ef0fd_r.jpg";
     private readonly IContext _context;
 
     public CreateUserHandler(IContext context)

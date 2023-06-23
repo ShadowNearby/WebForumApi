@@ -23,30 +23,39 @@ public class TokenService : ITokenService
     public Jwt GenerateJwt(string username, string role, UserId id)
     {
         byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-        ClaimsIdentity claims = new(new Claim[]
-        {
-            new(ClaimTypes.NameIdentifier, id.ToString()), new(ClaimTypes.Name, username),
-            new(ClaimTypes.Role, role)
-        });
+        ClaimsIdentity claims =
+            new(
+                new Claim[]
+                {
+                    new(ClaimTypes.NameIdentifier, id.ToString()),
+                    new(ClaimTypes.Name, username),
+                    new(ClaimTypes.Role, role)
+                }
+            );
 
         DateTime expDate = DateTime.Now.AddHours(4);
 
-        SecurityTokenDescriptor tokenDescriptor = new()
-        {
-            Subject = claims,
-            Expires = expDate,
-            SigningCredentials =
-                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Audience = _appSettings.Audience,
-            Issuer = _appSettings.Issuer
-        };
+        SecurityTokenDescriptor tokenDescriptor =
+            new()
+            {
+                Subject = claims,
+                Expires = expDate,
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
+                Audience = _appSettings.Audience,
+                Issuer = _appSettings.Issuer
+            };
         SecurityToken? accessToken = _handler.CreateToken(tokenDescriptor);
         byte[] randomNumber = new byte[32];
         RandomNumberGenerator.Create().GetBytes(randomNumber);
         string refreshToken = Convert.ToBase64String(randomNumber);
         return new Jwt
         {
-            AccessToken = _handler.WriteToken(accessToken), RefreshToken = refreshToken, Expire = expDate
+            AccessToken = _handler.WriteToken(accessToken),
+            RefreshToken = refreshToken,
+            Expire = expDate
         };
     }
 }

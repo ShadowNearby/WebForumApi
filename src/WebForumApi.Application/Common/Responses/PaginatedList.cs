@@ -22,19 +22,19 @@ public record PaginatedList<T>
         Result.AddRange(items);
     }
 
-    public PaginatedList()
-    {
-
-    }
+    public PaginatedList() { }
 }
 
 public static class PaginatedListHelper
 {
-
     public const int DefaultPageSize = 15;
     public const int DefaultCurrentPage = 1;
 
-    public static async Task<PaginatedList<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int currentPage, int pageSize)
+    public static async Task<PaginatedList<T>> ToPaginatedListAsync<T>(
+        this IQueryable<T> source,
+        int currentPage,
+        int pageSize
+    )
     {
         currentPage = currentPage > 0 ? currentPage : DefaultCurrentPage;
         pageSize = pageSize > 0 ? pageSize : DefaultPageSize;

@@ -17,12 +17,17 @@ public class UpdateHeroHandler : IRequestHandler<UpdateHeroRequest, Result<GetHe
         _context = context;
     }
 
-    public async Task<Result<GetHeroResponse>> Handle(UpdateHeroRequest request,
-        CancellationToken cancellationToken)
+    public async Task<Result<GetHeroResponse>> Handle(
+        UpdateHeroRequest request,
+        CancellationToken cancellationToken
+    )
     {
-        var originalHero = await _context.Heroes
-            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        if (originalHero == null) return Result.NotFound();
+        var originalHero = await _context.Heroes.FirstOrDefaultAsync(
+            x => x.Id == request.Id,
+            cancellationToken
+        );
+        if (originalHero == null)
+            return Result.NotFound();
 
         originalHero.Name = request.Name;
         originalHero.Nickname = request.Nickname;

@@ -18,13 +18,15 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserRequest, Result>
         _context = context;
     }
 
-
     public async Task<Result> Handle(UpdateUserRequest request, CancellationToken cancellationToken)
     {
         // Guaranteed to be valid, because it comes from the session.
-        User originalUser = await _context.Users
-            .FirstAsync(x => x.Id == request.Id, cancellationToken);
-        originalUser.Password = request.Password != null ? BC.HashPassword(request.Password) : originalUser.Password;
+        User originalUser = await _context.Users.FirstAsync(
+            x => x.Id == request.Id,
+            cancellationToken
+        );
+        originalUser.Password =
+            request.Password != null ? BC.HashPassword(request.Password) : originalUser.Password;
         originalUser.Username = request.Username ?? originalUser.Username;
         originalUser.Email = request.Email ?? originalUser.Email;
         originalUser.Location = request.Location ?? originalUser.Location;

@@ -23,7 +23,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
         .WithName($"integration-tests-{Guid.NewGuid()}")
         .Build();
 
-
     private string _connString = default!;
     private Respawner _respawner = default!;
 
@@ -47,30 +46,35 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
-        builder.ConfigureServices(services =>
-        {
-            // Replace sql server context for sqlite
-            List<Type> serviceTypes = new() { typeof(DbContextOptions<ApplicationDbContext>), typeof(IContext) };
-            List<ServiceDescriptor> contextsDescriptor =
-                services.Where(d => serviceTypes.Contains(d.ServiceType)).ToList();
-            foreach (ServiceDescriptor descriptor in contextsDescriptor)
+        builder
+            .ConfigureServices(services =>
             {
-                services.Remove(descriptor);
-            }
+                // Replace sql server context for sqlite
+                List<Type> serviceTypes =
+                    new() { typeof(DbContextOptions<ApplicationDbContext>), typeof(IContext) };
+                List<ServiceDescriptor> contextsDescriptor = services
+                    .Where(d => serviceTypes.Contains(d.ServiceType))
+                    .ToList();
+                foreach (ServiceDescriptor descriptor in contextsDescriptor)
+                {
+                    services.Remove(descriptor);
+                }
 
-            services.AddScoped(_ => CreateContext());
-        }).ConfigureLogging(o => o.AddFilter(loglevel => loglevel >= LogLevel.Error));
+                services.AddScoped(_ => CreateContext());
+            })
+            .ConfigureLogging(o => o.AddFilter(loglevel => loglevel >= LogLevel.Error));
         base.ConfigureWebHost(builder);
     }
 
     public IContext CreateContext()
     {
-        DbContextOptions<ApplicationDbContext> options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .EnableDetailedErrors()
-            .EnableSensitiveDataLogging()
-            .UseExceptionProcessor()
-            .UseMySql(_connString, new MySqlServerVersion(new Version(8, 0, 28)))
-            .Options;
+        DbContextOptions<ApplicationDbContext> options =
+            new DbContextOptionsBuilder<ApplicationDbContext>()
+                .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                .UseExceptionProcessor()
+                .UseMySql(_connString, new MySqlServerVersion(new Version(8, 0, 28)))
+                .Options;
         return new ApplicationDbContext(options);
     }
 
@@ -81,7 +85,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
 
     private async Task SetupRespawnerAsync()
     {
-        _respawner = await Respawner.CreateAsync(_connString,
-            new RespawnerOptions { DbAdapter = DbAdapter.SqlServer, SchemasToInclude = new[] { "dbo" } });
+        _respawner = await Respawner.CreateAsync(
+            _connString,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.SqlServer,
+                SchemasToInclude = new[] { "dbo" }
+            }
+        );
     }
 }

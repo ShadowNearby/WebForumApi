@@ -3,12 +3,15 @@ using System;
 
 [assembly: StronglyTypedIdDefaults(
     backingType: StronglyTypedIdBackingType.Guid,
-    converters: StronglyTypedIdConverter.SystemTextJson | StronglyTypedIdConverter.EfCoreValueConverter |
-                StronglyTypedIdConverter.Default | StronglyTypedIdConverter.TypeConverter,
-    implementations: StronglyTypedIdImplementations.IEquatable | StronglyTypedIdImplementations.Default)]
+    converters: StronglyTypedIdConverter.SystemTextJson
+        | StronglyTypedIdConverter.EfCoreValueConverter
+        | StronglyTypedIdConverter.Default
+        | StronglyTypedIdConverter.TypeConverter,
+    implementations: StronglyTypedIdImplementations.IEquatable
+        | StronglyTypedIdImplementations.Default
+)]
 
 namespace WebForumApi.Domain.Entities.Common;
-
 
 public interface IGuid { }
 

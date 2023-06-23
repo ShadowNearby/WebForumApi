@@ -27,7 +27,6 @@ public class HeroController : ControllerBase
         _mediator = mediator;
     }
 
-
     /// <summary>
     /// Returns all heroes in the database
     /// </summary>
@@ -35,11 +34,12 @@ public class HeroController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [TranslateResultToActionResult]
-    public async Task<ActionResult<PaginatedList<GetHeroResponse>>> GetHeroes([FromQuery] GetAllHeroesRequest request)
+    public async Task<ActionResult<PaginatedList<GetHeroResponse>>> GetHeroes(
+        [FromQuery] GetAllHeroesRequest request
+    )
     {
         return Ok(await _mediator.Send(request));
     }
-
 
     /// <summary>
     /// Get one hero by id from the database
@@ -61,7 +61,7 @@ public class HeroController : ControllerBase
     /// </summary>
     /// <param name="request">The hero information</param>
     /// <returns></returns>
-    /// 
+    ///
     [HttpPost]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
@@ -69,7 +69,6 @@ public class HeroController : ControllerBase
     {
         var result = await _mediator.Send(request);
         return result;
-
     }
 
     /// <summary>
@@ -81,12 +80,14 @@ public class HeroController : ControllerBase
     [HttpPut("{id}")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid, ResultStatus.NotFound)]
-    public async Task<Result<GetHeroResponse>> Update(HeroId id, [FromBody] UpdateHeroRequest request)
+    public async Task<Result<GetHeroResponse>> Update(
+        HeroId id,
+        [FromBody] UpdateHeroRequest request
+    )
     {
         var result = await _mediator.Send(request with { Id = id });
         return result;
     }
-
 
     /// <summary>
     /// Delete a hero from the database
