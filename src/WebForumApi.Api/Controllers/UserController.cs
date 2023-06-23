@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Auth;
@@ -14,7 +15,7 @@ using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Application.Features.Users.DeleteUser;
 using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Application.Features.Users.GetUsers;
-using WebForumApi.Application.Features.Users.UpdatePassword;
+using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities.Common;
 using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
@@ -35,32 +36,6 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
-    /// <summary>
-    ///     Authenticates the user and returns the token information.
-    /// </summary>
-    /// <param name="request">Email and password information</param>
-    /// <returns>Token information</returns>
-    [HttpPost]
-    [Route("token")]
-    [AllowAnonymous]
-    [TranslateResultToActionResult]
-    [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result<Jwt>> Authenticate([FromBody] AuthenticateRequest request)
-    {
-        Result<Jwt> jwt = await _mediator.Send(request);
-        return jwt;
-    }
-
-    [HttpPost]
-    [Route("token/refresh")]
-    [AllowAnonymous]
-    [TranslateResultToActionResult]
-    [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result<Jwt>> Refresh([FromBody] RefreshRequest request)
-    {
-        Result<Jwt> jwt = await _mediator.Send(request);
-        return jwt;
-    }
 
     /// <summary>
     ///     Returns all users in the database
@@ -92,21 +67,11 @@ public class UserController : ControllerBase
         return result;
     }
 
-    // [Authorize(Roles = Roles.Admin)]
-    [AllowAnonymous]
-    [HttpPost]
-    [TranslateResultToActionResult]
-    [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result<GetUserResponse>> CreateUser(CreateUserRequest request)
-    {
-        Result<GetUserResponse> result = await _mediator.Send(request);
-        return result;
-    }
 
-    [HttpPatch("password")]
+    [HttpPut("update")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
-    public async Task<Result> UpdatePassword([FromBody] UpdatePasswordRequest request)
+    public async Task<Result> UpdateUser([FromBody] UpdateUserRequest request)
     {
         Result result = await _mediator.Send(request with { Id = _session.UserId });
         return result;

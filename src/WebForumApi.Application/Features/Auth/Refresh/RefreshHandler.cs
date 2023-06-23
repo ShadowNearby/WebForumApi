@@ -46,11 +46,10 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
         }
 
         var user = await _context.Users.Select(x => new { x.Id, x.Username, x.Role })
-            .FirstOrDefaultAsync(x => x.Id == token.UserId, cancellationToken);
-        Jwt jwt = _tokenService.GenerateJwt(user!.Username, user.Role, user.Id);
+            .FirstAsync(x => x.Id == token.UserId, cancellationToken);
+        Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
         token.RefreshToken = jwt.RefreshToken;
         token.Expire = DateTime.Now.AddDays(1);
-        _context.Tokens.Update(token);
         await _context.SaveChangesAsync(cancellationToken);
         return jwt;
     }

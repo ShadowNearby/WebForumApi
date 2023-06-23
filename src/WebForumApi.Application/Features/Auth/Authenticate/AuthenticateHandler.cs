@@ -26,8 +26,18 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
 
     public async Task<Result<Jwt>> Handle(AuthenticateRequest request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users.Select(x => new { x.Id, x.Password, x.Username, x.Role }).FirstOrDefaultAsync(
+        var user = await _context.Users.Select(x => new
+        {
+            x.Id,
+            x.Password,
+            x.Username,
+            x.Role,
+            x.LastLogin
+        }).FirstOrDefaultAsync(
             x => x.Username.Equals(request.Username), cancellationToken);
+        // update last login 
+        // var user = await _context.Users.FirstOrDefaultAsync(
+        //     x => x.Username.Equals(request.Username), cancellationToken);
         if (user == null)
         {
             return Result.Invalid(new List<ValidationError>
@@ -44,12 +54,13 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
             });
         }
 
+        // user.LastLogin = DateTime.Now;
+
         Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
         Token? token = await _context.Tokens.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
         token ??= new Token { UserId = user.Id };
         token.RefreshToken = jwt.RefreshToken;
         token.Expire = DateTime.Now.AddDays(1);
-        _context.Tokens.Update(token);
         await _context.SaveChangesAsync(cancellationToken);
         return jwt;
     }

@@ -12,7 +12,7 @@ using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Application.Features.Users.GetUsers;
-using WebForumApi.Application.Features.Users.UpdatePassword;
+using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Api.IntegrationTests;
@@ -61,7 +61,6 @@ public class UserControllerTests : BaseTest
         CreateUserRequest? newUser = userFaker
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
-            .RuleFor(x => x.IsAdmin, _ => true)
             .Generate();
         HttpResponseMessage response = await PostAsync("/api/User", newUser);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
@@ -72,7 +71,7 @@ public class UserControllerTests : BaseTest
 
         // Act
         response = await PatchAsync("/api/User/password",
-            new UpdatePasswordRequest { Password = "mypasswordisverynice" });
+            new UpdateUserRequest { Password = "mypasswordisverynice" });
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -223,7 +222,6 @@ public class UserControllerTests : BaseTest
         CreateUserRequest? newUser = userFaker
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
-            .RuleFor(x => x.IsAdmin, _ => true)
             .Generate();
         GetUserResponse? response = await PostAsync<GetUserResponse>("/api/User", newUser);
 
@@ -253,7 +251,6 @@ public class UserControllerTests : BaseTest
         CreateUserRequest? newUser = userFaker
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, _ => null!)
-            .RuleFor(x => x.IsAdmin, _ => false)
             .Generate();
         HttpResponseMessage response = await PostAsync("/api/User", newUser);
 

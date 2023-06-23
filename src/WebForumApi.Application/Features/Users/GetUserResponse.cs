@@ -15,7 +15,7 @@ public record GetUserResponse
 
     public string? Location { get; set; }
 
-    public string? Profile { get; set; }
+    public string? About { get; set; }
 
     public string Avatar { get; set; } = null!;
     public bool IsAdmin { get; init; }
