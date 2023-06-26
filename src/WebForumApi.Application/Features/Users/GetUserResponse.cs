@@ -11,11 +11,11 @@ public record GetUserResponse
 
     public string Username { get; init; } = null!;
 
-    public DateTime LastLogin { get; set; }
+    public DateTime LastLogin { get; init; }
 
-    public string? Location { get; set; }
+    public string? Location { get; init; }
 
-    public string? About { get; set; }
+    public string? About { get; init; }
 
     public string Avatar { get; set; } = null!;
 

@@ -12,8 +12,11 @@ public interface IContext : IAsyncDisposable, IDisposable
     public DatabaseFacade Database { get; }
 
     public DbSet<User> Users { get; }
+    public DbSet<Question> Questions { get; }
+    public DbSet<Answer> Answers { get; }
+    public DbSet<Tag> Tags { get; }
+    public DbSet<Field> Fields { get; }
 
-    public DbSet<Hero> Heroes { get; }
     public DbSet<Token> Tokens { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
