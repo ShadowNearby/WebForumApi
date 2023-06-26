@@ -1,9 +1,9 @@
 ﻿using System;
 using WebForumApi.Domain.Entities.Common;
 
-namespace WebForumApi.Application.Features.Users;
+namespace WebForumApi.Application.Features.Users.Dto;
 
-public record GetUserResponse
+public record UserDetailDto
 {
     public UserId Id { get; init; }
 

@@ -4,5 +4,5 @@ namespace WebForumApi.Application.Features.Auth;
 
 public interface ITokenService
 {
-    Jwt GenerateJwt(string username, string role, UserId id);
+    JwtDto GenerateJwt(string username, string role, UserId id);
 }

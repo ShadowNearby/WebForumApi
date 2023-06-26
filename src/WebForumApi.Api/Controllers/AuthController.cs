@@ -18,7 +18,6 @@ namespace WebForumApi.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -38,9 +37,9 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result<Jwt>> Authenticate([FromBody] AuthenticateRequest request)
+    public async Task<Result<JwtDto>> Authenticate([FromBody] AuthenticateRequest request)
     {
-        Result<Jwt> jwt = await _mediator.Send(request);
+        Result<JwtDto> jwt = await _mediator.Send(request);
         return jwt;
     }
 
@@ -49,9 +48,9 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result<Jwt>> Refresh([FromBody] RefreshRequest request)
+    public async Task<Result<JwtDto>> Refresh([FromBody] RefreshRequest request)
     {
-        Result<Jwt> jwt = await _mediator.Send(request);
+        Result<JwtDto> jwt = await _mediator.Send(request);
         return jwt;
     }
 

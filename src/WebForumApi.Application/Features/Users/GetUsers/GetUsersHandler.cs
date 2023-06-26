@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
+using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Users.GetUsers;
 
-public class GetUsersHandler : IRequestHandler<GetUsersRequest, PaginatedList<GetUserResponse>>
+public class GetUsersHandler : IRequestHandler<GetUsersRequest, PaginatedList<UserDetailDto>>
 {
     private readonly IContext _context;
 
@@ -21,7 +22,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, PaginatedList<Ge
         _context = context;
     }
 
-    public async Task<PaginatedList<GetUserResponse>> Handle(
+    public async Task<PaginatedList<UserDetailDto>> Handle(
         GetUsersRequest request,
         CancellationToken cancellationToken
     )
@@ -33,7 +34,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, PaginatedList<Ge
             )
             .WhereIf(request.IsAdmin, x => x.Role == Roles.Admin);
         return await users
-            .ProjectToType<GetUserResponse>()
+            .ProjectToType<UserDetailDto>()
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

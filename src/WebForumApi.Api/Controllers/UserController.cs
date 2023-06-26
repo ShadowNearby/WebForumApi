@@ -13,12 +13,13 @@ using WebForumApi.Application.Features.Auth.Refresh;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Application.Features.Users.DeleteUser;
+using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities.Common;
-using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
+using ISession=WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Api.Controllers;
 
@@ -41,10 +42,10 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [ProducesResponseType(typeof(PaginatedList<GetUserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaginatedList<UserDetailDto>), StatusCodes.Status200OK)]
     [Authorize(Roles = Roles.Admin)]
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<GetUserResponse>>> GetUsers(
+    public async Task<ActionResult<PaginatedList<UserDetailDto>>> GetUsers(
         [FromQuery] GetUsersRequest request
     )
     {
@@ -61,9 +62,9 @@ public class UserController : ControllerBase
     [Route("{id}")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
-    public async Task<Result<GetUserResponse>> GetUserById(UserId id)
+    public async Task<Result<UserDetailDto>> GetUserById(UserId id)
     {
-        Result<GetUserResponse> result = await _mediator.Send(new GetUserByIdRequest(id));
+        Result<UserDetailDto> result = await _mediator.Send(new GetUserByIdRequest(id));
         return result;
     }
 
@@ -72,7 +73,10 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        Result result = await _mediator.Send(request with { Id = _session.UserId });
+        Result result = await _mediator.Send(request with
+        {
+            Id = _session.UserId
+        });
         return result;
     }
 

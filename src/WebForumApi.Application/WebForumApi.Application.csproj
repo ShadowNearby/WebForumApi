@@ -21,6 +21,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebForumApi.Domain\WebForumApi.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Auth\Dto\" />
+    <Folder Include="Features\Questions\GetQuestionById\" />
   </ItemGroup> 
 
 </Project>

@@ -2,7 +2,7 @@
 
 namespace WebForumApi.Application.Features.Auth;
 
-public record Jwt
+public record JwtDto
 {
     public string AccessToken { get; init; } = null!;
 

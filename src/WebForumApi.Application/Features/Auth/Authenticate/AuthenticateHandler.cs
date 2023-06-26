@@ -8,11 +8,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
-using BC = BCrypt.Net.BCrypt;
+using BC=BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Auth.Authenticate;
 
-public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<Jwt>>
+public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<JwtDto>>
 {
     private readonly IContext _context;
     private readonly ITokenService _tokenService;
@@ -23,7 +23,7 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
         _tokenService = tokenService;
     }
 
-    public async Task<Result<Jwt>> Handle(
+    public async Task<Result<JwtDto>> Handle(
         AuthenticateRequest request,
         CancellationToken cancellationToken
     )
@@ -51,8 +51,7 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.Username)}",
-                        ErrorMessage = "Username is incorrect"
+                        Identifier = $"{nameof(request.Username)}", ErrorMessage = "Username is incorrect"
                     }
                 }
             );
@@ -65,8 +64,7 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.Password)}",
-                        ErrorMessage = "Password is incorrect"
+                        Identifier = $"{nameof(request.Password)}", ErrorMessage = "Password is incorrect"
                     }
                 }
             );
@@ -74,15 +72,18 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
 
         // user.LastLogin = DateTime.Now;
 
-        Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
+        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
         Token? token = await _context.Tokens.FirstOrDefaultAsync(
             x => x.UserId == user.Id,
             cancellationToken
         );
-        token ??= new Token { UserId = user.Id };
-        token.RefreshToken = jwt.RefreshToken;
+        token ??= new Token
+        {
+            UserId = user.Id
+        };
+        token.RefreshToken = jwtDto.RefreshToken;
         token.Expire = DateTime.Now.AddDays(1);
         await _context.SaveChangesAsync(cancellationToken);
-        return jwt;
+        return jwtDto;
     }
 }

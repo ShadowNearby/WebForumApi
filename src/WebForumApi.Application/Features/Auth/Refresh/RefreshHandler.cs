@@ -11,7 +11,7 @@ using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Auth.Refresh;
 
-public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
+public class RefreshHandler : IRequestHandler<RefreshRequest, Result<JwtDto>>
 {
     private readonly IContext _context;
     private readonly ITokenService _tokenService;
@@ -22,7 +22,7 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
         _tokenService = tokenService;
     }
 
-    public async Task<Result<Jwt>> Handle(
+    public async Task<Result<JwtDto>> Handle(
         RefreshRequest request,
         CancellationToken cancellationToken
     )
@@ -38,8 +38,7 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.RefreshToken)}",
-                        ErrorMessage = "RefreshToken is incorrect"
+                        Identifier = $"{nameof(request.RefreshToken)}", ErrorMessage = "RefreshToken is incorrect"
                     }
                 }
             );
@@ -52,8 +51,7 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.RefreshToken)}",
-                        ErrorMessage = "RefreshToken is expired"
+                        Identifier = $"{nameof(request.RefreshToken)}", ErrorMessage = "RefreshToken is expired"
                     }
                 }
             );
@@ -64,16 +62,14 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<Jwt>>
                 x =>
                     new
                     {
-                        x.Id,
-                        x.Username,
-                        x.Role
+                        x.Id, x.Username, x.Role
                     }
             )
             .FirstAsync(x => x.Id == token.UserId, cancellationToken);
-        Jwt jwt = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
-        token.RefreshToken = jwt.RefreshToken;
+        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
+        token.RefreshToken = jwtDto.RefreshToken;
         token.Expire = DateTime.Now.AddDays(1);
         await _context.SaveChangesAsync(cancellationToken);
-        return jwt;
+        return jwtDto;
     }
 }

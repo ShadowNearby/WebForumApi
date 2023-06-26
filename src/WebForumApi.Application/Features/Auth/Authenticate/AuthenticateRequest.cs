@@ -3,7 +3,7 @@ using MediatR;
 
 namespace WebForumApi.Application.Features.Auth.Authenticate;
 
-public record AuthenticateRequest : IRequest<Result<Jwt>>
+public record AuthenticateRequest : IRequest<Result<JwtDto>>
 {
     public string Username { get; init; } = null!;
 

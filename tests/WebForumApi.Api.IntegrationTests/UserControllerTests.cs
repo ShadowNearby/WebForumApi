@@ -11,6 +11,7 @@ using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Users;
 using WebForumApi.Application.Features.Users.CreateUser;
+using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Entities.Common;
@@ -24,7 +25,9 @@ public class UserControllerTests : BaseTest
     private static string? _userToken;
 
     public UserControllerTests(CustomWebApplicationFactory apiFactory)
-        : base(apiFactory) { }
+        : base(apiFactory)
+    {
+    }
 
     public override async Task InitializeAsync()
     {
@@ -36,7 +39,7 @@ public class UserControllerTests : BaseTest
 
     protected void UpdateBearerToken(string? token)
     {
-        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "Bearer", token);
     }
 
     private void LoginAsAdmin()
@@ -61,17 +64,20 @@ public class UserControllerTests : BaseTest
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
             .Generate();
-        HttpResponseMessage response = await PostAsync("/api/User", newUser);
+        HttpResponseMessage response = await PostAsync(address: "/api/User", newUser);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        response = await PostAsync("/api/User/authenticate", newUser);
-        Jwt? newUserToken = await response.Content.ReadFromJsonAsync<Jwt>();
+        response = await PostAsync(address: "/api/User/authenticate", newUser);
+        JwtDto? newUserToken = await response.Content.ReadFromJsonAsync<JwtDto>();
         UpdateBearerToken(newUserToken!.AccessToken);
 
         // Act
         response = await PatchAsync(
-            "/api/User/password",
-            new UpdateUserRequest { Password = "mypasswordisverynice" }
+            address: "/api/User/password",
+            new UpdateUserRequest
+            {
+                Password = "mypasswordisverynice"
+            }
         );
 
         // Assert
@@ -86,7 +92,7 @@ public class UserControllerTests : BaseTest
     public async Task Get_AllUsers_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
+        PaginatedList<UserDetailDto>? response = await GetAsync<PaginatedList<UserDetailDto>>(
             "/api/User"
         );
 
@@ -103,9 +109,12 @@ public class UserControllerTests : BaseTest
     public async Task Get_AllUsersWithPaginationFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
-            "/api/User",
-            new GetUsersRequest { CurrentPage = 1, PageSize = 1 }
+        PaginatedList<UserDetailDto>? response = await GetAsync<PaginatedList<UserDetailDto>>(
+            address: "/api/User",
+            new GetUsersRequest
+            {
+                CurrentPage = 1, PageSize = 1
+            }
         );
 
         // Assert
@@ -121,9 +130,12 @@ public class UserControllerTests : BaseTest
     public async Task Get_ExistingUsersWithFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
-            "/api/User",
-            new GetUsersRequest { Username = "admin@boilerplate.com" }
+        PaginatedList<UserDetailDto>? response = await GetAsync<PaginatedList<UserDetailDto>>(
+            address: "/api/User",
+            new GetUsersRequest
+            {
+                Username = "admin@boilerplate.com"
+            }
         );
 
         // Assert
@@ -139,9 +151,12 @@ public class UserControllerTests : BaseTest
     public async Task Get_NonExistingUsersWithFilter_ReturnsOk()
     {
         // Act
-        PaginatedList<GetUserResponse>? response = await GetAsync<PaginatedList<GetUserResponse>>(
-            "/api/User",
-            new GetUsersRequest { Username = "admifsdfsdfsdjma" }
+        PaginatedList<UserDetailDto>? response = await GetAsync<PaginatedList<UserDetailDto>>(
+            address: "/api/User",
+            new GetUsersRequest
+            {
+                Username = "admifsdfsdfsdjma"
+            }
         );
 
         // Assert
@@ -156,7 +171,7 @@ public class UserControllerTests : BaseTest
     public async Task GetById_ExistingUser_ReturnsOk()
     {
         // Act
-        GetUserResponse? response = await GetAsync<GetUserResponse>(
+        UserDetailDto? response = await GetAsync<UserDetailDto>(
             "/api/User/2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37"
         );
 
@@ -184,9 +199,12 @@ public class UserControllerTests : BaseTest
     {
         // Act
         AuthenticateRequest loginData =
-            new() { Username = "admin@boilerplate.com", Password = "testpassword123" };
+            new()
+            {
+                Username = "admin@boilerplate.com", Password = "testpassword123"
+            };
 
-        Jwt? response = await PostAsync<Jwt>("/api/User/authenticate", loginData);
+        JwtDto? response = await PostAsync<JwtDto>(address: "/api/User/authenticate", loginData);
         response.Should().NotBeNull();
         response!.Expire.Should().NotBe(DateTime.MinValue);
         response.AccessToken.Should().NotBeNullOrWhiteSpace();
@@ -199,9 +217,12 @@ public class UserControllerTests : BaseTest
     {
         // Act
         AuthenticateRequest loginData =
-            new() { Username = "user@boilerplate.com", Password = "testpassword123" };
+            new()
+            {
+                Username = "user@boilerplate.com", Password = "testpassword123"
+            };
 
-        Jwt? response = await PostAsync<Jwt>("/api/User/authenticate", loginData);
+        JwtDto? response = await PostAsync<JwtDto>(address: "/api/User/authenticate", loginData);
         response.Should().NotBeNull();
         response!.Expire.Should().NotBe(DateTime.MinValue);
         response.AccessToken.Should().NotBeNullOrWhiteSpace();
@@ -215,8 +236,11 @@ public class UserControllerTests : BaseTest
     public async Task Authenticate_IncorretUserOrPassword(string email, string password)
     {
         // Act
-        AuthenticateRequest loginData = new() { Username = email, Password = password };
-        HttpResponseMessage response = await PostAsync("/api/User/authenticate", loginData);
+        AuthenticateRequest loginData = new()
+        {
+            Username = email, Password = password
+        };
+        HttpResponseMessage response = await PostAsync(address: "/api/User/authenticate", loginData);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
@@ -231,7 +255,7 @@ public class UserControllerTests : BaseTest
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
             .Generate();
-        GetUserResponse? response = await PostAsync<GetUserResponse>("/api/User", newUser);
+        UserDetailDto? response = await PostAsync<UserDetailDto>(address: "/api/User", newUser);
 
         // Assert
         response.Should().NotBeNull();
@@ -242,8 +266,11 @@ public class UserControllerTests : BaseTest
     public async Task Post_EmaillessUser_ReturnsBadRequest()
     {
         // Act
-        CreateUserRequest newUser = new() { Password = "mypasswordisnice" };
-        HttpResponseMessage response = await PostAsync("/api/User", newUser);
+        CreateUserRequest newUser = new()
+        {
+            Password = "mypasswordisnice"
+        };
+        HttpResponseMessage response = await PostAsync(address: "/api/User", newUser);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -260,7 +287,7 @@ public class UserControllerTests : BaseTest
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, _ => null!)
             .Generate();
-        HttpResponseMessage response = await PostAsync("/api/User", newUser);
+        HttpResponseMessage response = await PostAsync(address: "/api/User", newUser);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -271,7 +298,7 @@ public class UserControllerTests : BaseTest
     {
         // Act
         CreateUserRequest newUser = new();
-        HttpResponseMessage response = await PostAsync("/api/User", newUser);
+        HttpResponseMessage response = await PostAsync(address: "/api/User", newUser);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
