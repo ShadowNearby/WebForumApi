@@ -45,11 +45,15 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 StarCount = q.StarCount,
                 UserCard = new UserCardDto
                 {
-                    Id = q.CreateUser.Id.ToString(), UserName = q.CreateUser.Username, Avatar = q.CreateUser.Avatar
+                    Id = q.CreateUser.Id.ToString(),
+                    UserName = q.CreateUser.Username,
+                    Avatar = q.CreateUser.Avatar
                 },
                 Tags = _context.QuestionTags.Where(t => t.QuestionId == q.Id).Select(t => new TagDto
                 {
-                    Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
+                    Id = t.TagId,
+                    Content = t.Tag.Content,
+                    Description = t.Tag.Description
                 }).ToList(),
                 Answers = q.Answers.Where(a => a.QuestionId == q.Id).Select(a => new AnswerDto
                 {
@@ -57,7 +61,9 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     Content = a.Content,
                     UserCard = new UserCardDto
                     {
-                        Id = a.CreateUser.Id.ToString(), UserName = a.CreateUser.Username, Avatar = a.CreateUser.Avatar
+                        Id = a.CreateUser.Id.ToString(),
+                        UserName = a.CreateUser.Username,
+                        Avatar = a.CreateUser.Avatar
                     },
                     LikeCount = a.LikeCount,
                     DislikeCount = a.DislikeCount,
