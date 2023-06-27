@@ -8,10 +8,21 @@ public class AnswerConfiguration : IEntityTypeConfiguration<Answer>
 {
     public void Configure(EntityTypeBuilder<Answer> builder)
     {
-        builder.HasMany(q => q.LikeUsers).WithMany(u => u.LikeAnswers).UsingEntity("UserLikeAnswer");
-        builder.HasMany(q => q.DislikeUsers).WithMany(u => u.DislikeAnswers).UsingEntity("UserDislikeAnswer");
-        builder.HasMany(q => q.StarUsers).WithMany(u => u.StarAnswers).UsingEntity("UserStarAnswer");
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateAnswers).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Content).IsRequired();
+    }
+}
+
+public class UserAnswerActionConfiguration : IEntityTypeConfiguration<UserAnswerAction>
+{
+    public void Configure(EntityTypeBuilder<UserAnswerAction> builder)
+    {
+        builder.HasOne(t => t.Answer).WithMany(a => a.UserAnswerActions).HasForeignKey(u => u.AnswerId).IsRequired();
+        builder.HasOne(t => t.User).WithMany(a => a.UserAnswerActions).HasForeignKey(u => u.UserId).IsRequired();
+        builder.HasKey(u => new
+        {
+            u.AnswerId, u.UserId
+        });
+        builder.ToTable("UserAnswerAction");
     }
 }

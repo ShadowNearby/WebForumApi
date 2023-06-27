@@ -8,11 +8,23 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 {
     public void Configure(EntityTypeBuilder<Question> builder)
     {
-        builder.HasMany(q => q.LikeUsers).WithMany(u => u.LikeQuestions).UsingEntity("UserLikeQuestion");
-        builder.HasMany(q => q.DislikeUsers).WithMany(u => u.DislikeQuestions).UsingEntity("UserDislikeQuestion");
-        builder.HasMany(q => q.StarUsers).WithMany(u => u.StarQuestions).UsingEntity("UserStarQuestion");
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateQuestions).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Title).IsRequired().HasMaxLength(128);
         builder.Property(q => q.Content).IsRequired();
+    }
+}
+
+public class UserQuestionActionConfiguration : IEntityTypeConfiguration<UserQuestionAction>
+{
+    public void Configure(EntityTypeBuilder<UserQuestionAction> builder)
+    {
+        builder.HasKey(u => new
+        {
+            u.QuestionId, u.UserId
+        });
+        builder.HasOne(t => t.Question).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.QuestionId).IsRequired();
+        builder.HasOne(t => t.User).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.UserId).IsRequired();
+
+        builder.ToTable("UserQuestionAction");
     }
 }

@@ -12,6 +12,5 @@ public class TokenConfiguration : IEntityTypeConfiguration<Token>
         builder.Property(x => x.Expire).IsRequired();
         builder.Property(x => x.RefreshToken).IsRequired().IsFixedLength().HasMaxLength(64);
         builder.HasIndex(x => x.RefreshToken).IsUnique();
-        builder.ToTable("token");
     }
 }

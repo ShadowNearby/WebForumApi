@@ -12,8 +12,9 @@ public class Answer : Entity<Guid>
     public Guid QuestionId { get; set; }
     public User CreateUser { get; set; } = null!;
     public UserId CreateUserId { get; set; }
+    public List<UserAnswerAction> UserAnswerActions { get; set; } = new();
 
-    public List<User> LikeUsers { get; set; } = new();
-    public List<User> DislikeUsers { get; set; } = new();
-    public List<User> StarUsers { get; set; } = new();
+    public long LikeCount { get; set; }
+    public long DislikeCount { get; set; }
+    public long StarCount { get; set; }
 }

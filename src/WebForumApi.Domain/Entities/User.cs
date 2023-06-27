@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Domain.Entities;
@@ -25,13 +26,9 @@ public class User : Entity<UserId>
     public bool IsBanned { get; set; }
     public Token? Token { get; init; }
 
-    public List<Question> LikeQuestions { get; set; } = new();
-    public List<Question> DislikeQuestions { get; set; } = new();
-    public List<Question> StarQuestions { get; set; } = new();
-    public List<Answer> LikeAnswers { get; set; } = new();
-    public List<Answer> DislikeAnswers { get; set; } = new();
-    public List<Answer> StarAnswers { get; set; } = new();
     public List<Field> Fields { get; set; } = new();
     public List<Question> CreateQuestions { get; set; } = new();
     public List<Answer> CreateAnswers { get; set; } = new();
+    public List<UserQuestionAction> UserQuestionActions { get; set; } = new();
+    public List<UserAnswerAction> UserAnswerActions { get; set; } = new();
 }

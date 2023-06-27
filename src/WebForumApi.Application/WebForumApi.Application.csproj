@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Auth\Dto\" />
-    <Folder Include="Features\Questions\GetQuestionById\" />
   </ItemGroup> 
 
 </Project>
