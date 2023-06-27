@@ -16,13 +16,13 @@ public class ApplicationDbContext : DbContext, IContext
     {
     }
 
-    public DbSet<Field> Fields { get; } = null!;
+    public DbSet<Field> Fields { get; set; } = null!;
     public DbSet<Token> Tokens { get; set; } = null!;
 
     public DbSet<User> Users { get; set; } = null!;
-    public DbSet<Question> Questions { get; } = null!;
-    public DbSet<Answer> Answers { get; } = null!;
-    public DbSet<Tag> Tags { get; } = null!;
+    public DbSet<Question> Questions { get; set; } = null!;
+    public DbSet<Answer> Answers { get; set; } = null!;
+    public DbSet<Tag> Tags { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -4,4 +4,5 @@ public record TagDto
 {
     public string Id { get; init; } = null!;
     public string Content { get; init; } = null!;
+    public string? Description { get; init; }
 }
