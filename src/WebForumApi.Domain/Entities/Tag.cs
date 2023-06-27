@@ -9,5 +9,5 @@ public class Tag : Entity<long>
     public string Content { get; set; } = null!;
     public string? Description { get; set; }
 
-    public List<Question> Questions { get; set; } = new();
+    public List<QuestionTag> QuestionTags { get; set; } = new();
 }

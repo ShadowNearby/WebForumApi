@@ -13,6 +13,7 @@ public class CreateUserHandler : IRequestHandler<CreateUserRequest, Result>
 {
     private const string DefaultAvatar =
         "https://pic2.zhimg.com/v2-eda9c6ea91435f99e850ba32743ef0fd_r.jpg";
+
     private readonly IContext _context;
 
     public CreateUserHandler(IContext context)
@@ -24,7 +25,8 @@ public class CreateUserHandler : IRequestHandler<CreateUserRequest, Result>
     {
         User created = request.Adapt<User>();
         _context.Users.Add(created);
-        created.Password = BC.HashPassword(request.Password);
+        // created.Password = BC.HashPassword(request.Password);
+        created.Password = request.Password;
         created.Avatar = DefaultAvatar;
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();
