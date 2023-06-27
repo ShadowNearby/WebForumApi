@@ -1,6 +1,7 @@
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using WebForumApi.Application.Features.Questions.Dto;
@@ -14,6 +15,7 @@ namespace WebForumApi.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class QuestionController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -25,12 +27,11 @@ public class QuestionController : ControllerBase
         _mediator = mediator;
     }
     [HttpGet]
-    [Route("{id}")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
-    public async Task<Result<QuestionDto>> GetQuestionById(string id)
+    public async Task<Result<QuestionDto>> GetQuestionById([FromQuery] GetQuestionByIdRequest request)
     {
-        Result<QuestionDto> result = await _mediator.Send(new GetQuestionByIdRequest(id));
+        Result<QuestionDto> result = await _mediator.Send(request);
         return result;
     }
 }
