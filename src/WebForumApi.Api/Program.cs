@@ -40,6 +40,9 @@ builder.Services.AddAuthSetup(builder.Configuration);
 // Swagger
 builder.Services.AddSwaggerSetup();
 
+// Cache
+builder.Services.AddCaching(builder.Configuration);
+
 // Persistence
 builder.Services.AddPersistenceSetup(builder.Configuration);
 
@@ -57,6 +60,8 @@ builder.Services.AddMediatRSetup();
 
 // Middleware
 builder.Services.AddScoped<ExceptionHandlerMiddleware>();
+
+builder.Services.AddDistributedMemoryCache();
 
 builder.Logging.ClearProviders();
 

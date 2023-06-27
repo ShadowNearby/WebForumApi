@@ -2,9 +2,11 @@ using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Application.Cache;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
@@ -15,13 +17,22 @@ namespace WebForumApi.Application.Features.Questions.GetQuestionById;
 public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Result<QuestionDto>>
 {
     private readonly IContext _context;
-    public GetQuestionByIdHandler(IContext context)
+    private readonly ICacheService _cache;
+    public GetQuestionByIdHandler(IContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
     public async Task<Result<QuestionDto>> Handle(GetQuestionByIdRequest request, CancellationToken cancellationToken)
     {
         UserId userId = request.UserId;
+        // QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.Id}", cancellationToken);
+        // if (cachedDto != null)
+        // {
+        //     Console.WriteLine("cache hit");
+        //     return cachedDto;
+        // }
+
         QuestionDto? question = await _context.Questions.Select(q =>
             new QuestionDto
             {
@@ -34,15 +45,11 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 StarCount = q.StarCount,
                 UserCard = new UserCardDto
                 {
-                    Id = q.CreateUser.Id.ToString(),
-                    UserName = q.CreateUser.Username,
-                    Avatar = q.CreateUser.Avatar
+                    Id = q.CreateUser.Id.ToString(), UserName = q.CreateUser.Username, Avatar = q.CreateUser.Avatar
                 },
                 Tags = _context.QuestionTags.Where(t => t.QuestionId == q.Id).Select(t => new TagDto
                 {
-                    Id = t.TagId,
-                    Content = t.Tag.Content,
-                    Description = t.Tag.Description
+                    Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
                 }).ToList(),
                 Answers = q.Answers.Where(a => a.QuestionId == q.Id).Select(a => new AnswerDto
                 {
@@ -50,9 +57,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     Content = a.Content,
                     UserCard = new UserCardDto
                     {
-                        Id = a.CreateUser.Id.ToString(),
-                        UserName = a.CreateUser.Username,
-                        Avatar = a.CreateUser.Avatar
+                        Id = a.CreateUser.Id.ToString(), UserName = a.CreateUser.Username, Avatar = a.CreateUser.Avatar
                     },
                     LikeCount = a.LikeCount,
                     DislikeCount = a.DislikeCount,
@@ -75,20 +80,21 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
         question.UserLike = action?.IsLike ?? false;
         question.UserDislike = action?.IsDislike ?? false;
         question.UserStar = action?.IsStar ?? false;
-        question.Answers.ForEach(async at =>
+        question.Answers.ForEach(at =>
         {
-            var aq = await _context.UserAnswerActions.Select(a => new
+            var aq = _context.UserAnswerActions.Select(a => new
             {
                 a.AnswerId,
                 a.UserId,
                 a.IsLike,
                 a.IsDislike,
                 a.IsStar
-            }).FirstOrDefaultAsync(a => a.AnswerId.ToString() == question.Id && a.UserId == userId, cancellationToken);
+            }).FirstOrDefault(a => a.AnswerId.ToString() == question.Id && a.UserId == userId);
             at.UserLike = aq?.IsLike ?? false;
             at.UserDislike = aq?.IsDislike ?? false;
             at.UserStar = aq?.IsStar ?? false;
         });
-        return question.Adapt<QuestionDto>();
+        // await _cache.SetAsync($"{request.UserId}-{request.Id}", question, TimeSpan.FromMinutes(10), cancellationToken);
+        return question;
     }
 }

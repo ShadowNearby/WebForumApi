@@ -13,7 +13,7 @@
     <PropertyGroup>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);1591</NoWarn>
-<!--        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>-->
+        <!--        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>-->
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,6 +26,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />

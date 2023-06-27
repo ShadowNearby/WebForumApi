@@ -16,6 +16,7 @@ public class Question : Entity<Guid>
 
     public List<QuestionTag> QuestionTags { get; set; } = new();
     public List<Answer> Answers { get; set; } = new();
+    public long AnswerCount { get; set; }
     public List<UserQuestionAction> UserQuestionActions { get; set; } = new();
     public long LikeCount { get; set; }
     public long DislikeCount { get; set; }

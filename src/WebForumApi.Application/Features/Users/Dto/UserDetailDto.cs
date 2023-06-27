@@ -19,5 +19,5 @@ public record UserDetailDto
 
     public string Avatar { get; set; } = null!;
 
-    public bool IsAdmin { get; init; }
+    // public bool IsAdmin { get; init; }
 }
