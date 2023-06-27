@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Features.Questions.CreateQuestion;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Questions.GetQuestionById;
+using WebForumApi.Application.Features.Questions.QuestionAction;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Domain.Auth.Interfaces;
@@ -45,6 +46,33 @@ public class QuestionController : ControllerBase
     // [AllowAnonymous]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateQuestion([FromBody] CreateQuestionRequest request)
+    {
+        Result result = await _mediator.Send(request, cancellationToken: default);
+        return result;
+    }
+
+    [HttpPost("like")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result> LikeQuestion([FromBody] QuestionLikeRequest request)
+    {
+        Result result = await _mediator.Send(request, cancellationToken: default);
+        return result;
+    }
+
+    [HttpPost("dislike")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result> DislikeQuestion([FromBody] QuestionDislikeRequest request)
+    {
+        Result result = await _mediator.Send(request, cancellationToken: default);
+        return result;
+    }
+
+    [HttpPost("star")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result> StarQuestion([FromBody] QuestionStarRequest request)
     {
         Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
