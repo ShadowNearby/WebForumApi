@@ -26,8 +26,8 @@ builder.Services
                     HttpStatusCode.OK,
                     resultStatusOptions =>
                         resultStatusOptions
-                            .For("POST", HttpStatusCode.Created)
-                            .For("DELETE", HttpStatusCode.NoContent)
+                            .For(method: "POST", HttpStatusCode.Created)
+                            .For(method: "DELETE", HttpStatusCode.NoContent)
                 );
         });
     })
@@ -84,7 +84,7 @@ app.UseMiddleware(typeof(ExceptionHandlerMiddleware));
 app.UseSwaggerSetup();
 
 app.UseResponseCompression();
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

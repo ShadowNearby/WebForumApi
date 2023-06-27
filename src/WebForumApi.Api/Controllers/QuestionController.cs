@@ -3,6 +3,7 @@ using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Features.Questions.CreateQuestion;
@@ -30,11 +31,12 @@ public class QuestionController : ControllerBase
     }
 
     [HttpGet]
+    [Route("{id:guid}")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
-    public async Task<Result<QuestionDto>> GetQuestionById([FromQuery] GetQuestionByIdRequest request)
+    public async Task<Result<QuestionDto>> GetQuestionById(Guid id)
     {
-        Result<QuestionDto> result = await _mediator.Send(request);
+        Result<QuestionDto> result = await _mediator.Send(new GetQuestionByIdRequest(id, _session.UserId));
         return result;
     }
 
@@ -44,7 +46,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateQuestion([FromBody] CreateQuestionRequest request)
     {
-        Result result = await _mediator.Send(request, default);
+        Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
     }
 }
