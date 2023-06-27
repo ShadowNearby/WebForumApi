@@ -23,12 +23,12 @@ public class AnswerController
     }
 
     [HttpPost]
-    [Route("new")]
+    // [Route("")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateAnswer([FromBody] CreateAnswerRequest request)
     {
-        Result result = await _mediator.Send(request, default);
+        Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -38,7 +38,7 @@ public class AnswerController
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> LikeAnswer([FromBody] AnswerLikeRequest request)
     {
-        Result result = await _mediator.Send(request, default);
+        Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -48,7 +48,7 @@ public class AnswerController
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> DislikeAnswer([FromBody] AnswerDislikeRequest request)
     {
-        Result result = await _mediator.Send(request, default);
+        Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -58,7 +58,7 @@ public class AnswerController
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> StarAnswer([FromBody] AnswerStarRequest request)
     {
-        Result result = await _mediator.Send(request, default);
+        Result result = await _mediator.Send(request, cancellationToken: default);
         return result;
     }
 }
