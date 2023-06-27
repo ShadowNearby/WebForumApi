@@ -25,3 +25,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("user");
     }
 }
+
+public class UserFollowConfiguration : IEntityTypeConfiguration<UserFollow>
+{
+    public void Configure(EntityTypeBuilder<UserFollow> builder)
+    {
+        builder.HasKey(x => new
+        {
+            x.UserId, UserFollowingId = x.UserIdFollowing
+        });
+        builder.HasOne(c => c.User).WithMany(u => u.UsersFollowing).HasForeignKey(c => c.UserId).IsRequired();
+        builder.HasOne(c => c.UserFollowing).WithMany(u => u.UsersFollowed).HasForeignKey(c => c.UserIdFollowing).IsRequired();
+        builder.ToTable("user_following");
+    }
+}

@@ -31,4 +31,8 @@ public class User : Entity<UserId>
     public List<Answer> CreateAnswers { get; set; } = new();
     public List<UserQuestionAction> UserQuestionActions { get; set; } = new();
     public List<UserAnswerAction> UserAnswerActions { get; set; } = new();
+    public long FollowingCount { get; set; }
+    public long FollowedCount { get; set; }
+    public List<UserFollow> UsersFollowing { get; set; } = new();
+    public List<UserFollow> UsersFollowed { get; set; } = new();
 }

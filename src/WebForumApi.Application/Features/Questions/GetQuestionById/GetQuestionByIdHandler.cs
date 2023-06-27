@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
-using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionById;
