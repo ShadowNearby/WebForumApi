@@ -2,7 +2,6 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
@@ -52,7 +51,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             default:
                 // select unanswered questions
-                var unansweredQuestions = _context.Questions
+                IQueryable<Question>? unansweredQuestions = _context.Questions
                     .Where(x => x.Answers.Count == 0)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),

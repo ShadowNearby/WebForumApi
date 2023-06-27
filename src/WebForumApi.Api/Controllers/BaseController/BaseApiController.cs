@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebForumApi.Domain.Auth.Interfaces;
 
-namespace WebForumApi.Api.Controllers;
+namespace WebForumApi.Api.Controllers.BaseController;
 
 [ApiController]
 [Authorize]

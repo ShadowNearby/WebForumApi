@@ -29,7 +29,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
         QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.QuestionId}", cancellationToken);
         if (cachedDto != null)
         {
-            Console.WriteLine("cache hit");
+            // Console.WriteLine("cache hit");
             return cachedDto;
         }
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Auth.Forget;

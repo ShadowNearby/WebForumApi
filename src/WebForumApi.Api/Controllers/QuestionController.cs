@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.CreateQuestion;
 using WebForumApi.Application.Features.Questions.Dto;

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Features.Answers;
 using WebForumApi.Application.Features.Answers.AnswerAction;
 using WebForumApi.Application.Features.Answers.CreateAnswer;

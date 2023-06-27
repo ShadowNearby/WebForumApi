@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
