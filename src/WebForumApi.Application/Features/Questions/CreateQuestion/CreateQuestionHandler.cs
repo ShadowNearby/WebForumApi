@@ -27,7 +27,9 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Resu
         var tags = request.Tags.Adapt<List<Tag>>();
         Question question = new Question
         {
-            Title = request.Title, Content = request.Content, CreateUserId = _session.UserId
+            Title = request.Title,
+            Content = request.Content,
+            CreateUserId = _session.UserId
         };
         await _context.Questions.AddAsync(question, cancellationToken);
         await _context.QuestionTags.AddRangeAsync(

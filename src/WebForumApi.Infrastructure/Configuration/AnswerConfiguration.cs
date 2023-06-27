@@ -22,7 +22,8 @@ public class UserAnswerActionConfiguration : IEntityTypeConfiguration<UserAnswer
         builder.HasOne(t => t.User).WithMany(a => a.UserAnswerActions).HasForeignKey(u => u.UserId).IsRequired();
         builder.HasKey(u => new
         {
-            u.AnswerId, u.UserId
+            u.AnswerId,
+            u.UserId
         });
         builder.ToTable("user_answer_action");
     }

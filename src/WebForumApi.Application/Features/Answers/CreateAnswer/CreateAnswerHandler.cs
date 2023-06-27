@@ -24,7 +24,9 @@ public class CreateAnswerHandler : IRequestHandler<CreateAnswerRequest, Result>
     {
         var answer = new Answer
         {
-            Content = request.Content, CreateUserId = _session.UserId, QuestionId = new Guid(request.QuestionId)
+            Content = request.Content,
+            CreateUserId = _session.UserId,
+            QuestionId = new Guid(request.QuestionId)
         };
         await _context.Answers.AddAsync(answer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

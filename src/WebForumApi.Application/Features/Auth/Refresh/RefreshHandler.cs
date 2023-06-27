@@ -62,7 +62,9 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<JwtDto>>
                 x =>
                     new
                     {
-                        x.Id, x.Username, x.Role
+                        x.Id,
+                        x.Username,
+                        x.Role
                     }
             )
             .FirstAsync(x => x.Id == token.UserId, cancellationToken);

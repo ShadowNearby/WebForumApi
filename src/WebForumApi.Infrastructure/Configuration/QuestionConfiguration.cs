@@ -21,7 +21,8 @@ public class UserQuestionActionConfiguration : IEntityTypeConfiguration<UserQues
     {
         builder.HasKey(u => new
         {
-            u.QuestionId, u.UserId
+            u.QuestionId,
+            u.UserId
         });
         builder.HasOne(t => t.Question).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.QuestionId).IsRequired();
         builder.HasOne(t => t.User).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.UserId).IsRequired();

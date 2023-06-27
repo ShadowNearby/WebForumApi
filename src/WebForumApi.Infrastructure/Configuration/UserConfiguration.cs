@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebForumApi.Domain.Entities;
 using WebForumApi.Domain.Entities.Common;
-using BC=BCrypt.Net.BCrypt;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Infrastructure.Configuration;
 
@@ -32,7 +32,8 @@ public class UserFollowConfiguration : IEntityTypeConfiguration<UserFollow>
     {
         builder.HasKey(x => new
         {
-            x.UserId, UserFollowingId = x.UserIdFollowing
+            x.UserId,
+            UserFollowingId = x.UserIdFollowing
         });
         builder.HasOne(c => c.User).WithMany(u => u.UsersFollowing).HasForeignKey(c => c.UserId).IsRequired();
         builder.HasOne(c => c.UserFollowing).WithMany(u => u.UsersFollowed).HasForeignKey(c => c.UserIdFollowing).IsRequired();

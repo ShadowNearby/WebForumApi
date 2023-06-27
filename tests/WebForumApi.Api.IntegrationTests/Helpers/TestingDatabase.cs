@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
 using WebForumApi.Domain.Entities.Enums;
-using BC=BCrypt.Net.BCrypt;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Api.IntegrationTests.Helpers;
 

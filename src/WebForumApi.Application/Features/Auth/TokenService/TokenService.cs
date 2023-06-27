@@ -51,7 +51,9 @@ public class TokenService : ITokenService
         string refreshToken = Convert.ToBase64String(randomNumber);
         return new JwtDto
         {
-            AccessToken = _handler.WriteToken(accessToken), RefreshToken = refreshToken, Expire = expDate
+            AccessToken = _handler.WriteToken(accessToken),
+            RefreshToken = refreshToken,
+            Expire = expDate
         };
     }
 }

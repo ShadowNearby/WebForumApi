@@ -19,7 +19,7 @@ using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities.Common;
-using ISession=WebForumApi.Domain.Auth.Interfaces.ISession;
+using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Api.Controllers;
 
