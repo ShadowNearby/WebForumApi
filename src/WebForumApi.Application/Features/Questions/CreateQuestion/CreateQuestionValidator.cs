@@ -12,7 +12,7 @@ public class CreateQuestionValidator : AbstractValidator<CreateQuestionRequest>
         RuleFor(x => x.Content).NotEmpty();
         RuleFor(x => x.Title).NotEmpty();
         RuleFor(x => x.Tags).Must(
-            (tags, ct) => tags.Tags.TrueForAll(t => context.Tags.Any(tg => tg.Id == t.Id))
+            (_, tags) => tags.TrueForAll(t => context.Tags.Any(tg => tg.Id == t.Id))
         );
     }
 }
