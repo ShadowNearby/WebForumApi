@@ -14,7 +14,7 @@ public class Question : Entity<Guid>
 
     public DateTime CreateTime { get; set; } = DateTime.Now;
 
-    public List<Tag> Tags { get; set; } = new();
+    public List<QuestionTag> QuestionTags { get; set; } = new();
     public List<Answer> Answers { get; set; } = new();
     public List<UserQuestionAction> UserQuestionActions { get; set; } = new();
     public long LikeCount { get; set; }

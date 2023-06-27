@@ -13,6 +13,7 @@ public interface IContext : IAsyncDisposable, IDisposable
 
     public DbSet<User> Users { get; }
     public DbSet<Question> Questions { get; }
+    public DbSet<QuestionTag> QuestionTags { get; }
     public DbSet<Answer> Answers { get; }
     public DbSet<Tag> Tags { get; }
     public DbSet<Field> Fields { get; }

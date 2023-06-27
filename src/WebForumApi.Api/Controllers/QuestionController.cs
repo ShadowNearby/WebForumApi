@@ -1,8 +1,11 @@
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Application.Features.Questions.CreateQuestion;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Questions.GetQuestionById;
 using WebForumApi.Application.Features.Users.Dto;
@@ -14,6 +17,7 @@ namespace WebForumApi.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class QuestionController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -24,6 +28,7 @@ public class QuestionController : ControllerBase
         _session = session;
         _mediator = mediator;
     }
+
     [HttpGet]
     [Route("{id}")]
     [TranslateResultToActionResult]
@@ -31,6 +36,16 @@ public class QuestionController : ControllerBase
     public async Task<Result<QuestionDto>> GetQuestionById(string id)
     {
         Result<QuestionDto> result = await _mediator.Send(new GetQuestionByIdRequest(id));
+        return result;
+    }
+
+    [HttpPost("new")]
+    [TranslateResultToActionResult]
+    // [AllowAnonymous]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result> CreateQuestion([FromBody] CreateQuestionRequest request)
+    {
+        Result result = await _mediator.Send(request, default);
         return result;
     }
 }
