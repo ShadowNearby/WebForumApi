@@ -7,6 +7,8 @@ using WebForumApi.Application.Features.Users.GetUsers;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestions;
 
-public record GetQuestionsRequest : PaginatedRequest, IRequest<PaginatedList<QuestionDto>>
+public record GetQuestionsRequest : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
 {
+    public string Tab { get; init; } = null!;
+    public string? KeyWord { get; init; }
 }

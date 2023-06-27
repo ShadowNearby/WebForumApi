@@ -11,8 +11,8 @@ public class AnswerLikeValidator : AbstractValidator<AnswerLikeRequest>
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
         // answer must exist
-        RuleFor(x => x.AnswerId).Must(
-            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.AnswerId))
+        RuleFor(x => x.Id).Must(
+            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.Id))
         );
     }
 }
@@ -23,8 +23,8 @@ public class AnswerDislikeValidator : AbstractValidator<AnswerLikeRequest>
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
         // answer must exist
-        RuleFor(x => x.AnswerId).Must(
-            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.AnswerId))
+        RuleFor(x => x.Id).Must(
+            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.Id))
         );
     }
 }
@@ -35,8 +35,8 @@ public class AnswerStarValidator : AbstractValidator<AnswerLikeRequest>
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
         // answer must exist
-        RuleFor(x => x.AnswerId).Must(
-            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.AnswerId))
+        RuleFor(x => x.Id).Must(
+            (answerId, ct) => context.Answers.Any(a => a.Id == new Guid(answerId.Id))
         );
     }
 }

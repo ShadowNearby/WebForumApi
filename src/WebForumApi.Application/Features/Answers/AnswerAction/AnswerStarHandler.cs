@@ -24,7 +24,7 @@ public class AnswerStarHandler : IRequestHandler<AnswerLikeRequest, Result>
     public async Task<Result> Handle(AnswerLikeRequest request, CancellationToken cancellationToken)
     {
         // select the target answer
-        Answer answer = _context.Answers.First(a => a.Id == new Guid(request.AnswerId));
+        Answer answer = _context.Answers.First(a => a.Id == new Guid(request.Id));
         // select the user
         User user = _context.Users.First(u => u.Id == _session.UserId);
         UserAnswerAction? action = user.UserAnswerActions.Find(u => u.AnswerId == answer.Id);

@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.CreateQuestion;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Questions.GetQuestionById;
+using WebForumApi.Application.Features.Questions.GetQuestionByTag;
+using WebForumApi.Application.Features.Questions.GetQuestions;
 using WebForumApi.Application.Features.Questions.QuestionAction;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUserById;
@@ -33,6 +36,7 @@ public class QuestionController : ControllerBase
 
     [HttpGet]
     [Route("{id:guid}")]
+    [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<QuestionDto>> GetQuestionById(Guid id)
@@ -41,9 +45,38 @@ public class QuestionController : ControllerBase
         return result;
     }
 
-    [HttpPost("new")]
+    // get questions by tab and keyword(?), and no tag
+    [HttpGet]
+    [Route("search")]
+    [AllowAnonymous]
     [TranslateResultToActionResult]
-    // [AllowAnonymous]
+    [ExpectedFailures(ResultStatus.NotFound)]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> SearchQuestion(
+        [FromQuery] GetQuestionsRequest request
+    )
+    {
+        Result<PaginatedList<QuestionCardDto>> result = await _mediator.Send(request);
+        return result;
+    }
+
+    // get questions by tab and keyword(?), and tag
+    [HttpGet]
+    [Route("tagged")]
+    [AllowAnonymous]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.NotFound)]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> SearchQuestionByTag(
+        [FromQuery] GetQuestionsByTagRequest request
+    )
+    {
+        Result<PaginatedList<QuestionCardDto>> result = await _mediator.Send(request);
+        return result;
+    }
+
+
+    // create a new question
+    [HttpPost]
+    [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateQuestion([FromBody] CreateQuestionRequest request)
     {

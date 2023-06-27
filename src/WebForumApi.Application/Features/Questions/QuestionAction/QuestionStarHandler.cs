@@ -24,7 +24,7 @@ public class QuestionStarHandler : IRequestHandler<QuestionLikeRequest, Result>
     public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
     {
         // get question
-        var question = _context.Questions.First(q => q.Id == new Guid(request.QuestionId));
+        var question = _context.Questions.First(q => q.Id == new Guid(request.Id));
         // get user
         var user = _context.Users.First(u => u.Id == _session.UserId);
         // get user question action

@@ -24,7 +24,7 @@ public class QuestionDislikeHandler : IRequestHandler<QuestionLikeRequest, Resul
     public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
     {
         // get question
-        var question = _context.Questions.First(q => q.Id == new Guid(request.QuestionId));
+        var question = _context.Questions.First(q => q.Id == new Guid(request.Id));
         // get user
         var user = _context.Users.First(u => u.Id == _session.UserId);
         // get user question action
@@ -47,8 +47,10 @@ public class QuestionDislikeHandler : IRequestHandler<QuestionLikeRequest, Resul
         {
             // update question
             question.DislikeCount += action.IsDislike ? -1 : 1;
+            question.LikeCount += action.IsLike ? -1 : 0;
             // update action
             action.IsDislike = !action.IsDislike;
+            action.IsLike = false;
         }
 
         await _context.SaveChangesAsync(cancellationToken);
