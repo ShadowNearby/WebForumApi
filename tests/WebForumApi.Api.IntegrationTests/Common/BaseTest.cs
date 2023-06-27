@@ -9,7 +9,7 @@ namespace WebForumApi.Api.IntegrationTests.Common;
 [Collection("Test collection")]
 public abstract class BaseTest : IAsyncLifetime
 {
-    protected CustomWebApplicationFactory App { get; }
+    private CustomWebApplicationFactory App { get; }
     protected HttpClient Client { get; }
 
     public virtual async Task InitializeAsync()
@@ -45,12 +45,13 @@ public abstract class BaseTest : IAsyncLifetime
         {
             address += $"?{query.ToQueryString()}";
         }
+
         return await Client.GetAsync(address);
     }
 
     protected async Task<T?> PostAsync<T>(string address, object? data = null)
     {
-        var response = await RequestAsync(address, data, Client.PostAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PostAsync);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<T>();
     }
@@ -61,17 +62,18 @@ public abstract class BaseTest : IAsyncLifetime
         bool ensureSuccess = false
     )
     {
-        var response = await RequestAsync(address, data, Client.PostAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PostAsync);
         if (ensureSuccess)
         {
             response.EnsureSuccessStatusCode();
         }
+
         return response;
     }
 
     protected async Task<T?> PutAsync<T>(string address, object? data = null)
     {
-        var response = await RequestAsync(address, data, Client.PutAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PutAsync);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<T>();
     }
@@ -82,17 +84,18 @@ public abstract class BaseTest : IAsyncLifetime
         bool ensureSuccess = false
     )
     {
-        var response = await RequestAsync(address, data, Client.PutAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PutAsync);
         if (ensureSuccess)
         {
             response.EnsureSuccessStatusCode();
         }
+
         return response;
     }
 
     protected async Task<T?> PatchAsync<T>(string address, object? data = null)
     {
-        var response = await RequestAsync(address, data, Client.PatchAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PatchAsync);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<T>();
     }
@@ -103,11 +106,12 @@ public abstract class BaseTest : IAsyncLifetime
         bool ensureSuccess = false
     )
     {
-        var response = await RequestAsync(address, data, Client.PatchAsync);
+        HttpResponseMessage? response = await RequestAsync(address, data, Client.PatchAsync);
         if (ensureSuccess)
         {
             response.EnsureSuccessStatusCode();
         }
+
         return response;
     }
 
@@ -116,24 +120,25 @@ public abstract class BaseTest : IAsyncLifetime
         bool ensureSuccess = false
     )
     {
-        var response = await Client.DeleteAsync(address);
+        HttpResponseMessage? response = await Client.DeleteAsync(address);
         if (ensureSuccess)
         {
             response.EnsureSuccessStatusCode();
         }
+
         return response;
     }
 
-    protected static async Task<HttpResponseMessage> RequestAsync(
+    private static async Task<HttpResponseMessage> RequestAsync(
         string address,
         object? data,
         Func<string, HttpContent, Task<HttpResponseMessage>> verb
     )
     {
-        var json = JsonSerializer.Serialize(data);
+        string? json = JsonSerializer.Serialize(data);
 
         HttpResponseMessage response;
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using StringContent? content = new(json, Encoding.UTF8, mediaType: "application/json");
 
         if (data is HttpContent httpContent)
         {

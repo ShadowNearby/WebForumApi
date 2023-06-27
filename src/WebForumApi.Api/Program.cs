@@ -58,10 +58,11 @@ builder.Services.AddHttpContextAccessor();
 // Mediator
 builder.Services.AddMediatRSetup();
 
+builder.Services.AddSerializer();
+
 // Middleware
 builder.Services.AddScoped<ExceptionHandlerMiddleware>();
 
-builder.Services.AddDistributedMemoryCache();
 
 builder.Logging.ClearProviders();
 

@@ -37,7 +37,7 @@ public class UserControllerTests : BaseTest
         LoginAsAdmin();
     }
 
-    protected void UpdateBearerToken(string? token)
+    private void UpdateBearerToken(string? token)
     {
         Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "Bearer", token);
     }
@@ -113,8 +113,7 @@ public class UserControllerTests : BaseTest
             address: "/api/User",
             new GetUsersRequest
             {
-                CurrentPage = 1,
-                PageSize = 1
+                CurrentPage = 1, PageSize = 1
             }
         );
 
@@ -202,8 +201,7 @@ public class UserControllerTests : BaseTest
         AuthenticateRequest loginData =
             new()
             {
-                Username = "admin@boilerplate.com",
-                Password = "testpassword123"
+                Username = "admin@boilerplate.com", Password = "testpassword123"
             };
 
         JwtDto? response = await PostAsync<JwtDto>(address: "/api/User/authenticate", loginData);
@@ -221,8 +219,7 @@ public class UserControllerTests : BaseTest
         AuthenticateRequest loginData =
             new()
             {
-                Username = "user@boilerplate.com",
-                Password = "testpassword123"
+                Username = "user@boilerplate.com", Password = "testpassword123"
             };
 
         JwtDto? response = await PostAsync<JwtDto>(address: "/api/User/authenticate", loginData);
@@ -241,8 +238,7 @@ public class UserControllerTests : BaseTest
         // Act
         AuthenticateRequest loginData = new()
         {
-            Username = email,
-            Password = password
+            Username = email, Password = password
         };
         HttpResponseMessage response = await PostAsync(address: "/api/User/authenticate", loginData);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

@@ -6,4 +6,4 @@ using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionById;
 
-public record GetQuestionByIdRequest(Guid Id, UserId UserId) : IRequest<Result<QuestionDto>>;
+public record GetQuestionByIdRequest(Guid QuestionId, UserId UserId) : IRequest<Result<QuestionDto>>;

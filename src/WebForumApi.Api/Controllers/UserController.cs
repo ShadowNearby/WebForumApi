@@ -19,22 +19,14 @@ using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities.Common;
-using ISession = WebForumApi.Domain.Auth.Interfaces.ISession;
+using ISession=WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class UserController : ControllerBase
+public class UserController : BaseApiController
 {
-    private readonly IMediator _mediator;
-    private readonly ISession _session;
-
-    public UserController(ISession session, IMediator mediator)
+    public UserController(IMediator mediator, ISession session) : base(mediator, session)
     {
-        _session = session;
-        _mediator = mediator;
     }
 
     /// <summary>
@@ -49,7 +41,7 @@ public class UserController : ControllerBase
         [FromQuery] GetUsersRequest request
     )
     {
-        return Ok(await _mediator.Send(request));
+        return Ok(await Mediator.Send(request));
     }
 
     /// <summary>
@@ -64,7 +56,7 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<UserDetailDto>> GetUserById(UserId id)
     {
-        Result<UserDetailDto> result = await _mediator.Send(new GetUserByIdRequest(id));
+        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest(id));
         return result;
     }
 
@@ -73,9 +65,9 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        Result result = await _mediator.Send(request with
+        Result result = await Mediator.Send(request with
         {
-            Id = _session.UserId
+            Id = Session.UserId
         });
         return result;
     }
@@ -86,7 +78,7 @@ public class UserController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> DeleteUser(UserId id)
     {
-        Result result = await _mediator.Send(new DeleteUserRequest(id));
+        Result result = await Mediator.Send(new DeleteUserRequest(id));
         return result;
     }
 }

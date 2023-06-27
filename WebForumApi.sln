@@ -32,20 +32,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{85F6B20D-7DD1-4E73-959C-0457668CCE5F}"
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
-		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{4BE8D923-E856-40F3-9AB6-4DA4B760F24F}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
-		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rules", "rules", "{B9AA6117-3A61-4E16-9281-D4C4A9B5253F}"
 	ProjectSection(SolutionItems) = preProject
-		WebForumApi.ruleset = WebForumApi.ruleset
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		WebForumApi.ruleset = WebForumApi.ruleset
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{16C3D5B3-4A1C-48B3-979F-29400BB2ECE7}"

@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Application.Extensions.Serializer;
 
-namespace WebForumApi.Application.Cache;
+namespace WebForumApi.Application.Extensions.Cache;
 
 public class DistributedCacheService : ICacheService
 {

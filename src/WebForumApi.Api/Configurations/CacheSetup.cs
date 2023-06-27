@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using WebForumApi.Application.Auth;
-using WebForumApi.Application.Cache;
+using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Infrastructure.Context;
 
@@ -13,7 +13,8 @@ public class CacheSetting
 {
     public bool UseDistributedCache { get; set; }
     public bool PreferRedis { get; set; }
-    public string? RedisUrl { get; set; }
+    public string RedisUrl { get; set; } = null!;
+    public string InstanceName { get; set; } = null!;
 }
 
 public static class CacheSetup
@@ -36,14 +37,15 @@ public static class CacheSetup
                 services.AddStackExchangeRedisCache(options =>
                 {
                     options.Configuration = settings.RedisUrl;
-                    options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
-                    {
-                        AbortOnConnectFail = true,
-                        EndPoints =
-                        {
-                            settings.RedisUrl
-                        }
-                    };
+                    options.InstanceName = settings.InstanceName;
+                    // options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
+                    // {
+                    //     AbortOnConnectFail = true,
+                    //     EndPoints =
+                    //     {
+                    //         settings.RedisUrl
+                    //     }
+                    // };
                 });
             }
             else

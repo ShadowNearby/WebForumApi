@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebForumApi.Application.Cache;
+namespace WebForumApi.Application.Extensions.Cache;
 
 public class LocalCacheService : ICacheService
 {

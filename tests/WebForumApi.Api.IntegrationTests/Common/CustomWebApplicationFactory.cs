@@ -1,15 +1,14 @@
-﻿using EntityFramework.Exceptions.SqlServer;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
 using Respawn;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using Testcontainers.MsSql;
 using WebForumApi.Application.Common;
 using WebForumApi.Infrastructure.Context;
 
@@ -18,20 +17,15 @@ namespace WebForumApi.Api.IntegrationTests.Common;
 public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     // Db connection
-    private readonly MsSqlContainer _dbContainer = new MsSqlBuilder()
-        .WithPassword("myHardCoreTestDb123")
-        .WithName($"integration-tests-{Guid.NewGuid()}")
-        .Build();
+    private const string _connString = $"Server=localhost;Database=web_forum_api;User=ubuntu;Password=yjs135790;TrustServerCertificate=True";
+    private readonly MySqlConnection _dbContainer = new(_connString);
 
-    private string _connString = default!;
     private Respawner _respawner = default!;
 
     public HttpClient Client { get; private set; } = default!;
 
     public async Task InitializeAsync()
     {
-        await _dbContainer.StartAsync();
-        _connString = $"{_dbContainer.GetConnectionString()};TrustServerCertificate=True";
         Client = CreateClient();
         await using IContext context = CreateContext();
         //await context.Database.MigrateAsync();
@@ -51,7 +45,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
             {
                 // Replace sql server context for sqlite
                 List<Type> serviceTypes =
-                    new() { typeof(DbContextOptions<ApplicationDbContext>), typeof(IContext) };
+                    new()
+                    {
+                        typeof(DbContextOptions<ApplicationDbContext>), typeof(IContext)
+                    };
                 List<ServiceDescriptor> contextsDescriptor = services
                     .Where(d => serviceTypes.Contains(d.ServiceType))
                     .ToList();
@@ -72,8 +69,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
             new DbContextOptionsBuilder<ApplicationDbContext>()
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
-                .UseExceptionProcessor()
-                .UseMySql(_connString, new MySqlServerVersion(new Version(8, 0, 28)))
+                .UseMySql(_connString, new MySqlServerVersion(new Version(major: 8, minor: 0, build: 28)))
                 .Options;
         return new ApplicationDbContext(options);
     }
@@ -90,7 +86,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
             new RespawnerOptions
             {
                 DbAdapter = DbAdapter.SqlServer,
-                SchemasToInclude = new[] { "dbo" }
+                SchemasToInclude = new[]
+                {
+                    "dbo"
+                }
             }
         );
     }

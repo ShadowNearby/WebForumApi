@@ -20,18 +20,10 @@ using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class QuestionController : ControllerBase
+public class QuestionController : BaseApiController
 {
-    private readonly IMediator _mediator;
-    private readonly ISession _session;
-
-    public QuestionController(ISession session, IMediator mediator)
+    public QuestionController(IMediator mediator, ISession session) : base(mediator, session)
     {
-        _session = session;
-        _mediator = mediator;
     }
 
     [HttpGet]
@@ -41,7 +33,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<QuestionDto>> GetQuestionById(Guid id)
     {
-        Result<QuestionDto> result = await _mediator.Send(new GetQuestionByIdRequest(id, _session.UserId));
+        Result<QuestionDto> result = await Mediator.Send(new GetQuestionByIdRequest(id, Session.UserId));
         return result;
     }
 
@@ -55,7 +47,7 @@ public class QuestionController : ControllerBase
         [FromQuery] GetQuestionsRequest request
     )
     {
-        Result<PaginatedList<QuestionCardDto>> result = await _mediator.Send(request);
+        Result<PaginatedList<QuestionCardDto>> result = await Mediator.Send(request);
         return result;
     }
 
@@ -69,7 +61,7 @@ public class QuestionController : ControllerBase
         [FromQuery] GetQuestionsByTagRequest request
     )
     {
-        Result<PaginatedList<QuestionCardDto>> result = await _mediator.Send(request);
+        Result<PaginatedList<QuestionCardDto>> result = await Mediator.Send(request);
         return result;
     }
 
@@ -80,7 +72,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateQuestion([FromBody] CreateQuestionRequest request)
     {
-        Result result = await _mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -89,7 +81,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> LikeQuestion([FromBody] QuestionLikeRequest request)
     {
-        Result result = await _mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -98,7 +90,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> DislikeQuestion([FromBody] QuestionDislikeRequest request)
     {
-        Result result = await _mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(request, cancellationToken: default);
         return result;
     }
 
@@ -107,7 +99,7 @@ public class QuestionController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> StarQuestion([FromBody] QuestionStarRequest request)
     {
-        Result result = await _mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(request, cancellationToken: default);
         return result;
     }
 }

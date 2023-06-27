@@ -6,8 +6,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WebForumApi.Application.Cache;
 using WebForumApi.Application.Common;
+using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Entities.Common;
@@ -26,12 +26,12 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
     public async Task<Result<QuestionDto>> Handle(GetQuestionByIdRequest request, CancellationToken cancellationToken)
     {
         UserId userId = request.UserId;
-        // QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.Id}", cancellationToken);
-        // if (cachedDto != null)
-        // {
-        //     Console.WriteLine("cache hit");
-        //     return cachedDto;
-        // }
+        QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.QuestionId}", cancellationToken);
+        if (cachedDto != null)
+        {
+            Console.WriteLine("cache hit");
+            return cachedDto;
+        }
 
         QuestionDto? question = await _context.Questions.Select(q =>
             new QuestionDto
@@ -45,15 +45,11 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 StarCount = q.StarCount,
                 UserCard = new UserCardDto
                 {
-                    Id = q.CreateUser.Id.ToString(),
-                    UserName = q.CreateUser.Username,
-                    Avatar = q.CreateUser.Avatar
+                    Id = q.CreateUser.Id.ToString(), UserName = q.CreateUser.Username, Avatar = q.CreateUser.Avatar
                 },
                 Tags = _context.QuestionTags.Where(t => t.QuestionId == q.Id).Select(t => new TagDto
                 {
-                    Id = t.TagId,
-                    Content = t.Tag.Content,
-                    Description = t.Tag.Description
+                    Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
                 }).ToList(),
                 Answers = q.Answers.Where(a => a.QuestionId == q.Id).Select(a => new AnswerDto
                 {
@@ -61,15 +57,13 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     Content = a.Content,
                     UserCard = new UserCardDto
                     {
-                        Id = a.CreateUser.Id.ToString(),
-                        UserName = a.CreateUser.Username,
-                        Avatar = a.CreateUser.Avatar
+                        Id = a.CreateUser.Id.ToString(), UserName = a.CreateUser.Username, Avatar = a.CreateUser.Avatar
                     },
                     LikeCount = a.LikeCount,
                     DislikeCount = a.DislikeCount,
                     StarCount = a.StarCount
                 }).ToList()
-            }).FirstOrDefaultAsync(q => q.Id == request.Id.ToString(), cancellationToken);
+            }).FirstOrDefaultAsync(q => q.Id == request.QuestionId.ToString(), cancellationToken);
         if (question == null)
         {
             return Result.NotFound();
@@ -100,7 +94,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
             at.UserDislike = aq?.IsDislike ?? false;
             at.UserStar = aq?.IsStar ?? false;
         });
-        // await _cache.SetAsync($"{request.UserId}-{request.Id}", question, TimeSpan.FromMinutes(10), cancellationToken);
+        await _cache.SetAsync($"{request.UserId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
         return question;
     }
 }

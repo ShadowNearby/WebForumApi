@@ -16,17 +16,11 @@ using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : BaseApiController
 {
-    private readonly IMediator _mediator;
-
-    public AuthController(IMediator mediator)
+    public AuthController(IMediator mediator, ISession session) : base(mediator, session)
     {
-        _mediator = mediator;
     }
-
     /// <summary>
     ///     Authenticates the user and returns the token information.
     /// </summary>
@@ -39,7 +33,7 @@ public class AuthController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result<JwtDto>> Authenticate([FromBody] AuthenticateRequest request)
     {
-        Result<JwtDto> jwt = await _mediator.Send(request);
+        Result<JwtDto> jwt = await Mediator.Send(request);
         return jwt;
     }
 
@@ -50,7 +44,7 @@ public class AuthController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result<JwtDto>> Refresh([FromBody] RefreshRequest request)
     {
-        Result<JwtDto> jwt = await _mediator.Send(request);
+        Result<JwtDto> jwt = await Mediator.Send(request);
         return jwt;
     }
 
@@ -61,7 +55,7 @@ public class AuthController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateUser([FromBody] RegisterRequest request)
     {
-        Result result = await _mediator.Send(request);
+        Result result = await Mediator.Send(request);
         return result;
     }
 
@@ -72,7 +66,7 @@ public class AuthController : ControllerBase
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> Forget([FromBody] ForgetRequest request)
     {
-        Result result = await _mediator.Send(request);
+        Result result = await Mediator.Send(request);
         return result;
     }
 }
