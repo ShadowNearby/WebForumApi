@@ -12,6 +12,8 @@ public class Question : Entity<Guid>
     public User CreateUser { get; set; } = null!;
     public UserId CreateUserId { get; set; }
 
+    public DateTime CreateTime { get; set; } = DateTime.Now;
+
     public List<Tag> Tags { get; set; } = new();
     public List<Answer> Answers { get; set; } = new();
     public List<UserQuestionAction> UserQuestionActions { get; set; } = new();

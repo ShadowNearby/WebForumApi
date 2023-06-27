@@ -10,6 +10,7 @@ public class AnswerConfiguration : IEntityTypeConfiguration<Answer>
     {
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateAnswers).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Content).IsRequired();
+        builder.ToTable("answer");
     }
 }
 
@@ -23,6 +24,6 @@ public class UserAnswerActionConfiguration : IEntityTypeConfiguration<UserAnswer
         {
             u.AnswerId, u.UserId
         });
-        builder.ToTable("UserAnswerAction");
+        builder.ToTable("user_answer_action");
     }
 }

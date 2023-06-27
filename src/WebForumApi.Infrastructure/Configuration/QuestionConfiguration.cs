@@ -11,6 +11,7 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateQuestions).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Title).IsRequired().HasMaxLength(128);
         builder.Property(q => q.Content).IsRequired();
+        builder.ToTable("question");
     }
 }
 
@@ -25,6 +26,6 @@ public class UserQuestionActionConfiguration : IEntityTypeConfiguration<UserQues
         builder.HasOne(t => t.Question).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.QuestionId).IsRequired();
         builder.HasOne(t => t.User).WithMany(a => a.UserQuestionActions).HasForeignKey(u => u.UserId).IsRequired();
 
-        builder.ToTable("UserQuestionAction");
+        builder.ToTable("user_question_action");
     }
 }

@@ -8,7 +8,8 @@ public class FieldConfiguration : IEntityTypeConfiguration<Field>
 {
     public void Configure(EntityTypeBuilder<Field> builder)
     {
-        builder.HasMany(f => f.Users).WithMany(u => u.Fields).UsingEntity("UserField");
+        builder.HasMany(f => f.Users).WithMany(u => u.Fields).UsingEntity("user_field");
         builder.Property(q => q.Content).IsRequired().HasMaxLength(128);
+        builder.ToTable("field");
     }
 }
