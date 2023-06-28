@@ -11,6 +11,8 @@ public class Question : Entity<Guid>
     public string Content { get; set; } = null!;
     public User CreateUser { get; set; } = null!;
     public UserId CreateUserId { get; set; }
+    public string CreateUserUsername { get; set; } = null!;
+    public string? CreateUserAvatar { get; set; }
 
     public DateTime CreateTime { get; set; } = DateTime.Now;
 

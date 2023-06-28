@@ -13,9 +13,7 @@ public record QuestionDto
     public long StarCount { get; init; }
     public long LikeCount { get; init; }
     public long DislikeCount { get; init; }
-    public bool UserStar { get; set; }
-    public bool UserLike { get; set; }
-    public bool UserDislike { get; set; }
+    public UserActionDto UserAction { get; init; } = null!;
     public DateTime CreateTime { get; init; }
     public DateTime? LastEdit { get; init; }
     public List<AnswerDto> Answers { get; init; } = null!;

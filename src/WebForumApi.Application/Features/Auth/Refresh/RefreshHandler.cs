@@ -62,13 +62,11 @@ public class RefreshHandler : IRequestHandler<RefreshRequest, Result<JwtDto>>
                 x =>
                     new
                     {
-                        x.Id,
-                        x.Username,
-                        x.Role
+                        x.Id, x.Username, x.Role, x.Avatar
                     }
             )
             .FirstAsync(x => x.Id == token.UserId, cancellationToken);
-        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
+        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id, user.Avatar);
         token.RefreshToken = jwtDto.RefreshToken;
         token.Expire = DateTime.Now.AddDays(1);
         await _context.SaveChangesAsync(cancellationToken);

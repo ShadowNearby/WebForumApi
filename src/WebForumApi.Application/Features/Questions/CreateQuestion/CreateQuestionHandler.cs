@@ -24,16 +24,22 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Resu
 
     public async Task<Result> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
     {
-        var tags = request.Tags.Adapt<List<Tag>>();
-        Question question = new Question
+        List<Tag>? tags = request.Tags.Adapt<List<Tag>>();
+        Question question = new()
         {
             Title = request.Title,
             Content = request.Content,
-            CreateUserId = _session.UserId
+            CreateUserId = _session.UserId,
+            CreateUserUsername = _session.Username ?? "",
+            CreateUserAvatar = _session.Avatar
         };
         await _context.Questions.AddAsync(question, cancellationToken);
         await _context.QuestionTags.AddRangeAsync(
-            tags.Select(t => new QuestionTag { QuestionId = question.Id, TagId = t.Id }).ToList(), cancellationToken);
+            tags.Select(t => new QuestionTag
+            {
+                QuestionId = question.Id, TagId = t.Id
+            }).ToList(),
+            cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }

@@ -96,7 +96,7 @@ public class DistributedCacheService : ICacheService
         return Encoding.Default.GetBytes(_serializer.Serialize(item));
     }
 
-    private T Deserialize<T>(byte[] cachedData)
+    private T? Deserialize<T>(byte[] cachedData)
     {
         return _serializer.Deserialize<T>(Encoding.Default.GetString(cachedData));
     }

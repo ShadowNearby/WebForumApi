@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
-using BC = BCrypt.Net.BCrypt;
+using BC=BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Auth.Authenticate;
 
@@ -37,7 +37,8 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
                         x.Password,
                         x.Username,
                         x.Role,
-                        x.LastLogin
+                        x.LastLogin,
+                        x.Avatar
                     }
             )
             .FirstOrDefaultAsync(x => x.Username.Equals(request.Username), cancellationToken);
@@ -72,7 +73,7 @@ public class AuthenticateHandler : IRequestHandler<AuthenticateRequest, Result<J
 
         // user.LastLogin = DateTime.Now;
 
-        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id);
+        JwtDto jwtDto = _tokenService.GenerateJwt(user.Username, user.Role, user.Id, user.Avatar);
         Token? token = await _context.Tokens.FirstOrDefaultAsync(
             x => x.UserId == user.Id,
             cancellationToken

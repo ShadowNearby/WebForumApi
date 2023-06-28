@@ -10,6 +10,8 @@ public class AnswerConfiguration : IEntityTypeConfiguration<Answer>
     {
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateAnswers).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Content).IsRequired();
+        builder.Property(x => x.CreateUserUsername).IsRequired().HasMaxLength(64);
+        builder.Property(x => x.CreateUserAvatar).HasMaxLength(256);
         builder.ToTable("answer");
     }
 }
@@ -22,8 +24,7 @@ public class UserAnswerActionConfiguration : IEntityTypeConfiguration<UserAnswer
         builder.HasOne(t => t.User).WithMany(a => a.UserAnswerActions).HasForeignKey(u => u.UserId).IsRequired();
         builder.HasKey(u => new
         {
-            u.AnswerId,
-            u.UserId
+            u.AnswerId, u.UserId
         });
         builder.ToTable("user_answer_action");
     }

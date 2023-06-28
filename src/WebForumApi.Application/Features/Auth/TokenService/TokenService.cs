@@ -20,14 +20,14 @@ public class TokenService : ITokenService
         _appSettings = appSettings.Value;
     }
 
-    public JwtDto GenerateJwt(string username, string role, UserId id)
+    public JwtDto GenerateJwt(string username, string role, UserId id, string avatar)
     {
         byte[] key = Encoding.ASCII.GetBytes(_appSettings.Secret);
         ClaimsIdentity claims =
             new(
                 new Claim[]
                 {
-                    new(ClaimTypes.NameIdentifier, id.ToString()), new(ClaimTypes.Name, username), new(ClaimTypes.Role, role)
+                    new(ClaimTypes.NameIdentifier, id.ToString()), new(ClaimTypes.Name, username), new(ClaimTypes.Role, role), new(ClaimTypes.Uri, avatar)
                 }
             );
 
@@ -51,9 +51,7 @@ public class TokenService : ITokenService
         string refreshToken = Convert.ToBase64String(randomNumber);
         return new JwtDto
         {
-            AccessToken = _handler.WriteToken(accessToken),
-            RefreshToken = refreshToken,
-            Expire = expDate
+            AccessToken = _handler.WriteToken(accessToken), RefreshToken = refreshToken, Expire = expDate
         };
     }
 }

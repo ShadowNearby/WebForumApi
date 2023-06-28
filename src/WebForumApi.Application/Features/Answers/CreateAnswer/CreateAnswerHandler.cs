@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,12 +23,16 @@ public class CreateAnswerHandler : IRequestHandler<CreateAnswerRequest, Result>
 
     public async Task<Result> Handle(CreateAnswerRequest request, CancellationToken cancellationToken)
     {
-        var answer = new Answer
+        Answer? answer = new()
         {
             Content = request.Content,
             CreateUserId = _session.UserId,
+            CreateUserUsername = _session.Username ?? "",
+            CreateUserAvatar = _session.Avatar,
             QuestionId = new Guid(request.QuestionId)
         };
+        Question question = await _context.Questions.FirstAsync(q => q.Id.ToString() == request.QuestionId, cancellationToken);
+        question.AnswerCount += 1;
         await _context.Answers.AddAsync(answer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();
