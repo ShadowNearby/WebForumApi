@@ -3,6 +3,7 @@ using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Features.Answers;
@@ -18,7 +19,6 @@ public class AnswerController : BaseApiController
     {
     }
     [HttpPost]
-    // [Route("")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateAnswer([FromBody] CreateAnswerRequest request)

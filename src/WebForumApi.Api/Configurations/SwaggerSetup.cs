@@ -25,10 +25,6 @@ public static class SwaggerSetup
                     Title = "WebForumApi.Api",
                     Version = "v1",
                     Description = "API WebForumApi",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Yan Pitangui", Url = new Uri("https://github.com/yanpitangui")
-                    },
                     License = new OpenApiLicense
                     {
                         Name = "MIT",

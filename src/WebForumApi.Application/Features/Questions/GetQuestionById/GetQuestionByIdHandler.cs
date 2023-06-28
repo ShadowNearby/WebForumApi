@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -19,10 +20,12 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
 {
     private readonly IContext _context;
     private readonly ICacheService _cache;
-    public GetQuestionByIdHandler(IContext context, ICacheService cache)
+    private readonly ILogger<GetQuestionByIdHandler> _logger;
+    public GetQuestionByIdHandler(IContext context, ICacheService cache, ILogger<GetQuestionByIdHandler> logger)
     {
         _context = context;
         _cache = cache;
+        _logger = logger;
     }
     public async Task<Result<QuestionDto>> Handle(GetQuestionByIdRequest request, CancellationToken cancellationToken)
     {
@@ -80,12 +83,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     }
                 }).ToList()
             }).FirstOrDefaultAsync(cancellationToken);
-        if (question == null)
-        {
-            return Result.NotFound();
-        }
-
         // await _cache.SetAsync($"{request.UserId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
-        return question;
+        return question == null ? Result.NotFound() : question;
     }
 }

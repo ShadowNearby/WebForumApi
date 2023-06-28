@@ -50,7 +50,7 @@ public class UserController : BaseApiController
     /// </summary>
     /// <param name="id">The user's ID</param>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Admin)]
+    [Authorize]
     [HttpGet]
     [Route("{id}")]
     [TranslateResultToActionResult]
@@ -63,6 +63,7 @@ public class UserController : BaseApiController
 
     [HttpPut("update")]
     [TranslateResultToActionResult]
+    [Authorize]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result> UpdateUser([FromBody] UpdateUserRequest request)
     {

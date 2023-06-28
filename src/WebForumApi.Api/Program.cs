@@ -13,25 +13,11 @@ using WebForumApi.Application.Features.Auth.TokenService;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Controllers
-builder.Services
-    .AddControllers(options =>
-    {
-        options.AllowEmptyInputInBodyModelBinding = true;
-        options.AddResultConvention(resultMap =>
-        {
-            resultMap
-                .AddDefaultMap()
-                .For(
-                    ResultStatus.Ok,
-                    HttpStatusCode.OK,
-                    resultStatusOptions =>
-                        resultStatusOptions
-                            .For(method: "POST", HttpStatusCode.Created)
-                            .For(method: "DELETE", HttpStatusCode.NoContent)
-                );
-        });
-    })
-    .AddValidationSetup();
+builder.Services.UseControllerSetup();
+
+// Route
+builder.Services.UseRouteSetup();
+
 builder.Services.AddTransient<ITokenService, TokenService>();
 
 // Authn / Authrz

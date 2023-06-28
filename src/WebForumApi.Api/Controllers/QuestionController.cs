@@ -32,9 +32,9 @@ public class QuestionController : BaseApiController
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
-    public async Task<Result<QuestionDto>> GetQuestionById(Guid id)
+    public async Task<Result<QuestionDto>> GetQuestionById(Guid id, CancellationToken cancellationToken)
     {
-        Result<QuestionDto> result = await Mediator.Send(new GetQuestionByIdRequest(id, Session.UserId));
+        Result<QuestionDto> result = await Mediator.Send(new GetQuestionByIdRequest(id, Session.UserId), cancellationToken);
         return result;
     }
 
