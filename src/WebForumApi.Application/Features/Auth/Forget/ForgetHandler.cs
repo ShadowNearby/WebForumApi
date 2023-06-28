@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
-using WebForumApi.Application.Features.Auth.Refresh;
 using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Auth.Forget;
@@ -32,8 +31,7 @@ public class ForgetHandler : IRequestHandler<ForgetRequest, Result>
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.Username)}",
-                        ErrorMessage = "Username is incorrect"
+                        Identifier = $"{nameof(request.Username)}", ErrorMessage = "Username is incorrect"
                     }
                 }
             );
@@ -46,8 +44,7 @@ public class ForgetHandler : IRequestHandler<ForgetRequest, Result>
                 {
                     new()
                     {
-                        Identifier = $"{nameof(request.Email)}",
-                        ErrorMessage = "Email is incorrect"
+                        Identifier = $"{nameof(request.Email)}", ErrorMessage = "Email is incorrect"
                     }
                 }
             );

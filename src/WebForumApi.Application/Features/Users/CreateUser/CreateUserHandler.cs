@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
-using BC = BCrypt.Net.BCrypt;
+using BC=BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Users.CreateUser;
 

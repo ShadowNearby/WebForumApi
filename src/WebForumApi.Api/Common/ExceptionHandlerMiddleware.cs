@@ -25,8 +25,8 @@ public class ExceptionHandlerMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
-            var exception = ex.Demystify();
-            _logger.LogError(exception, "An error ocurred: {Message}", exception.Message);
+            Exception? exception = ex.Demystify();
+            _logger.LogError(exception, message: "An error ocurred: {Message}", exception.Message);
             HttpStatusCode code;
             switch (exception)
             {
@@ -37,7 +37,7 @@ public class ExceptionHandlerMiddleware : IMiddleware
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
-            var result = Result.Error(exception.ToStringDemystified());
+            Result? result = Result.Error(exception.ToStringDemystified());
             await context.Response.WriteAsJsonAsync(result);
         }
     }

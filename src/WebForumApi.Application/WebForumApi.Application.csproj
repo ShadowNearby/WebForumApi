@@ -1,31 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>11</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>11</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Ardalis.Result" />
-    <PackageReference Include="Ardalis.Result.FluentValidation" />
-    <PackageReference Include="BCrypt.Net-Next" />
-    <PackageReference Include="FluentValidation" />
-    <PackageReference Include="Mapster" />
-    <PackageReference Include="Mapster.EFCore" />
-    <PackageReference Include="MediatR" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Ardalis.Result"/>
+        <PackageReference Include="Ardalis.Result.FluentValidation"/>
+        <PackageReference Include="BCrypt.Net-Next"/>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="Mapster"/>
+        <PackageReference Include="Mapster.EFCore"/>
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+        <PackageReference Include="Newtonsoft.Json"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebForumApi.Domain\WebForumApi.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\WebForumApi.Domain\WebForumApi.Domain.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Auth\Dto\" />
-  </ItemGroup> 
+    <ItemGroup>
+        <Folder Include="Features\Auth\Dto\"/>
+    </ItemGroup>
 
 </Project>

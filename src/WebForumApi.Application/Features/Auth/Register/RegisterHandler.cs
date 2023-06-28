@@ -4,10 +4,9 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
-using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Entities;
-using BC = BCrypt.Net.BCrypt;
+using BC=BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Application.Features.Auth.Register;
 

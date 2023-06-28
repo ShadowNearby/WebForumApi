@@ -1,3 +1,5 @@
 ﻿namespace WebForumApi.Api;
 
-public interface IAssemblyMarker { }
+public interface IAssemblyMarker
+{
+}

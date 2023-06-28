@@ -20,7 +20,7 @@ public static class PersistanceSetup
         {
             o.UseMySql(
                 configuration["ConnectionStrings:DefaultConnection"],
-                new MySqlServerVersion(new Version(8, 0, 28))
+                new MySqlServerVersion(new Version(major: 8, minor: 0, build: 28))
             );
         });
 

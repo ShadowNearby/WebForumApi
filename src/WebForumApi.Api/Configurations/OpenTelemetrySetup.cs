@@ -16,14 +16,14 @@ public static class OpenTelemetrySetup
     {
         Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
-        var jaegerConfig = builder.Configuration.GetSection("Jaeger");
+        IConfigurationSection? jaegerConfig = builder.Configuration.GetSection("Jaeger");
 
         builder.Services
             .AddOpenTelemetry()
             .ConfigureResource(
                 (rb) =>
                     rb.AddService(
-                            serviceName: OpenTelemetryExtensions.ServiceName,
+                            OpenTelemetryExtensions.ServiceName,
                             serviceVersion: OpenTelemetryExtensions.ServiceVersion
                         )
                         .AddTelemetrySdk()
@@ -55,10 +55,7 @@ public static class OpenTelemetrySetup
                         o.ExportProcessorType = ExportProcessorType.Batch;
                         o.BatchExportProcessorOptions = new BatchExportProcessorOptions<Activity>
                         {
-                            MaxQueueSize = 2048,
-                            ScheduledDelayMilliseconds = 5000,
-                            ExporterTimeoutMilliseconds = 30000,
-                            MaxExportBatchSize = 512,
+                            MaxQueueSize = 2048, ScheduledDelayMilliseconds = 5000, ExporterTimeoutMilliseconds = 30000, MaxExportBatchSize = 512
                         };
                     });
                 }

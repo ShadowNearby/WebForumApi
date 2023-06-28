@@ -13,7 +13,9 @@ public static class FilterExtension
     )
     {
         if (condition)
+        {
             return source.Where(predicate);
+        }
 
         return source;
     }

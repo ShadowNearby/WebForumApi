@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
-using WebForumApi.Application.Extensions;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
@@ -18,8 +16,8 @@ namespace WebForumApi.Application.Features.Questions.GetQuestionById;
 
 public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Result<QuestionDto>>
 {
-    private readonly IContext _context;
     private readonly ICacheService _cache;
+    private readonly IContext _context;
     private readonly ILogger<GetQuestionByIdHandler> _logger;
     public GetQuestionByIdHandler(IContext context, ICacheService cache, ILogger<GetQuestionByIdHandler> logger)
     {
@@ -31,12 +29,12 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
     {
         UserId userId = request.UserId;
         Guid questionId = request.QuestionId;
-        // QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.QuestionId}", cancellationToken);
-        // if (cachedDto != null)
-        // {
-        //     // Console.WriteLine("cache hit");
-        //     return cachedDto;
-        // }
+        QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{request.UserId}-{request.QuestionId}", cancellationToken);
+        if (cachedDto != null)
+        {
+            // Console.WriteLine("cache hit");
+            return cachedDto;
+        }
 
         QuestionDto? question = await _context.Questions.Where(q => q.Id == questionId).Select(q =>
             new QuestionDto
@@ -83,7 +81,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     }
                 }).ToList()
             }).FirstOrDefaultAsync(cancellationToken);
-        // await _cache.SetAsync($"{request.UserId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
+        await _cache.SetAsync($"{request.UserId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
         return question == null ? Result.NotFound() : question;
     }
 }

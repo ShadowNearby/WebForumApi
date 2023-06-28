@@ -6,8 +6,8 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage(
-    "Globalization",
-    "CA1307:Especificar StringComparison",
+    category: "Globalization",
+    checkId: "CA1307:Especificar StringComparison",
     Justification = "<Pendente>",
     Scope = "member",
     Target = "~M:WebForumApi.Application.Services.HeroAppService.GetAllHeroes(WebForumApi.Application.Filters.GetHeroesFilter)~System.Threading.Tasks.Task{System.Collections.Generic.List{WebForumApi.Application.DTOs.Hero.GetHeroDTO}}"

@@ -2,18 +2,20 @@
 using System;
 
 [assembly: StronglyTypedIdDefaults(
-    backingType: StronglyTypedIdBackingType.Guid,
-    converters: StronglyTypedIdConverter.SystemTextJson
-        | StronglyTypedIdConverter.EfCoreValueConverter
-        | StronglyTypedIdConverter.Default
-        | StronglyTypedIdConverter.TypeConverter,
-    implementations: StronglyTypedIdImplementations.IEquatable
-        | StronglyTypedIdImplementations.Default
+    StronglyTypedIdBackingType.Guid,
+    StronglyTypedIdConverter.SystemTextJson
+    | StronglyTypedIdConverter.EfCoreValueConverter
+    | StronglyTypedIdConverter.Default
+    | StronglyTypedIdConverter.TypeConverter,
+    StronglyTypedIdImplementations.IEquatable
+    | StronglyTypedIdImplementations.Default
 )]
 
 namespace WebForumApi.Domain.Entities.Common;
 
-public interface IGuid { }
+public interface IGuid
+{
+}
 
 [StronglyTypedId]
 public partial struct HeroId : IGuid

@@ -24,14 +24,14 @@ public class QuestionStarHandler : IRequestHandler<QuestionLikeRequest, Result>
     public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
     {
         // get question
-        var question = _context.Questions.First(q => q.Id == new Guid(request.Id));
+        Question? question = _context.Questions.First(q => q.Id == new Guid(request.Id));
         // get user
-        var user = _context.Users.First(u => u.Id == _session.UserId);
+        User? user = _context.Users.First(u => u.Id == _session.UserId);
         // get user question action
         UserQuestionAction? action = user.UserQuestionActions.Find(u => u.QuestionId == question.Id);
         if (action == null)
         {
-            var ac = new UserQuestionAction
+            UserQuestionAction? ac = new()
             {
                 QuestionId = question.Id,
                 UserId = user.Id,
