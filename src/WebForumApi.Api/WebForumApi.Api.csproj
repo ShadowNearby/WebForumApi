@@ -17,18 +17,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.Result.AspNetCore" />
-        <PackageReference Include="Ben.Demystifier" />
-        <PackageReference Include="FastExpressionCompiler" />
-        <PackageReference Include="FluentValidation.AspNetCore" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Ardalis.Result.AspNetCore"/>
+        <PackageReference Include="Ben.Demystifier"/>
+        <PackageReference Include="FastExpressionCompiler"/>
+        <PackageReference Include="FluentValidation.AspNetCore"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug"/>
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"/>
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger"/>
         <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
@@ -51,7 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\images\"/>
+        <Folder Include="wwwroot\"/>
     </ItemGroup>
 
 
