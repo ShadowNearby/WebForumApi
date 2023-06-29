@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -25,21 +26,26 @@ public class AnswerLikeHandler : IRequestHandler<AnswerLikeRequest, Result>
     public async Task<Result> Handle(AnswerLikeRequest request, CancellationToken cancellationToken)
     {
         // select the target answer
-        Answer answer = _context.Answers.First(a => a.Id == new Guid(request.Id));
-        // select the user
-        User user = _context.Users.First(u => u.Id == _session.UserId);
-        UserAnswerAction? action = user.UserAnswerActions.Find(u => u.AnswerId == answer.Id);
+        Answer answer =
+            await _context.Answers.FirstOrDefaultAsync(a => a.Id == new Guid(request.Id), cancellationToken);
+        if (answer is null)
+        {
+            return Result.NotFound();
+        }
+
+        UserAnswerAction? action =
+            await _context.UserAnswerActions.FirstOrDefaultAsync(u => u.AnswerId.Equals(answer.Id), cancellationToken);
         if (action == null)
         {
             action = new UserAnswerAction
             {
                 AnswerId = answer.Id,
-                UserId = user.Id,
+                UserId = _session.UserId,
                 IsLike = true,
                 IsDislike = false,
                 IsStar = false
             };
-            user.UserAnswerActions.Add(action);
+            _context.UserAnswerActions.Add(action);
             // update the answer
             answer.LikeCount += 1;
         }

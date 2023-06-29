@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -10,7 +11,7 @@ using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.QuestionAction;
 
-public class QuestionStarHandler : IRequestHandler<QuestionLikeRequest, Result>
+public class QuestionStarHandler : IRequestHandler<QuestionStarRequest, Result>
 {
     private readonly IContext _context;
     private readonly ISession _session;
@@ -21,27 +22,34 @@ public class QuestionStarHandler : IRequestHandler<QuestionLikeRequest, Result>
         _session = session;
     }
 
-    public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(QuestionStarRequest request, CancellationToken cancellationToken)
     {
         // get question
-        Question? question = _context.Questions.First(q => q.Id == new Guid(request.Id));
-        // get user
-        User? user = _context.Users.First(u => u.Id == _session.UserId);
-        // get user question action
-        UserQuestionAction? action = user.UserQuestionActions.Find(u => u.QuestionId == question.Id);
-        if (action == null)
+        Question? question =
+            await _context.Questions.FirstOrDefaultAsync(q => q.Id.Equals(new Guid(request.Id)), cancellationToken);
+        if (question is null)
         {
-            UserQuestionAction? ac = new()
+            return Result.NotFound();
+        }
+
+        // get user question action
+        UserQuestionAction? action =
+            _context.UserQuestionActions.FirstOrDefault(questionAction =>
+                questionAction.QuestionId.Equals(question.Id) && questionAction.UserId.Equals(_session.UserId));
+        if (action is null)
+        {
+            UserQuestionAction ac = new UserQuestionAction
             {
                 QuestionId = question.Id,
-                UserId = user.Id,
+                UserId = _session.UserId,
                 IsLike = false,
                 IsDislike = false,
                 IsStar = true
             };
-            user.UserQuestionActions.Add(ac);
+            _context.UserQuestionActions.Add(ac);
             // update question
             question.StarCount += 1;
+            await _context.SaveChangesAsync(cancellationToken);
         }
         else
         {
@@ -49,9 +57,13 @@ public class QuestionStarHandler : IRequestHandler<QuestionLikeRequest, Result>
             question.StarCount += action.IsStar ? -1 : 1;
             // update action
             action.IsStar = !action.IsStar;
+            _context.UserQuestionActions.Update(action);
+            _context.Questions.Update(question);
         }
 
         await _context.SaveChangesAsync(cancellationToken);
+
+
         return Result.Success();
     }
 }

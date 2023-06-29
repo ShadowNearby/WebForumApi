@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -10,7 +11,7 @@ using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.QuestionAction;
 
-public class QuestionDislikeHandler : IRequestHandler<QuestionLikeRequest, Result>
+public class QuestionDislikeHandler : IRequestHandler<QuestionDislikeRequest, Result>
 {
     private readonly IContext _context;
     private readonly ISession _session;
@@ -21,25 +22,30 @@ public class QuestionDislikeHandler : IRequestHandler<QuestionLikeRequest, Resul
         _session = session;
     }
 
-    public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(QuestionDislikeRequest request, CancellationToken cancellationToken)
     {
         // get question
-        Question? question = _context.Questions.First(q => q.Id == new Guid(request.Id));
-        // get user
-        User? user = _context.Users.First(u => u.Id == _session.UserId);
+        Question? question =
+            await _context.Questions.FirstOrDefaultAsync(q => q.Id == new Guid(request.Id), cancellationToken);
+        if (question is null)
+        {
+            return Result.NotFound();
+        }
+
         // get user question action
-        UserQuestionAction? action = user.UserQuestionActions.Find(u => u.QuestionId == question.Id);
+        UserQuestionAction? action =
+            await _context.UserQuestionActions.FirstOrDefaultAsync(u => u.QuestionId == question.Id, cancellationToken);
         if (action == null)
         {
             UserQuestionAction? ac = new()
             {
                 QuestionId = question.Id,
-                UserId = user.Id,
+                UserId = _session.UserId,
                 IsLike = false,
                 IsDislike = true,
                 IsStar = false
             };
-            user.UserQuestionActions.Add(ac);
+            _context.UserQuestionActions.Add(ac);
             // update question
             question.DislikeCount += 1;
         }
