@@ -9,5 +9,5 @@ public record QuestionCardDto
     public string Title { get; set; } = null!;
     public long VoteNumber { get; set; } = 0;
     public long AnswerNumber { get; set; } = 0;
-    public List<Tag> Tags { get; set; } = new();
+    public List<TagDto> Tags { get; set; } = new();
 }

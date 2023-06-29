@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -10,7 +11,7 @@ using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Answers.AnswerAction;
 
-public class AnswerDislikeHandler : IRequestHandler<AnswerLikeRequest, Result>
+public class AnswerDislikeHandler : IRequestHandler<AnswerDislikeRequest, Result>
 {
     private readonly IContext _context;
     private readonly ISession _session;
@@ -21,24 +22,29 @@ public class AnswerDislikeHandler : IRequestHandler<AnswerLikeRequest, Result>
         _session = session;
     }
 
-    public async Task<Result> Handle(AnswerLikeRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AnswerDislikeRequest request, CancellationToken cancellationToken)
     {
         // select the target answer
-        Answer answer = _context.Answers.First(a => a.Id == new Guid(request.Id));
-        // select the user
-        User user = _context.Users.First(u => u.Id == _session.UserId);
-        UserAnswerAction? action = user.UserAnswerActions.Find(u => u.AnswerId == answer.Id);
-        if (action == null)
+        Answer answer =
+            await _context.Answers.FirstOrDefaultAsync(a => a.Id == new Guid(request.Id), cancellationToken);
+        if (answer is null)
+        {
+            return Result.NotFound();
+        }
+
+        UserAnswerAction? action =
+            await _context.UserAnswerActions.FirstOrDefaultAsync(u => u.AnswerId.Equals(answer.Id), cancellationToken);
+        if (action is null)
         {
             action = new UserAnswerAction
             {
                 AnswerId = answer.Id,
-                UserId = user.Id,
+                UserId = _session.UserId,
                 IsLike = false,
                 IsDislike = true,
                 IsStar = false
             };
-            user.UserAnswerActions.Add(action);
+            _context.UserAnswerActions.Add(action);
             // update the answer
             answer.DislikeCount += 1;
         }

@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -24,22 +25,28 @@ public class QuestionLikeHandler : IRequestHandler<QuestionLikeRequest, Result>
     public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
     {
         // get question
-        Question? question = _context.Questions.First(q => q.Id == new Guid(request.Id));
-        // get user
-        User? user = _context.Users.First(u => u.Id == _session.UserId);
+        Question? question =
+            await _context.Questions.FirstOrDefaultAsync(q => q.Id == new Guid(request.Id), cancellationToken);
+        if (question is null)
+        {
+            return Result.NotFound();
+        }
+
         // get user question action
-        UserQuestionAction? action = user.UserQuestionActions.Find(u => u.QuestionId == question.Id);
-        if (action == null)
+        UserQuestionAction? action =
+            _context.UserQuestionActions.FirstOrDefault(u =>
+                u.QuestionId == question.Id && u.UserId == _session.UserId);
+        if (action is null)
         {
             UserQuestionAction? ac = new()
             {
                 QuestionId = question.Id,
-                UserId = user.Id,
+                UserId = _session.UserId,
                 IsLike = true,
                 IsDislike = false,
                 IsStar = false
             };
-            user.UserQuestionActions.Add(ac);
+            _context.UserQuestionActions.Add(ac);
             // update question
             question.LikeCount += 1;
         }

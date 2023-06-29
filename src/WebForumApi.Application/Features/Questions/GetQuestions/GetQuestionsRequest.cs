@@ -10,5 +10,7 @@ namespace WebForumApi.Application.Features.Questions.GetQuestions;
 public record GetQuestionsRequest : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
 {
     public string Tab { get; init; } = null!;
+
+    // tab in ["newest", "heat", "unanswered"]
     public string? KeyWord { get; init; }
 }

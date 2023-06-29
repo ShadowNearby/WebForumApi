@@ -17,7 +17,7 @@ public class AnswerLikeValidator : AbstractValidator<AnswerLikeRequest>
     }
 }
 
-public class AnswerDislikeValidator : AbstractValidator<AnswerLikeRequest>
+public class AnswerDislikeValidator : AbstractValidator<AnswerDislikeRequest>
 {
     public AnswerDislikeValidator(IContext context)
     {
@@ -29,7 +29,7 @@ public class AnswerDislikeValidator : AbstractValidator<AnswerLikeRequest>
     }
 }
 
-public class AnswerStarValidator : AbstractValidator<AnswerLikeRequest>
+public class AnswerStarValidator : AbstractValidator<AnswerStarRequest>
 {
     public AnswerStarValidator(IContext context)
     {
