@@ -1,13 +1,14 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
+using WebForumApi.Application.Common.Requests;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.DeleteUser;
@@ -15,7 +16,6 @@ using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetAnswersByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersLikedByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersStaredByUserId;
-using WebForumApi.Application.Features.Users.GetQuestionsByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;
 using WebForumApi.Application.Features.Users.GetUserById;
@@ -65,39 +65,63 @@ public class UserController : BaseApiController
     }
     [HttpGet]
     [Route("{id:guid}/questions")]
-    public async Task<Result<List<QuestionCardDto>>> GetQuestionsByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetQuestionsByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetQuestionsLikedByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/answers")]
-    public async Task<Result<List<AnswerCardDto>>> GetAnswersByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<AnswerCardDto>> GetAnswersByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetAnswersByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetAnswersByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/questions/like")]
-    public async Task<Result<List<QuestionCardDto>>> GetQuestionsLikedByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetQuestionsLikedByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetQuestionsLikedByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/answers/like")]
-    public async Task<Result<List<AnswerCardDto>>> GetAnswersLikedByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<AnswerCardDto>> GetAnswersLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetAnswersLikedByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetAnswersLikedByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/questions/star")]
-    public async Task<Result<List<QuestionCardDto>>> GetQuestionsStaredByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetQuestionsStaredByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetQuestionsStaredByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/answers/star")]
-    public async Task<Result<List<AnswerCardDto>>> GetAnswersStaredByUserId([FromRoute] Guid id)
+    public async Task<PaginatedList<AnswerCardDto>> GetAnswersStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(new GetAnswersStaredByUserIdRequest(id), cancellationToken: default);
+        return await Mediator.Send(request.Adapt<GetAnswersStaredByUserIdRequest>() with
+            {
+                Id = id
+            },
+            cancellationToken: default);
     }
     /// <summary>
     ///     update user's profile

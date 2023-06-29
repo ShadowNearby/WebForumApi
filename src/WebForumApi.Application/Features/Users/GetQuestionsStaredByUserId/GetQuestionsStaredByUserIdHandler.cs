@@ -1,17 +1,36 @@
-using Ardalis.Result;
 using MediatR;
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebForumApi.Application.Common;
+using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;
 
-public class GetQuestionsStaredByUserIdHandler : IRequestHandler<GetQuestionsStaredByUserIdRequest, Result<List<QuestionCardDto>>>
+public class GetQuestionsStaredByUserIdHandler : IRequestHandler<GetQuestionsStaredByUserIdRequest, PaginatedList<QuestionCardDto>>
 {
-    public async Task<Result<List<QuestionCardDto>>> Handle(GetQuestionsStaredByUserIdRequest request, CancellationToken cancellationToken)
+    private readonly IContext _context;
+    private readonly ISession _session;
+
+    public GetQuestionsStaredByUserIdHandler(IContext context, ISession session)
     {
-        throw new NotImplementedException();
+        _context = context;
+        _session = session;
+    }
+    public async Task<PaginatedList<QuestionCardDto>> Handle(GetQuestionsStaredByUserIdRequest request, CancellationToken cancellationToken)
+    {
+        return await _context.UserQuestionActions.Where(a => a.UserId == request.Id && a.IsStar).Select(a => new QuestionCardDto
+        {
+            Id = a.QuestionId.ToString(),
+            Title = a.Question.Title,
+            VoteNumber = a.Question.LikeCount,
+            AnswerNumber = a.Question.AnswerCount,
+            Tags = _context.QuestionTags.Where(x => x.QuestionId == a.QuestionId).Select(t => new TagDto
+            {
+                Id = t.TagId, Content = t.Tag.Content
+            }).ToList()
+        }).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

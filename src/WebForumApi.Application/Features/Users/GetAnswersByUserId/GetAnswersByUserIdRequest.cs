@@ -1,9 +1,9 @@
-using Ardalis.Result;
 using MediatR;
 using System;
-using System.Collections.Generic;
+using WebForumApi.Application.Common.Requests;
+using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
 
 namespace WebForumApi.Application.Features.Users.GetAnswersByUserId;
 
-public record GetAnswersByUserIdRequest(Guid Id) : IRequest<Result<List<AnswerCardDto>>>;
+public record GetAnswersByUserIdRequest(Guid Id) : PaginatedRequest, IRequest<PaginatedList<AnswerCardDto>>;
