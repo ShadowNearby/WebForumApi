@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
@@ -25,8 +24,7 @@ public class AnswerStarHandler : IRequestHandler<AnswerStarRequest, Result>
     public async Task<Result> Handle(AnswerStarRequest request, CancellationToken cancellationToken)
     {
         // select the target answer
-        Answer answer =
-            await _context.Answers.FirstOrDefaultAsync(a => a.Id == new Guid(request.Id), cancellationToken);
+        Answer? answer = await _context.Answers.FirstOrDefaultAsync(a => a.Id == new Guid(request.Id), cancellationToken);
         if (answer is null)
         {
             return Result.NotFound();

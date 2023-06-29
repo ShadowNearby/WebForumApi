@@ -33,7 +33,6 @@ public class ApplicationDbContext : DbContext, IContext
             .LogTo(Console.WriteLine, LogLevel.Information)
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
-        ;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

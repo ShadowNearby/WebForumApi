@@ -1,9 +1,7 @@
 ﻿using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
@@ -26,7 +24,7 @@ public class AnswerLikeHandler : IRequestHandler<AnswerLikeRequest, Result>
     public async Task<Result> Handle(AnswerLikeRequest request, CancellationToken cancellationToken)
     {
         // select the target answer
-        Answer answer =
+        Answer? answer =
             await _context.Answers.FirstOrDefaultAsync(a => a.Id == new Guid(request.Id), cancellationToken);
         if (answer is null)
         {
