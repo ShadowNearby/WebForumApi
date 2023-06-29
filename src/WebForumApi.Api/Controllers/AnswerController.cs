@@ -17,6 +17,7 @@ public class AnswerController : BaseApiController
     {
     }
     [HttpPost]
+    [Route("add")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result> CreateAnswer([FromBody] CreateAnswerRequest request)

@@ -12,6 +12,12 @@ using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.DeleteUser;
 using WebForumApi.Application.Features.Users.Dto;
+using WebForumApi.Application.Features.Users.GetAnswersByUserId;
+using WebForumApi.Application.Features.Users.GetAnswersLikedByUserId;
+using WebForumApi.Application.Features.Users.GetAnswersStaredByUserId;
+using WebForumApi.Application.Features.Users.GetQuestionsByUserId;
+using WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
+using WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;
 using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
@@ -39,7 +45,7 @@ public class UserController : BaseApiController
         [FromQuery] GetUsersRequest request
     )
     {
-        return Ok(await Mediator.Send(request));
+        return Ok(await Mediator.Send(request, cancellationToken: default));
     }
 
     /// <summary>
@@ -54,20 +60,44 @@ public class UserController : BaseApiController
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<UserDetailDto>> GetUserById(UserId id)
     {
-        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest(id));
+        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest(id), cancellationToken: default);
         return result;
     }
     [HttpGet]
     [Route("{id:guid}/questions")]
     public async Task<Result<List<QuestionCardDto>>> GetQuestionsByUserId([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        return await Mediator.Send(new GetQuestionsByUserIdRequest(id), cancellationToken: default);
     }
     [HttpGet]
     [Route("{id:guid}/answers")]
-    public async Task<Result<List<AnswerDto>>> GetAnswersByUserId([FromRoute] Guid id)
+    public async Task<Result<List<AnswerCardDto>>> GetAnswersByUserId([FromRoute] Guid id)
     {
-        throw new NotImplementedException();
+        return await Mediator.Send(new GetAnswersByUserIdRequest(id), cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("{id:guid}/questions/like")]
+    public async Task<Result<List<QuestionCardDto>>> GetQuestionsLikedByUserId([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new GetQuestionsLikedByUserIdRequest(id), cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("{id:guid}/answers/like")]
+    public async Task<Result<List<AnswerCardDto>>> GetAnswersLikedByUserId([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new GetAnswersLikedByUserIdRequest(id), cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("{id:guid}/questions/star")]
+    public async Task<Result<List<QuestionCardDto>>> GetQuestionsStaredByUserId([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new GetQuestionsStaredByUserIdRequest(id), cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("{id:guid}/answers/star")]
+    public async Task<Result<List<AnswerCardDto>>> GetAnswersStaredByUserId([FromRoute] Guid id)
+    {
+        return await Mediator.Send(new GetAnswersStaredByUserIdRequest(id), cancellationToken: default);
     }
     /// <summary>
     ///     update user's profile
