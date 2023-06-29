@@ -5,14 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Auth;
-using WebForumApi.Application.Features.Auth.Authenticate;
-using WebForumApi.Application.Features.Auth.Refresh;
-using WebForumApi.Application.Features.Users;
-using WebForumApi.Application.Features.Users.CreateUser;
+using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.DeleteUser;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUserById;
@@ -60,8 +57,24 @@ public class UserController : BaseApiController
         Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest(id));
         return result;
     }
-
-    [HttpPut("update")]
+    [HttpGet]
+    [Route("{id:guid}/questions")]
+    public async Task<Result<List<QuestionCardDto>>> GetQuestionsByUserId([FromRoute] Guid id)
+    {
+        throw new NotImplementedException();
+    }
+    [HttpGet]
+    [Route("{id:guid}/answers")]
+    public async Task<Result<List<AnswerDto>>> GetAnswersByUserId([FromRoute] Guid id)
+    {
+        throw new NotImplementedException();
+    }
+    /// <summary>
+    ///     update user's profile
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [HttpPut("me/update")]
     [TranslateResultToActionResult]
     [Authorize]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
@@ -73,7 +86,11 @@ public class UserController : BaseApiController
         });
         return result;
     }
-
+    /// <summary>
+    ///     Delete the user identified by a id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize(Roles = Roles.Admin)]
     [HttpDelete("{id}")]
     [TranslateResultToActionResult]

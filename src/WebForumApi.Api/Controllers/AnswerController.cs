@@ -1,12 +1,10 @@
 ﻿using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
-using WebForumApi.Application.Features.Answers;
 using WebForumApi.Application.Features.Answers.AnswerAction;
 using WebForumApi.Application.Features.Answers.CreateAnswer;
 using WebForumApi.Domain.Auth.Interfaces;
@@ -28,32 +26,32 @@ public class AnswerController : BaseApiController
     }
 
     [HttpPost]
-    [Route("like")]
+    [Route("{id:guid}/like")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result> LikeAnswer([FromBody] AnswerLikeRequest request)
+    public async Task<Result> LikeAnswer([FromRoute] Guid id)
     {
-        Result result = await Mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(new AnswerLikeRequest(id.ToString()), cancellationToken: default);
         return result;
     }
 
     [HttpPost]
-    [Route("dislike")]
+    [Route("{id:guid}/dislike")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result> DislikeAnswer([FromBody] AnswerDislikeRequest request)
+    public async Task<Result> DislikeAnswer([FromRoute] Guid id)
     {
-        Result result = await Mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(new AnswerDislikeRequest(id.ToString()), cancellationToken: default);
         return result;
     }
 
     [HttpPost]
-    [Route("star")]
+    [Route("{id:guid}/star")]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.Invalid)]
-    public async Task<Result> StarAnswer([FromBody] AnswerStarRequest request)
+    public async Task<Result> StarAnswer([FromRoute] Guid id)
     {
-        Result result = await Mediator.Send(request, cancellationToken: default);
+        Result result = await Mediator.Send(new AnswerStarRequest(id.ToString()), cancellationToken: default);
         return result;
     }
 }

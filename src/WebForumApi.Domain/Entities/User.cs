@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Domain.Entities;
@@ -29,7 +28,7 @@ public class User : Entity<UserId>
     public List<Field> Fields { get; set; } = new();
     public List<Question> CreateQuestions { get; set; } = new();
     public List<Answer> CreateAnswers { get; set; } = new();
-    public List<UserQuestionAction> UserQuestionActions { get; set; } = new();
+    public List<UserQuestionAction> UserQuestionActions { get; set; } = null!;
     public List<UserAnswerAction> UserAnswerActions { get; set; } = new();
     public long FollowingCount { get; set; }
     public long FollowedCount { get; set; }

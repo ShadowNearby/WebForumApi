@@ -3,17 +3,8 @@ using MediatR;
 
 namespace WebForumApi.Application.Features.Answers.AnswerAction;
 
-public class AnswerLikeRequest : IRequest<Result>
-{
-    public string Id { get; set; } = null!;
-}
+public record AnswerLikeRequest(string Id) : IRequest<Result>;
 
-public class AnswerDislikeRequest : IRequest<Result>
-{
-    public string Id { get; set; } = null!;
-}
+public record AnswerDislikeRequest(string Id) : IRequest<Result>;
 
-public class AnswerStarRequest : IRequest<Result>
-{
-    public string Id { get; set; } = null!;
-}
+public record AnswerStarRequest(string Id) : IRequest<Result>;
