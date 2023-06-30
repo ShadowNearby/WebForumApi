@@ -1,17 +1,14 @@
-﻿using Mapster;
-using MediatR;
+﻿using MediatR;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WebForumApi.Application.Auth;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
-using WebForumApi.Domain.Entities;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionAnswers;
@@ -33,8 +30,7 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
         CancellationToken cancellationToken)
     {
         // Console.WriteLine($"request:{request.Authorization}");
-        Console.WriteLine($"session:{_session.UserId}");
-        var userId = _session.UserId;
+        UserId userId = _session.UserId;
         // Guid userId = request.Authorization is null ? Guid.Empty : Guid.Parse(request.Authorization);
         // find in cache
         // PaginatedList<AnswerDto>? cachedDto = await _cache.GetAsync<PaginatedList<AnswerDto>>(

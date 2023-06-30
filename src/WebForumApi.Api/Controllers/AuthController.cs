@@ -3,7 +3,6 @@ using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Features.Auth;
@@ -11,8 +10,6 @@ using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Auth.Forget;
 using WebForumApi.Application.Features.Auth.Refresh;
 using WebForumApi.Application.Features.Auth.Register;
-using WebForumApi.Application.Features.Users;
-using WebForumApi.Application.Features.Users.CreateUser;
 using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Api.Controllers;

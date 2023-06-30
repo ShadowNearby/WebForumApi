@@ -17,7 +17,7 @@ namespace WebForumApi.Api.IntegrationTests.Common;
 public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     // Db connection
-    private static readonly string ConnectionString = "server=localhost;database=web_forum_api;user=ubuntu;password=yjs135790;";
+    private static readonly string ConnectionString = "server=localhost;database=web_forum_api_test;user=ubuntu;password=yjs135790;";
     private readonly MySqlConnection _dbConnection = new(ConnectionString);
 
     private Respawner _respawner = default!;

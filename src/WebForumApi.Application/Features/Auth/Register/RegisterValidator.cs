@@ -1,7 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using WebForumApi.Application.Common;
-using WebForumApi.Application.Features.Users.CreateUser;
 
 namespace WebForumApi.Application.Features.Auth.Register;
 

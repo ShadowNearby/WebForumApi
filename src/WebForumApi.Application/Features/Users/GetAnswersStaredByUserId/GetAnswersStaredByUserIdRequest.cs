@@ -6,4 +6,7 @@ using WebForumApi.Application.Features.Questions.Dto;
 
 namespace WebForumApi.Application.Features.Users.GetAnswersStaredByUserId;
 
-public record GetAnswersStaredByUserIdRequest(Guid Id) : PaginatedRequest, IRequest<PaginatedList<AnswerCardDto>>;
+public record GetAnswersStaredByUserIdRequest : PaginatedRequest, IRequest<PaginatedList<AnswerCardDto>>
+{
+    public Guid Id { get; init; }
+}

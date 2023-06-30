@@ -17,8 +17,6 @@ using WebForumApi.Application.Features.Questions.GetQuestionByTag;
 using WebForumApi.Application.Features.Questions.GetQuestions;
 using WebForumApi.Application.Features.Questions.QuestionAction;
 using WebForumApi.Domain.Auth.Interfaces;
-using WebForumApi.Domain.Entities;
-using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Api.Controllers;
 
@@ -57,11 +55,15 @@ public class QuestionController : BaseApiController
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<PaginatedList<AnswerDto>>> GetAnswersByQuestionId([FromRoute] Guid id,
-        [FromQuery] PaginatedRequest request, CancellationToken cancellationToken)
+        [FromQuery] PaginatedRequest request,
+        CancellationToken cancellationToken)
     {
         Console.WriteLine($"session:{Session.UserId}");
         GetQuestionAnswersRequest r =
-            new(id) { CurrentPage = request.CurrentPage, PageSize = request.PageSize };
+            new(id)
+            {
+                CurrentPage = request.CurrentPage, PageSize = request.PageSize
+            };
         Result<PaginatedList<AnswerDto>>
             result = await Mediator.Send(r, cancellationToken);
         return result;
@@ -98,7 +100,8 @@ public class QuestionController : BaseApiController
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<PaginatedList<QuestionCardDto>>> SearchQuestionByTag(
-        [FromQuery] GetQuestionsByTagRequestPublic request, [FromRoute] string tagName,
+        [FromQuery] GetQuestionsByTagRequestPublic request,
+        [FromRoute] string tagName,
         CancellationToken cancellationToken
     )
     {

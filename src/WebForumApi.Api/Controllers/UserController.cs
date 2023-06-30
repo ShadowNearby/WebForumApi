@@ -16,6 +16,7 @@ using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetAnswersByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersLikedByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersStaredByUserId;
+using WebForumApi.Application.Features.Users.GetQuestionsByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;
 using WebForumApi.Application.Features.Users.GetUserById;
@@ -60,14 +61,18 @@ public class UserController : BaseApiController
     [ExpectedFailures(ResultStatus.NotFound)]
     public async Task<Result<UserDetailDto>> GetUserById(UserId id)
     {
-        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest(id), cancellationToken: default);
+        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest
+            {
+                Id = id
+            },
+            cancellationToken: default);
         return result;
     }
     [HttpGet]
     [Route("{id:guid}/questions")]
     public async Task<PaginatedList<QuestionCardDto>> GetQuestionsByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
-        return await Mediator.Send(request.Adapt<GetQuestionsLikedByUserIdRequest>() with
+        return await Mediator.Send(request.Adapt<GetQuestionsByUserIdRequest>() with
             {
                 Id = id
             },

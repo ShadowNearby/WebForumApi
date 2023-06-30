@@ -1,6 +1,5 @@
 using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 

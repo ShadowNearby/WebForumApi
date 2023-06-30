@@ -7,16 +7,13 @@ using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
 using WebForumApi.Application.Features.Auth.Forget;
-using WebForumApi.Application.Features.Users.CreateUser;
+using WebForumApi.Application.Features.Auth.Register;
 using WebForumApi.Application.Features.Users.UpdateUser;
 
 namespace WebForumApi.Api.IntegrationTests;
 
 public class AuthControllerTests : BaseTest
 {
-    private static string? _adminToken;
-
-    private static string? _userToken;
     public AuthControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
     {
     }
@@ -32,9 +29,9 @@ public class AuthControllerTests : BaseTest
     public async Task Patch_ValidUser_UpdatePassword_NoContent()
     {
         // Arrange
-        Faker<CreateUserRequest> userFaker = new();
+        Faker<RegisterRequest> userFaker = new();
 
-        CreateUserRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
+        RegisterRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
             .Generate();
@@ -91,10 +88,10 @@ public class AuthControllerTests : BaseTest
     public async Task Post_ValidUser_ReturnsCreated()
     {
         // Arrange
-        Faker<CreateUserRequest> userFaker = new();
+        Faker<RegisterRequest> userFaker = new();
 
         // Act
-        CreateUserRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
+        RegisterRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, f => f.Internet.Password())
             .Generate();
@@ -108,7 +105,7 @@ public class AuthControllerTests : BaseTest
     public async Task Post_EmaillessUser_ReturnsBadRequest()
     {
         // Act
-        CreateUserRequest newUser = new()
+        RegisterRequest newUser = new()
         {
             Password = "mypasswordisnice"
         };
@@ -122,10 +119,10 @@ public class AuthControllerTests : BaseTest
     public async Task Post_PasswordlessUser_ReturnsBadRequest()
     {
         // Arrange
-        Faker<CreateUserRequest> userFaker = new();
+        Faker<RegisterRequest> userFaker = new();
 
         // Act
-        CreateUserRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
+        RegisterRequest? newUser = userFaker.RuleFor(x => x.Username, f => f.Internet.UserName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, _ => null!)
             .Generate();
@@ -139,7 +136,7 @@ public class AuthControllerTests : BaseTest
     public async Task Post_EmptyUser_ReturnsBadRequest()
     {
         // Act
-        CreateUserRequest newUser = new();
+        RegisterRequest newUser = new();
         HttpResponseMessage response = await PostAsync(address: "/api/auth/register", newUser);
 
         // Assert

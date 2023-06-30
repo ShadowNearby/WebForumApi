@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Helper\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\..\src\WebForumApi.Application\WebForumApi.Application.csproj"/>
     </ItemGroup>
 

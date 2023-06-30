@@ -9,11 +9,14 @@ namespace WebForumApi.Api.IntegrationTests.Helpers;
 
 public static class TestingDatabase
 {
+    private const string AdminUserId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37";
+    private const string QuestionId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
+    private const string AnswerId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
     private static readonly User[] GetSeedingUsers =
     {
         new()
         {
-            Id = new Guid("2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37"),
+            Id = new Guid(AdminUserId),
             Password = BC.HashPassword("admin"),
             Email = "admin@qq.com",
             Role = "Admin",
@@ -30,28 +33,111 @@ public static class TestingDatabase
             Avatar = ""
         }
     };
+    private static readonly User Admin = GetSeedingUsers[0];
+    private static readonly User User = GetSeedingUsers[1];
 
-    private static readonly List<Question> GetSeedingQuestions = new();
-    private static readonly List<Answer> GetSeedingAnswers = new();
-    private static readonly List<Tag> GetSeedingTags = new();
-    private static readonly List<Field> GetSeedingFields = new();
-    private static readonly List<QuestionTag> GetSeedingQuestionTags = new();
-    private static readonly List<UserQuestionAction> GetSeedingUserQuestionActions = new();
-    private static readonly List<UserAnswerAction> GetSeedingUserAnswerActions = new();
-    private static readonly List<UserFollow> GetSeedingUserFollows = new();
+    private static readonly List<Answer> GetSeedingAnswers = new()
+    {
+        new Answer
+        {
+            Id = new Guid(QuestionId),
+            Content = "content",
+            CreateUser = Admin,
+            CreateUserId = Admin.Id,
+            CreateUserAvatar = Admin.Avatar,
+            CreateUserUsername = Admin.Username
+        }
+    };
+    private static readonly List<Question> GetSeedingQuestions = new()
+    {
+        new Question
+        {
+            Id = new Guid(QuestionId),
+            Content = "content",
+            Title = "title",
+            CreateUserId = Admin.Id,
+            CreateUserAvatar = Admin.Avatar,
+            CreateUserUsername = Admin.Username,
+            Answers = new List<Answer>
+            {
+                GetSeedingAnswers[0]
+            }
+        }
+    };
+    private static readonly List<Tag> GetSeedingTags = new()
+    {
+        new Tag
+        {
+            Id = 1, Content = "content", Description = ""
+        }
+    };
+    private static readonly List<Field> GetSeedingFields = new()
+    {
+        new Field
+        {
+            Id = 1, Content = "content"
+        }
+    };
+    private static readonly Answer Answer1 = GetSeedingAnswers[0];
+    private static readonly Question Question1 = GetSeedingQuestions[0];
+    private static readonly Tag Tag1 = GetSeedingTags[0];
+    private static readonly List<QuestionTag> GetSeedingQuestionTags = new()
+    {
+        new QuestionTag
+        {
+            QuestionId = Question1.Id, TagId = Tag1.Id
+        }
+    };
+    private static readonly List<UserQuestionAction> GetSeedingUserQuestionActions = new()
+    {
+        new UserQuestionAction
+        {
+            UserId = Admin.Id,
+            QuestionId = Question1.Id,
+            IsDislike = false,
+            IsLike = true,
+            IsStar = true
+        }
+    };
+    private static readonly List<UserAnswerAction> GetSeedingUserAnswerActions = new()
+    {
+        new UserAnswerAction
+        {
+            UserId = Admin.Id,
+            AnswerId = Answer1.Id,
+            IsDislike = false,
+            IsLike = true,
+            IsStar = true
+        }
+    };
+    private static readonly List<UserFollow> GetSeedingUserFollows = new()
+    {
+        new UserFollow
+        {
+            UserId = Admin.Id, UserIdFollowing = User.Id
+        }
+    };
     public static async Task SeedDatabase(Func<IContext> contextFactory)
     {
         await using IContext? db = contextFactory();
         await db.Users.ExecuteDeleteAsync();
-        db.Users.AddRange(GetSeedingUsers);
-        db.Answers.AddRange(GetSeedingAnswers);
-        db.Questions.AddRange(GetSeedingQuestions);
-        db.Tags.AddRange(GetSeedingTags);
-        db.Fields.AddRange(GetSeedingFields);
-        db.UserFollows.AddRange(GetSeedingUserFollows);
-        db.QuestionTags.AddRange(GetSeedingQuestionTags);
-        db.UserAnswerActions.AddRange(GetSeedingUserAnswerActions);
-        db.UserQuestionActions.AddRange(GetSeedingUserQuestionActions);
+        await db.Answers.ExecuteDeleteAsync();
+        await db.Questions.ExecuteDeleteAsync();
+        await db.Tags.ExecuteDeleteAsync();
+        await db.Fields.ExecuteDeleteAsync();
+        await db.UserFollows.ExecuteDeleteAsync();
+        await db.QuestionTags.ExecuteDeleteAsync();
+        await db.UserAnswerActions.ExecuteDeleteAsync();
+        await db.UserQuestionActions.ExecuteDeleteAsync();
+        await db.Users.AddRangeAsync(GetSeedingUsers);
+        await db.Answers.AddRangeAsync(GetSeedingAnswers);
+        await db.Questions.AddRangeAsync(GetSeedingQuestions);
+        await db.Tags.AddRangeAsync(GetSeedingTags);
+        await db.Fields.AddRangeAsync(GetSeedingFields);
+        await db.UserFollows.AddRangeAsync(GetSeedingUserFollows);
+        await db.QuestionTags.AddRangeAsync(GetSeedingQuestionTags);
+        await db.UserAnswerActions.AddRangeAsync(GetSeedingUserAnswerActions);
+        await db.UserQuestionActions.AddRangeAsync(GetSeedingUserQuestionActions);
         await db.SaveChangesAsync();
     }
 }

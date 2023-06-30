@@ -11,7 +11,7 @@ public static class MediatRSetup
             (config) =>
             {
                 config.RegisterServicesFromAssemblyContaining(
-                    typeof(WebForumApi.Application.IAssemblyMarker)
+                    typeof(Application.IAssemblyMarker)
                 );
                 config.AddOpenBehavior(typeof(ValidationResultPipelineBehavior<,>));
             }

@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Common.Responses;
+using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Domain.Entities.Common;
@@ -126,6 +127,66 @@ public class UserControllerTests : BaseTest
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+    [Fact]
+    public async Task GetQuestion_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<QuestionCardDto>? response = await GetAsync<PaginatedList<QuestionCardDto>>($"/api/user/{Guid.NewGuid()}/questions");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
+    }
+    [Fact]
+    public async Task GetQuestionLike_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<QuestionCardDto>? response = await GetAsync<PaginatedList<QuestionCardDto>>($"/api/user/{Guid.NewGuid()}/questions/like");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
+    }
+    [Fact]
+    public async Task GetQuestionStar_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<QuestionCardDto>? response = await GetAsync<PaginatedList<QuestionCardDto>>($"/api/user/{Guid.NewGuid()}/questions/star");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
+    }
+    [Fact]
+    public async Task GetAnswer_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<AnswerCardDto>? response = await GetAsync<PaginatedList<AnswerCardDto>>($"/api/user/{Guid.NewGuid()}/answers");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
+    }
+    [Fact]
+    public async Task GetAnswerLike_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<AnswerCardDto>? response = await GetAsync<PaginatedList<AnswerCardDto>>($"/api/user/{Guid.NewGuid()}/answers/like");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
+    }
+    [Fact]
+    public async Task GetAnswerStar_ReturnsNoContent()
+    {
+        // Act
+        PaginatedList<AnswerCardDto>? response = await GetAsync<PaginatedList<AnswerCardDto>>($"/api/user/{Guid.NewGuid()}/answers/star");
+
+        // Assert
+        response.Should().NotBeNull();
+        response!.Result.Count.Should().Be(0);
     }
 
     #endregion

@@ -6,4 +6,7 @@ using WebForumApi.Application.Features.Questions.Dto;
 
 namespace WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
 
-public record GetQuestionsLikedByUserIdRequest(Guid Id) : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>;
+public record GetQuestionsLikedByUserIdRequest : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
+{
+    public Guid Id { get; init; }
+}

@@ -1,7 +1,4 @@
-using Ardalis.Result;
-using Ardalis.Result.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
 
 namespace WebForumApi.Api.Configurations;
 

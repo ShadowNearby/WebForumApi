@@ -7,6 +7,6 @@ public static class ValidationSetup
 {
     public static void AddValidationSetup(this IMvcBuilder builder)
     {
-        builder.Services.AddValidatorsFromAssemblyContaining<WebForumApi.Application.IAssemblyMarker>();
+        builder.Services.AddValidatorsFromAssemblyContaining<Application.IAssemblyMarker>();
     }
 }

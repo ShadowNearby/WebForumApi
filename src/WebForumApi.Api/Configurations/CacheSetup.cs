@@ -1,11 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using WebForumApi.Application.Auth;
 using WebForumApi.Application.Extensions.Cache;
-using WebForumApi.Domain.Auth.Interfaces;
-using WebForumApi.Infrastructure.Context;
 
 namespace WebForumApi.Api.Configurations;
 
