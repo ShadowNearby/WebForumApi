@@ -7,4 +7,17 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Helper\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\WebForumApi.Application\WebForumApi.Application.csproj"/>
+    </ItemGroup>
+
 </Project>

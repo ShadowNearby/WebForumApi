@@ -12,5 +12,9 @@
         <PackageReference Include="StronglyTypedId"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Entities\Enums\"/>
+    </ItemGroup>
+
 
 </Project>

@@ -25,6 +25,7 @@ public class ApplicationDbContext : DbContext, IContext
     public DbSet<Answer> Answers { get; set; } = null!;
     public DbSet<UserAnswerAction> UserAnswerActions { get; set; } = null!;
     public DbSet<Tag> Tags { get; set; } = null!;
+    public DbSet<UserFollow> UserFollows { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

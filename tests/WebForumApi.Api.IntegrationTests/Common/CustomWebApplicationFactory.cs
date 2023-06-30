@@ -17,24 +17,24 @@ namespace WebForumApi.Api.IntegrationTests.Common;
 public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     // Db connection
-    private const string _connString = $"Server=localhost;Database=web_forum_api;User=ubuntu;Password=yjs135790;TrustServerCertificate=True";
-    private readonly MySqlConnection _dbContainer = new(_connString);
+    private static readonly string ConnectionString = "server=localhost;database=web_forum_api;user=ubuntu;password=yjs135790;";
+    private readonly MySqlConnection _dbConnection = new(ConnectionString);
 
     private Respawner _respawner = default!;
 
     public HttpClient Client { get; private set; } = default!;
-
     public async Task InitializeAsync()
     {
+        await _dbConnection.OpenAsync();
         Client = CreateClient();
         await using IContext context = CreateContext();
-        //await context.Database.MigrateAsync();
+        await context.Database.MigrateAsync();
         await SetupRespawnerAsync();
     }
 
     async Task IAsyncLifetime.DisposeAsync()
     {
-        await _dbContainer.DisposeAsync();
+        await _dbConnection.DisposeAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -69,26 +69,26 @@ public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker
             new DbContextOptionsBuilder<ApplicationDbContext>()
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
-                .UseMySql(_connString, new MySqlServerVersion(new Version(major: 8, minor: 0, build: 28)))
+                .UseMySql(ConnectionString, new MySqlServerVersion(new Version(major: 8, minor: 0, build: 33)))
                 .Options;
         return new ApplicationDbContext(options);
     }
 
     public async Task ResetDatabaseAsync()
     {
-        await _respawner.ResetAsync(_connString);
+        await _respawner.ResetAsync(_dbConnection);
     }
 
     private async Task SetupRespawnerAsync()
     {
         _respawner = await Respawner.CreateAsync(
-            _connString,
+            _dbConnection,
             new RespawnerOptions
             {
-                DbAdapter = DbAdapter.SqlServer,
+                DbAdapter = DbAdapter.MySql,
                 SchemasToInclude = new[]
                 {
-                    "dbo"
+                    "web_forum"
                 }
             }
         );

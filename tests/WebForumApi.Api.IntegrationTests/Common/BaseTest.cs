@@ -1,32 +1,89 @@
+using FluentAssertions;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using WebForumApi.Api.IntegrationTests.Helpers;
+using WebForumApi.Application.Features.Auth;
+using WebForumApi.Application.Features.Auth.Authenticate;
 
 namespace WebForumApi.Api.IntegrationTests.Common;
 
 [Collection("Test collection")]
 public abstract class BaseTest : IAsyncLifetime
 {
-    private CustomWebApplicationFactory App { get; }
-    protected HttpClient Client { get; }
+    protected static string? AdminToken;
 
-    public virtual async Task InitializeAsync()
-    {
-        await TestingDatabase.SeedDatabase(App.CreateContext);
-    }
-
-    public async Task DisposeAsync()
-    {
-        await App.ResetDatabaseAsync();
-    }
+    protected static string? UserToken;
 
     protected BaseTest(CustomWebApplicationFactory apiFactory)
     {
         App = apiFactory;
 
         Client = App.Client;
+    }
+    private CustomWebApplicationFactory App { get; }
+    protected HttpClient Client { get; }
+
+    public virtual async Task InitializeAsync()
+    {
+        await TestingDatabase.SeedDatabase(App.CreateContext);
+        AdminToken ??= await GetAdminToken();
+        UserToken ??= await GetUserToken();
+    }
+
+    public async Task DisposeAsync()
+    {
+        await App.ResetDatabaseAsync();
+    }
+    [Fact]
+    public async Task<string> GetAdminToken()
+    {
+        // Act
+        AuthenticateRequest loginData =
+            new()
+            {
+                Username = "admin", Password = "admin"
+            };
+
+        JwtDto? response = await PostAsync<JwtDto>(address: "/api/auth/login", loginData);
+        response.Should().NotBeNull();
+        response!.Expire.Should().NotBe(DateTime.MinValue);
+        response.AccessToken.Should().NotBeNullOrWhiteSpace();
+
+        return response.AccessToken;
+    }
+
+    [Fact]
+    public async Task<string> GetUserToken()
+    {
+        // Act
+        AuthenticateRequest loginData =
+            new()
+            {
+                Username = "user", Password = "user"
+            };
+
+        JwtDto? response = await PostAsync<JwtDto>(address: "/api/auth/login", loginData);
+        response.Should().NotBeNull();
+        response!.Expire.Should().NotBe(DateTime.MinValue);
+        response.AccessToken.Should().NotBeNullOrWhiteSpace();
+
+        return response.AccessToken;
+    }
+    protected void LoginAsAdmin()
+    {
+        UpdateBearerToken(AdminToken);
+    }
+
+    protected void LoginAsUser()
+    {
+        UpdateBearerToken(UserToken);
+    }
+    protected void UpdateBearerToken(string? token)
+    {
+        Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "Bearer", token);
     }
 
     protected async Task<T?> GetAsync<T>(string address, object? query = null)
