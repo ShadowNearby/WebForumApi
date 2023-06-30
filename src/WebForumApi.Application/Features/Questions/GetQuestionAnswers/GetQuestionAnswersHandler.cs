@@ -50,6 +50,7 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
                     StarCount = a.StarCount,
                     LikeCount = a.LikeCount,
                     DislikeCount = a.DislikeCount,
+                    CreateTime = a.CreateTime,
                     UserCard = new UserCardDto
                     {
                         Id = a.CreateUserId.ToString(), UserName = a.CreateUserUsername, Avatar = a.CreateUserAvatar

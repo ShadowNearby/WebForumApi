@@ -40,12 +40,14 @@ public static class TestingDatabase
     {
         new Answer
         {
-            Id = new Guid(QuestionId),
+            Id = new Guid(AnswerId),
             Content = "content",
             CreateUser = Admin,
             CreateUserId = Admin.Id,
             CreateUserAvatar = Admin.Avatar,
-            CreateUserUsername = Admin.Username
+            CreateUserUsername = Admin.Username,
+            LikeCount = 1,
+            StarCount = 1
         }
     };
     private static readonly List<Question> GetSeedingQuestions = new()
@@ -61,7 +63,9 @@ public static class TestingDatabase
             Answers = new List<Answer>
             {
                 GetSeedingAnswers[0]
-            }
+            },
+            LikeCount = 1,
+            StarCount = 1
         }
     };
     private static readonly List<Tag> GetSeedingTags = new()

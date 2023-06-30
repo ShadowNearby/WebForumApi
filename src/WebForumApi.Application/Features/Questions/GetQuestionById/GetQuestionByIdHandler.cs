@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,12 +33,12 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
     {
         UserId userId = _session.UserId;
         Guid questionId = request.QuestionId;
-        QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{userId}-{request.QuestionId}", cancellationToken);
-        if (cachedDto != null)
-        {
-            // Console.WriteLine("cache hit");
-            return cachedDto;
-        }
+        // QuestionDto? cachedDto = await _cache.GetAsync<QuestionDto?>($"{userId}-{request.QuestionId}", cancellationToken);
+        // if (cachedDto != null)
+        // {
+        //     // Console.WriteLine("cache hit");
+        //     return cachedDto;
+        // }
 
         QuestionDto? question = await _context.Questions.Where(q => q.Id == questionId).Select(q =>
             new QuestionDto
@@ -64,27 +65,9 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 {
                     Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
                 }).ToList(),
-                Answers = q.Answers.Select(a => new AnswerDto
-                {
-                    Id = a.Id.ToString(),
-                    Content = a.Content,
-                    UserCard = new UserCardDto
-                    {
-                        Id = a.CreateUserId.ToString(), UserName = a.CreateUserUsername, Avatar = a.CreateUserAvatar
-                    },
-                    LikeCount = a.LikeCount,
-                    DislikeCount = a.DislikeCount,
-                    StarCount = a.StarCount,
-                    UserAction = a.UserAnswerActions.Where(aa => aa.UserId == userId).Select(aa => new UserActionDto
-                    {
-                        UserLike = aa.IsLike, UserDislike = aa.IsDislike, UserStar = aa.IsStar
-                    }).FirstOrDefault() ?? new UserActionDto
-                    {
-                        UserLike = false, UserDislike = false, UserStar = false
-                    }
-                }).ToList()
+                Answers = new List<AnswerDto>()
             }).FirstOrDefaultAsync(cancellationToken);
-        await _cache.SetAsync($"{userId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
+        // await _cache.SetAsync($"{userId}-{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
         return question == null ? Result.NotFound() : question;
     }
 }

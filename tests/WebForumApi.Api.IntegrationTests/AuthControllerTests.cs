@@ -59,26 +59,39 @@ public class AuthControllerTests : BaseTest
 
     #region Post
 
-    [Fact]
-    public async Task Authenticate_Forget_Password_Returns()
+    [Theory]
+    [InlineData("admin", "admin@qq.com")]
+    public async Task Authenticate_Forget_Password_ReturnOk(string username, string email)
     {
         ForgetRequest request = new()
         {
-            Username = "user", Password = "useruser", Email = "user@qq.com"
+            Username = username, Password = "useruser", Email = email
         };
         HttpResponseMessage response = await PostAsync(address: "/api/auth/forget", request);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
+    [Theory]
+    [InlineData("admin", "incorrect@qq.com")]
+    [InlineData("incorrect", "admin@qq.com")]
+    public async Task Authenticate_Forget_Password_ReturnBadRequest(string username, string email)
+    {
+        ForgetRequest request = new()
+        {
+            Username = username, Password = "useruser", Email = email
+        };
+        HttpResponseMessage response = await PostAsync(address: "/api/auth/forget", request);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
 
     [Theory]
-    [InlineData("admin@boilerplate.com", "incorrect")]
+    [InlineData("admin", "incorrect")]
     [InlineData("admin@incorrect.com", "testpassword123")]
-    public async Task Authenticate_IncorretUserOrPassword(string email, string password)
+    public async Task Authenticate_IncorretUserOrPassword(string username, string password)
     {
         // Act
         AuthenticateRequest loginData = new()
         {
-            Username = email, Password = password
+            Username = username, Password = password
         };
         HttpResponseMessage response = await PostAsync(address: "/api/auth/login", loginData);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
