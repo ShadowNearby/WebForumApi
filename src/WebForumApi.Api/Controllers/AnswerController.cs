@@ -16,6 +16,8 @@ public class AnswerController : BaseApiController
     public AnswerController(IMediator mediator, ISession session) : base(mediator, session)
     {
     }
+
+    // create a new answer
     [HttpPost]
     [Route("add")]
     [TranslateResultToActionResult]

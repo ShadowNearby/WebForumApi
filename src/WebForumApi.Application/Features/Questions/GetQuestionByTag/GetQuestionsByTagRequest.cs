@@ -8,9 +8,14 @@ using WebForumApi.Application.Features.Questions.GetQuestions;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionByTag;
 
-public record GetQuestionsByTagRequest : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
+public record GetQuestionsByTagRequest(string TagName) : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
 {
-    public string TagName { get; set; } = null!;
+    public string Tab { get; set; } = null!;
+    public string? KeyWord { get; set; }
+}
+
+public record GetQuestionsByTagRequestPublic() : PaginatedRequest, IRequest<PaginatedList<QuestionCardDto>>
+{
     public string Tab { get; set; } = null!;
     public string? KeyWord { get; set; }
 }
