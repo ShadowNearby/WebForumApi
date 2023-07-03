@@ -7,25 +7,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.Result"/>
-        <PackageReference Include="Ardalis.Result.FluentValidation"/>
-        <PackageReference Include="BCrypt.Net-Next"/>
-        <PackageReference Include="FluentValidation"/>
-        <PackageReference Include="Mapster"/>
-        <PackageReference Include="Mapster.EFCore"/>
-        <PackageReference Include="MediatR"/>
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
-        <PackageReference Include="Newtonsoft.Json"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+        <PackageReference Include="Ardalis.Result" />
+        <PackageReference Include="Ardalis.Result.FluentValidation" />
+        <PackageReference Include="BCrypt.Net-Next" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Mapster" />
+        <PackageReference Include="Mapster.EFCore" />
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WebForumApi.Domain\WebForumApi.Domain.csproj"/>
+        <ProjectReference Include="..\WebForumApi.Domain\WebForumApi.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Features\Auth\Dto\"/>
+        <Folder Include="Features\Auth\Dto\" />
     </ItemGroup>
 
 </Project>

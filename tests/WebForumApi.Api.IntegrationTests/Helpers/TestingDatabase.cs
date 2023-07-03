@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
-using BC=BCrypt.Net.BCrypt;
+using BC = BCrypt.Net.BCrypt;
 
 namespace WebForumApi.Api.IntegrationTests.Helpers;
 
@@ -12,6 +13,7 @@ public static class TestingDatabase
     private const string AdminUserId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a37";
     private const string QuestionId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
     private const string AnswerId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
+
     private static readonly User[] GetSeedingUsers =
     {
         new()
@@ -33,6 +35,7 @@ public static class TestingDatabase
             Avatar = ""
         }
     };
+
     private static readonly User Admin = GetSeedingUsers[0];
     private static readonly User User = GetSeedingUsers[1];
 
@@ -46,10 +49,17 @@ public static class TestingDatabase
             CreateUserId = Admin.Id,
             CreateUserAvatar = Admin.Avatar,
             CreateUserUsername = Admin.Username,
+            QuestionId = Guid.Parse(QuestionId),
             LikeCount = 1,
             StarCount = 1
         }
     };
+
+    private static readonly List<Tag> GetSeedingTags = new()
+    {
+        new Tag { Id = 1, Content = "content", Description = "" }
+    };
+
     private static readonly List<Question> GetSeedingQuestions = new()
     {
         new Question
@@ -60,38 +70,22 @@ public static class TestingDatabase
             CreateUserId = Admin.Id,
             CreateUserAvatar = Admin.Avatar,
             CreateUserUsername = Admin.Username,
-            Answers = new List<Answer>
-            {
-                GetSeedingAnswers[0]
-            },
+            Answers = new List<Answer> { GetSeedingAnswers[0] },
             LikeCount = 1,
-            StarCount = 1
+            StarCount = 1,
         }
     };
-    private static readonly List<Tag> GetSeedingTags = new()
-    {
-        new Tag
-        {
-            Id = 1, Content = "content", Description = ""
-        }
-    };
-    private static readonly List<Field> GetSeedingFields = new()
-    {
-        new Field
-        {
-            Id = 1, Content = "content"
-        }
-    };
+
+    private static readonly List<Field> GetSeedingFields = new() { new Field { Id = 1, Content = "content" } };
     private static readonly Answer Answer1 = GetSeedingAnswers[0];
     private static readonly Question Question1 = GetSeedingQuestions[0];
     private static readonly Tag Tag1 = GetSeedingTags[0];
+
     private static readonly List<QuestionTag> GetSeedingQuestionTags = new()
     {
-        new QuestionTag
-        {
-            QuestionId = Question1.Id, TagId = Tag1.Id
-        }
+        new QuestionTag { QuestionId = Question1.Id, TagId = Tag1.Id }
     };
+
     private static readonly List<UserQuestionAction> GetSeedingUserQuestionActions = new()
     {
         new UserQuestionAction
@@ -103,6 +97,7 @@ public static class TestingDatabase
             IsStar = true
         }
     };
+
     private static readonly List<UserAnswerAction> GetSeedingUserAnswerActions = new()
     {
         new UserAnswerAction
@@ -114,13 +109,12 @@ public static class TestingDatabase
             IsStar = true
         }
     };
+
     private static readonly List<UserFollow> GetSeedingUserFollows = new()
     {
-        new UserFollow
-        {
-            UserId = Admin.Id, UserIdFollowing = User.Id
-        }
+        new UserFollow { UserId = Admin.Id, UserIdFollowing = User.Id }
     };
+
     public static async Task SeedDatabase(Func<IContext> contextFactory)
     {
         await using IContext? db = contextFactory();

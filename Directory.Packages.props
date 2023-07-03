@@ -11,6 +11,7 @@
         <PackageVersion Include="FastExpressionCompiler" Version="3.3.4"/>
         <PackageVersion Include="Mapster" Version="7.3.0"/>
         <PackageVersion Include="Mapster.EFCore" Version="5.1.0"/>
+        <PackageVersion Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0"/>
         <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.8"/>
         <PackageVersion Include="MySql.Data" Version="8.0.33"/>
         <PackageVersion Include="NewId" Version="4.0.1"/>
@@ -31,6 +32,8 @@
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.2"/>
         <PackageVersion Include="coverlet.collector" Version="6.0.0"/>
         <PackageVersion Include="xunit" Version="2.4.2"/>
+        <PackageVersion Include="xunit.assert" Version="2.4.2"/>
+        <PackageVersion Include="xunit.extensibility.core" Version="2.4.2"/>
         <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5"/>
         <PackageVersion Include="Ben.Demystifier" Version="0.4.1"/>
         <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0"/>
@@ -43,6 +46,7 @@
         <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.5.0"/>
         <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.14"/>
         <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta.7"/>
+        <PackageVersion Include="Serilog" Version="3.0.0"/>
         <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0"/>
         <PackageVersion Include="Serilog.Exceptions" Version="8.4.0"/>
         <PackageVersion Include="Serilog.Sinks.Async" Version="1.5.0"/>

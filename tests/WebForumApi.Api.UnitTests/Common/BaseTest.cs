@@ -1,14 +1,17 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
-using WebForumApi.Api.IntegrationTests.Helpers;
+using System.Text.Json;
+using System.Threading.Tasks;
+using WebForumApi.Api.UnitTests.Helpers;
 using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.Authenticate;
+using Xunit;
 
-namespace WebForumApi.Api.IntegrationTests.Common;
+namespace WebForumApi.Api.UnitTests.Common;
 
 [Collection("Test collection")]
 public abstract class BaseTest : IAsyncLifetime

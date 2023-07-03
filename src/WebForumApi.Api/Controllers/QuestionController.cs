@@ -60,10 +60,7 @@ public class QuestionController : BaseApiController
     {
         Console.WriteLine($"session:{Session.UserId}");
         GetQuestionAnswersRequest r =
-            new(id)
-            {
-                CurrentPage = request.CurrentPage, PageSize = request.PageSize
-            };
+            new(id) { CurrentPage = request.CurrentPage, PageSize = request.PageSize };
         Result<PaginatedList<AnswerDto>>
             result = await Mediator.Send(r, cancellationToken);
         return result;
@@ -83,6 +80,7 @@ public class QuestionController : BaseApiController
         [FromQuery] GetQuestionsRequest request
     )
     {
+        Console.WriteLine("haha");
         Result<PaginatedList<QuestionCardDto>> result = await Mediator.Send(request);
         return result;
     }

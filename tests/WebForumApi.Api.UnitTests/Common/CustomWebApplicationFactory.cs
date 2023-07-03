@@ -9,10 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
+using WebForumApi.Application;
 using WebForumApi.Application.Common;
 using WebForumApi.Infrastructure.Context;
+using Xunit;
 
-namespace WebForumApi.Api.IntegrationTests.Common;
+namespace WebForumApi.Api.UnitTests.Common;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
