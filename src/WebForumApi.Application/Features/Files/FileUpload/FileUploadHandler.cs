@@ -22,7 +22,7 @@ public class FileUploadHandler : IRequestHandler<FileUploadRequest, Result<FileD
         const string host = "121.37.158.48";
         return new Result<FileDto>(new FileDto
         {
-            Url = $"http://${host}:5000/images/{filename}"
+            Url = $"http://{host}:5000/images/{filename}"
         });
     }
 }
