@@ -24,7 +24,7 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Resu
 
     public async Task<Result> Handle(CreateQuestionRequest request, CancellationToken cancellationToken)
     {
-        List<Tag>? tags = request.Tags.Adapt<List<Tag>>();
+        List<Domain.Entities.Tag>? tags = request.Tags.Adapt<List<Domain.Entities.Tag>>();
         Question question = new()
         {
             Title = request.Title,
@@ -35,10 +35,7 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Resu
         };
         await _context.Questions.AddAsync(question, cancellationToken);
         await _context.QuestionTags.AddRangeAsync(
-            tags.Select(t => new QuestionTag
-            {
-                QuestionId = question.Id, TagId = t.Id
-            }).ToList(),
+            tags.Select(t => new QuestionTag { QuestionId = question.Id, TagId = t.Id }).ToList(),
             cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

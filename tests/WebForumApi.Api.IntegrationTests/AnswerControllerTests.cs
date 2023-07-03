@@ -10,9 +10,9 @@ using WebForumApi.Application.Features.Questions.Dto;
 
 namespace WebForumApi.Api.IntegrationTests;
 
-public class AnswerTests : BaseTest
+public class AnswerControllerTests : BaseTest
 {
-    public AnswerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
+    public AnswerControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
     {
     }
 
