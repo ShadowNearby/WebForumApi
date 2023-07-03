@@ -8,6 +8,8 @@ namespace WebForumApi.Infrastructure.Configuration;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {
+    private const string DefaultAvatar =
+        "https://pic2.zhimg.com/v2-eda9c6ea91435f99e850ba32743ef0fd_r.jpg";
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(x => x.Id);
@@ -15,11 +17,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email).IsRequired().HasMaxLength(128);
         builder.HasIndex(x => x.Email).IsUnique();
         builder.Property(x => x.Username).IsRequired().HasMaxLength(64);
-        builder.Property(x => x.Avatar).HasMaxLength(256);
+        builder.Property(x => x.Avatar).HasMaxLength(256).IsRequired().HasDefaultValue(DefaultAvatar);
         builder.HasIndex(x => x.Username).IsUnique();
-        builder.Property(x => x.About).HasMaxLength(128);
-        builder.Property(x => x.Location).HasMaxLength(128);
-        builder.Property(x => x.Role).HasMaxLength(16);
+        builder.Property(x => x.About).HasMaxLength(128).IsRequired().HasDefaultValue("");
+        builder.Property(x => x.Location).HasMaxLength(128).IsRequired().HasDefaultValue("");
+        builder.Property(x => x.Role).HasMaxLength(16).IsRequired();
         builder.HasOne(x => x.Token).WithOne(x => x.User).HasForeignKey<Token>(u => u.UserId);
         builder.ToTable("user");
     }

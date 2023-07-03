@@ -12,7 +12,7 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
         builder.Property(q => q.Title).IsRequired().HasMaxLength(128);
         builder.Property(q => q.Content).IsRequired();
         builder.Property(x => x.CreateUserUsername).IsRequired().HasMaxLength(64);
-        builder.Property(x => x.CreateUserAvatar).HasMaxLength(256);
+        builder.Property(x => x.CreateUserAvatar).IsRequired().HasMaxLength(256);
         builder.ToTable("question");
     }
 }

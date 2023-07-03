@@ -9,7 +9,7 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.Property(q => q.Content).IsRequired().HasMaxLength(64);
-        builder.Property(q => q.Description).IsRequired().HasMaxLength(256);
+        builder.Property(q => q.Description).IsRequired().HasDefaultValue("").HasMaxLength(256);
         builder.ToTable("tag");
     }
 }

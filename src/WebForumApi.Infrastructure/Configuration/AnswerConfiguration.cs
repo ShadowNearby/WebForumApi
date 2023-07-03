@@ -11,7 +11,7 @@ public class AnswerConfiguration : IEntityTypeConfiguration<Answer>
         builder.HasOne(q => q.CreateUser).WithMany(u => u.CreateAnswers).HasForeignKey(u => u.CreateUserId).IsRequired();
         builder.Property(q => q.Content).IsRequired();
         builder.Property(x => x.CreateUserUsername).IsRequired().HasMaxLength(64);
-        builder.Property(x => x.CreateUserAvatar).HasMaxLength(256);
+        builder.Property(x => x.CreateUserAvatar).IsRequired().HasMaxLength(256);
         builder.ToTable("answer");
     }
 }
