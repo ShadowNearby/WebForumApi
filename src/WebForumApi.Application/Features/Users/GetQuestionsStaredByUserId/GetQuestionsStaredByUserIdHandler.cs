@@ -31,6 +31,6 @@ public class GetQuestionsStaredByUserIdHandler : IRequestHandler<GetQuestionsSta
             {
                 Id = t.TagId, Content = t.Tag.Content
             }).ToList()
-        }).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        }).OrderByDescending(x => x.VoteNumber).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

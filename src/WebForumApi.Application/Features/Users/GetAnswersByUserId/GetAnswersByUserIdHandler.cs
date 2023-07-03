@@ -24,6 +24,6 @@ public class GetAnswersByUserIdHandler : IRequestHandler<GetAnswersByUserIdReque
         return await _context.Answers.Where(a => a.CreateUserId == request.Id).Select(a => new AnswerCardDto
         {
             Id = a.Id.ToString(), Content = a.Content, VoteNumber = a.LikeCount
-        }).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        }).OrderByDescending(x => x.VoteNumber).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }
