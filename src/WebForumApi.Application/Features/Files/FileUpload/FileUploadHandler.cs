@@ -19,9 +19,10 @@ public class FileUploadHandler : IRequestHandler<FileUploadRequest, Result<FileD
         string filepath = $"{DataPath}/wwwroot/images/{filename}";
         await using FileStream stream = File.Create(filepath);
         await file.CopyToAsync(stream, cancellationToken);
+        const string host = "121.37.158.48";
         return new Result<FileDto>(new FileDto
         {
-            Url = $"http://localhost:5000/images/{filename}"
+            Url = $"http://${host}:5000/images/{filename}"
         });
     }
 }
