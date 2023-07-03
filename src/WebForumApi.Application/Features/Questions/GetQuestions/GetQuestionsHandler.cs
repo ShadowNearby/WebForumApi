@@ -37,6 +37,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                     );
                 return await newestQuestions
                     .ProjectToType<QuestionCardDto>()
+                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             case "heat":
                 // order by answer number
@@ -48,6 +49,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                     );
                 return await heatQuestions
                     .ProjectToType<QuestionCardDto>()
+                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             default:
                 // select unanswered questions
@@ -58,6 +60,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
                 return await unansweredQuestions.ProjectToType<QuestionCardDto>()
+                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }

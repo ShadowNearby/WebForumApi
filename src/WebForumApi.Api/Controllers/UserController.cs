@@ -49,6 +49,21 @@ public class UserController : BaseApiController
         return Ok(await Mediator.Send(request, cancellationToken: default));
     }
 
+    [Authorize]
+    [HttpGet]
+    [Route("me")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.NotFound)]
+    public async Task<Result<UserDetailDto>> GetMe()
+    {
+        Result<UserDetailDto> result = await Mediator.Send(new GetUserByIdRequest
+            {
+                Id = Session.UserId
+            },
+            cancellationToken: default);
+        return result;
+    }
+
     /// <summary>
     ///     Get one user by id from the database
     /// </summary>
