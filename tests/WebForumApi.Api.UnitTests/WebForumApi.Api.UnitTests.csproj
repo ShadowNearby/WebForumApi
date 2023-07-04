@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="xunit"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\WebForumApi.Application\WebForumApi.Application.csproj"/>
+        <ProjectReference Include="..\..\src\WebForumApi.Application\WebForumApi.Application.csproj" />
     </ItemGroup>
 
 </Project>
