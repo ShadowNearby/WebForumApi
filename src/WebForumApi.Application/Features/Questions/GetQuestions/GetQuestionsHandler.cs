@@ -37,30 +37,29 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                     );
                 return await newestQuestions
                     .ProjectToType<QuestionCardDto>()
-                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             case "heat":
                 // order by answer number
                 IQueryable<Question> heatQuestions = _context.Questions
-                    .OrderByDescending(x => x.Answers.Count)
+                    .OrderByDescending(x => x.AnswerCount)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
                 return await heatQuestions
                     .ProjectToType<QuestionCardDto>()
-                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             default:
                 // select unanswered questions
                 IQueryable<Question>? unansweredQuestions = _context.Questions
-                    .Where(x => x.Answers.Count == 0)
-                    .WhereIf(
-                        !string.IsNullOrEmpty(request.KeyWord),
-                        x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
-                    );
+                        .Where(x => x.Answers.Count == 0)
+                        .OrderByDescending(x => x.CreateTime)
+                        .WhereIf(
+                            !string.IsNullOrEmpty(request.KeyWord),
+                            x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
+                        )
+                    ;
                 return await unansweredQuestions.ProjectToType<QuestionCardDto>()
-                    .OrderByDescending(x => x.AnswerNumber)
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }
