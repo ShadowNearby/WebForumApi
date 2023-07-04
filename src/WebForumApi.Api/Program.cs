@@ -60,8 +60,16 @@ if (builder.Environment.EnvironmentName != "Testing")
 }
 
 // Add opentelemetry
-builder.AddOpenTemeletrySetup();
 
+builder.AddOpenTemeletrySetup();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "_myAllowSpecificOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost").AllowAnyHeader().AllowAnyMethod();
+        });
+});
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -82,6 +90,7 @@ app.UseResponseCompression();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
+app.UseCors();
 // app.UseDirectoryBrowser();
 app.MapControllers().RequireAuthorization();
 
