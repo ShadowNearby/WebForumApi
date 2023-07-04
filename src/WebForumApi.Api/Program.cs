@@ -71,7 +71,7 @@ builder.Services.AddCors(options =>
         });
 });
 WebApplication app = builder.Build();
-
+app.UseHttpLogging();
 // Configure the HTTP request pipeline.
 app.UseResponseCompression();
 

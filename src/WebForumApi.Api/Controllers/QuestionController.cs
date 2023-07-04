@@ -58,7 +58,6 @@ public class QuestionController : BaseApiController
         [FromQuery] PaginatedRequest request,
         CancellationToken cancellationToken)
     {
-        Console.WriteLine($"session:{Session.UserId}");
         GetQuestionAnswersRequest r =
             new(id)
             {
@@ -78,7 +77,7 @@ public class QuestionController : BaseApiController
     [Route("search")]
     [AllowAnonymous]
     [TranslateResultToActionResult]
-    [ExpectedFailures(ResultStatus.NotFound)]
+    [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result<PaginatedList<QuestionCardDto>>> SearchQuestion(
         [FromQuery] GetQuestionsRequest request
     )
