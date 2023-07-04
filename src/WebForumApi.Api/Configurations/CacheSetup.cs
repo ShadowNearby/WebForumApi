@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using WebForumApi.Application.Extensions.Cache;
 
 namespace WebForumApi.Api.Configurations;
@@ -33,14 +34,14 @@ public static class CacheSetup
                 {
                     options.Configuration = settings.RedisUrl;
                     options.InstanceName = settings.InstanceName;
-                    // options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions()
-                    // {
-                    //     AbortOnConnectFail = true,
-                    //     EndPoints =
-                    //     {
-                    //         settings.RedisUrl
-                    //     }
-                    // };
+                    options.ConfigurationOptions = new ConfigurationOptions
+                    {
+                        AbortOnConnectFail = false,
+                        EndPoints =
+                        {
+                            settings.RedisUrl
+                        }
+                    };
                 });
             }
             else

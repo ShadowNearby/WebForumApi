@@ -8,6 +8,6 @@ public class GetQuestionsValidator : AbstractValidator<GetQuestionsRequest>
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
         // tab in ["newest", "heat", "unanswered"]
-        RuleFor(x => x.Tab).Must(x => x is null || x.Equals("") || x.Equals("newest") || x.Equals("heat") || x.Equals("unanswered"));
+        RuleFor(x => x.Tab).Must(x => x is null or "" or "newest" or "heat" or "unanswered");
     }
 }

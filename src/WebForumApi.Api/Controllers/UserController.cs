@@ -3,7 +3,6 @@ using Ardalis.Result.AspNetCore;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -23,8 +22,8 @@ using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Application.Features.Users.GetUsers;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
+using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Domain.Entities.Common;
-using ISession=WebForumApi.Domain.Auth.Interfaces.ISession;
 
 namespace WebForumApi.Api.Controllers;
 
@@ -38,9 +37,11 @@ public class UserController : BaseApiController
     /// return all user
     /// </summary>
     /// <returns></returns>
-    [ProducesResponseType(typeof(PaginatedList<UserDetailDto>), StatusCodes.Status200OK)]
     [AllowAnonymous]
     [HttpGet]
+    [Route("")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
     public async Task<Result<PaginatedList<UserDetailDto>>> GetUsers(
         [FromQuery] GetUsersRequest request
     )

@@ -65,6 +65,34 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
 
                 return heatResult;
 
+            case "unanswered":
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                {
+                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_answered", cancellationToken);
+                    if (cacheResult != null)
+                    {
+                        // _logger.LogCritical("hit");
+                        return cacheResult;
+                    }
+                }
+
+                IQueryable<Question> unansweredQuestions = _context.Questions
+                        .Where(x => x.Answers.Count == 0)
+                        .OrderByDescending(x => x.CreateTime)
+                        .WhereIf(
+                            !string.IsNullOrEmpty(request.KeyWord),
+                            x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
+                        )
+                    ;
+                PaginatedList<QuestionCardDto> unansweredResult = await unansweredQuestions.ProjectToType<QuestionCardDto>()
+                    .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                {
+                    await _cache.SetAsync(key: "question_unanswered", unansweredResult, TimeSpan.FromMinutes(5), cancellationToken);
+                }
+
+                return unansweredResult;
+
             case "newest":
                 // order by create time
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
@@ -103,16 +131,6 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                         }
                     });
             // select unanswered questions
-            // IQueryable<Question> unansweredQuestions = _context.Questions
-            //         .Where(x => x.Answers.Count == 0)
-            //         .OrderByDescending(x => x.CreateTime)
-            //         .WhereIf(
-            //             !string.IsNullOrEmpty(request.KeyWord),
-            //             x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
-            //         )
-            //     ;
-            // return await unansweredQuestions.ProjectToType<QuestionCardDto>()
-            //     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }
 }
