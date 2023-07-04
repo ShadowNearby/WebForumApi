@@ -1,3 +1,4 @@
+using Ardalis.Result;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -9,7 +10,7 @@ using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
 
-public class GetQuestionsLikedByUserIdHandler : IRequestHandler<GetQuestionsLikedByUserIdRequest, PaginatedList<QuestionCardDto>>
+public class GetQuestionsLikedByUserIdHandler : IRequestHandler<GetQuestionsLikedByUserIdRequest, Result<PaginatedList<QuestionCardDto>>>
 {
     private readonly IContext _context;
     private readonly ISession _session;
@@ -19,7 +20,7 @@ public class GetQuestionsLikedByUserIdHandler : IRequestHandler<GetQuestionsLike
         _context = context;
         _session = session;
     }
-    public async Task<PaginatedList<QuestionCardDto>> Handle(GetQuestionsLikedByUserIdRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<QuestionCardDto>>> Handle(GetQuestionsLikedByUserIdRequest request, CancellationToken cancellationToken)
     {
         return await _context.UserQuestionActions.Where(a => a.UserId == request.Id && a.IsLike).Select(a => new QuestionCardDto
         {

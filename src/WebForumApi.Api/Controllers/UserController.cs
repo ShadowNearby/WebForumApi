@@ -85,7 +85,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/questions")]
     [Authorize]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsByOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsByOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsByUserIdRequest>() with
             {
@@ -96,7 +97,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/answers")]
     [Authorize]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersByOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersByOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersByUserIdRequest>() with
             {
@@ -107,7 +109,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/questions/like")]
     [Authorize]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsLikedByOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsLikedByOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsLikedByUserIdRequest>() with
             {
@@ -118,7 +121,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/answers/like")]
     [Authorize]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersLikedByOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersLikedByOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersLikedByUserIdRequest>() with
             {
@@ -129,7 +133,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/questions/star")]
     [Authorize]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsStaredOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsStaredOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsStaredByUserIdRequest>() with
             {
@@ -140,7 +145,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("me/answers/star")]
     [Authorize]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersStaredOfMe([FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersStaredOfMe([FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersStaredByUserIdRequest>() with
             {
@@ -151,7 +157,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/questions")]
     [AllowAnonymous]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsByUserIdRequest>() with
             {
@@ -162,7 +169,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/answers")]
     [AllowAnonymous]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersByUserIdRequest>() with
             {
@@ -173,7 +181,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/questions/like")]
     [AllowAnonymous]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsLikedByUserIdRequest>() with
             {
@@ -184,7 +193,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/answers/like")]
     [AllowAnonymous]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersLikedByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersLikedByUserIdRequest>() with
             {
@@ -195,7 +205,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/questions/star")]
     [AllowAnonymous]
-    public async Task<PaginatedList<QuestionCardDto>> GetQuestionsStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<QuestionCardDto>>> GetQuestionsStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetQuestionsStaredByUserIdRequest>() with
             {
@@ -206,7 +217,8 @@ public class UserController : BaseApiController
     [HttpGet]
     [Route("{id:guid}/answers/star")]
     [AllowAnonymous]
-    public async Task<PaginatedList<AnswerCardDto>> GetAnswersStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
+    [TranslateResultToActionResult]
+    public async Task<Result<PaginatedList<AnswerCardDto>>> GetAnswersStaredByUserId([FromRoute] Guid id, [FromQuery] PaginatedRequest request)
     {
         return await Mediator.Send(request.Adapt<GetAnswersStaredByUserIdRequest>() with
             {

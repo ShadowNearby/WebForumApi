@@ -1,8 +1,10 @@
+using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +17,7 @@ using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestions;
 
-public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, PaginatedList<QuestionCardDto>>
+public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<PaginatedList<QuestionCardDto>>>
 {
     private readonly ICacheService _cache;
     private readonly IContext _context;
@@ -26,12 +28,25 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
         _cache = cache;
     }
 
-    public async Task<PaginatedList<QuestionCardDto>> Handle(GetQuestionsRequest request,
+    public async Task<Result<PaginatedList<QuestionCardDto>>> Handle(GetQuestionsRequest request,
         CancellationToken cancellationToken)
     {
         // tab in ["newest", "heat", "unanswered"]
+        Console.WriteLine(request.Tab);
         switch (request.Tab)
         {
+            case null:
+            case "heat":
+                // order by answer number
+                IQueryable<Question> heatQuestions = _context.Questions
+                    .OrderByDescending(x => x.AnswerCount)
+                    .WhereIf(
+                        !string.IsNullOrEmpty(request.KeyWord),
+                        x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
+                    );
+                return await heatQuestions
+                    .ProjectToType<QuestionCardDto>()
+                    .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
             case "newest":
                 // order by create time
                 IQueryable<Question> newestQuestions = _context.Questions
@@ -45,41 +60,41 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Paginate
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>("question_newest", cancellationToken);
+                    List<QuestionCardDto>? cacheResult = await _cache.GetAsync<List<QuestionCardDto>>(key: "question_newest", cancellationToken);
                     if (cacheResult != null)
                     {
-                        return cacheResult;
+                        return result with
+                        {
+                            Result = cacheResult
+                        };
                     }
 
-                    await _cache.SetAsync("question_newest", result, TimeSpan.FromDays(1), cancellationToken);
+                    await _cache.SetAsync(key: "question_newest", result.Result, TimeSpan.FromDays(1), cancellationToken);
                 }
 
                 LoggerMessage.Define(LogLevel.Information, new EventId(0), request.PageSize.ToString());
                 return result;
-            case "heat":
-            case "":
-                // order by answer number
-                IQueryable<Question> heatQuestions = _context.Questions
-                    .OrderByDescending(x => x.AnswerCount)
-                    .WhereIf(
-                        !string.IsNullOrEmpty(request.KeyWord),
-                        x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
-                    );
-                return await heatQuestions
-                    .ProjectToType<QuestionCardDto>()
-                    .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+
             default:
-                // select unanswered questions
-                IQueryable<Question> unansweredQuestions = _context.Questions
-                        .Where(x => x.Answers.Count == 0)
-                        .OrderByDescending(x => x.CreateTime)
-                        .WhereIf(
-                            !string.IsNullOrEmpty(request.KeyWord),
-                            x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
-                        )
-                    ;
-                return await unansweredQuestions.ProjectToType<QuestionCardDto>()
-                    .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+                return Result.Invalid(
+                    new List<ValidationError>
+                    {
+                        new()
+                        {
+                            Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab does not match!"
+                        }
+                    });
+            // select unanswered questions
+            // IQueryable<Question> unansweredQuestions = _context.Questions
+            //         .Where(x => x.Answers.Count == 0)
+            //         .OrderByDescending(x => x.CreateTime)
+            //         .WhereIf(
+            //             !string.IsNullOrEmpty(request.KeyWord),
+            //             x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
+            //         )
+            //     ;
+            // return await unansweredQuestions.ProjectToType<QuestionCardDto>()
+            //     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }
 }

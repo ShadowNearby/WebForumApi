@@ -1,6 +1,6 @@
-﻿using Mapster;
+﻿using Ardalis.Result;
+using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
@@ -9,12 +9,11 @@ using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
 using WebForumApi.Application.Features.Questions.Dto;
-using WebForumApi.Application.Features.Questions.GetQuestions;
 using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionByTag;
 
-public class GetQuestionByTagHandler : IRequestHandler<GetQuestionsByTagRequest, PaginatedList<QuestionCardDto>>
+public class GetQuestionByTagHandler : IRequestHandler<GetQuestionsByTagRequest, Result<PaginatedList<QuestionCardDto>>>
 {
     private readonly IContext _context;
 
@@ -23,7 +22,7 @@ public class GetQuestionByTagHandler : IRequestHandler<GetQuestionsByTagRequest,
         _context = context;
     }
 
-    public async Task<PaginatedList<QuestionCardDto>> Handle(GetQuestionsByTagRequest request,
+    public async Task<Result<PaginatedList<QuestionCardDto>>> Handle(GetQuestionsByTagRequest request,
         CancellationToken cancellationToken)
     {
         switch (request.Tab)

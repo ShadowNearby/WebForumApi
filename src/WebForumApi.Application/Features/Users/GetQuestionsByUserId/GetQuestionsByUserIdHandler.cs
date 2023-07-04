@@ -1,3 +1,4 @@
+using Ardalis.Result;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -9,7 +10,7 @@ using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Application.Features.Users.GetQuestionsByUserId;
 
-public class GetQuestionsByUserIdHandler : IRequestHandler<GetQuestionsByUserIdRequest, PaginatedList<QuestionCardDto>>
+public class GetQuestionsByUserIdHandler : IRequestHandler<GetQuestionsByUserIdRequest, Result<PaginatedList<QuestionCardDto>>>
 {
     private readonly IContext _context;
     private readonly ISession _session;
@@ -19,7 +20,7 @@ public class GetQuestionsByUserIdHandler : IRequestHandler<GetQuestionsByUserIdR
         _context = context;
         _session = session;
     }
-    public async Task<PaginatedList<QuestionCardDto>> Handle(GetQuestionsByUserIdRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<QuestionCardDto>>> Handle(GetQuestionsByUserIdRequest request, CancellationToken cancellationToken)
     {
         return await _context.Questions.Where(a => a.CreateUserId == request.Id).Select(a => new QuestionCardDto
         {
