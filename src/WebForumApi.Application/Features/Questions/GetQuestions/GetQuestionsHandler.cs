@@ -21,59 +21,77 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
 {
     private readonly ICacheService _cache;
     private readonly IContext _context;
+    private readonly ILogger<GetQuestionsHandler> _logger;
 
-    public GetQuestionsHandler(IContext context, ICacheService cache)
+    public GetQuestionsHandler(IContext context, ICacheService cache, ILogger<GetQuestionsHandler> logger)
     {
         _context = context;
         _cache = cache;
+        _logger = logger;
     }
 
     public async Task<Result<PaginatedList<QuestionCardDto>>> Handle(GetQuestionsRequest request,
         CancellationToken cancellationToken)
     {
         // tab in ["newest", "heat", "unanswered"]
-        Console.WriteLine(request.Tab);
         switch (request.Tab)
         {
             case null:
             case "heat":
                 // order by answer number
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                {
+                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_heat", cancellationToken);
+                    if (cacheResult != null)
+                    {
+                        // _logger.LogCritical("hit");
+                        return cacheResult;
+                    }
+                }
+
                 IQueryable<Question> heatQuestions = _context.Questions
                     .OrderByDescending(x => x.AnswerCount)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
-                return await heatQuestions
+                PaginatedList<QuestionCardDto> heatResult = await heatQuestions
                     .ProjectToType<QuestionCardDto>()
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                {
+                    await _cache.SetAsync(key: "question_heat", heatResult, TimeSpan.FromMinutes(5), cancellationToken);
+                }
+
+                return heatResult;
+
             case "newest":
                 // order by create time
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                {
+                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_newest", cancellationToken);
+                    if (cacheResult != null)
+                    {
+                        // _logger.LogCritical("hit");
+                        return cacheResult;
+                    }
+                }
+
                 IQueryable<Question> newestQuestions = _context.Questions
                     .OrderByDescending(x => x.CreateTime)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
-                PaginatedList<QuestionCardDto> result = await newestQuestions
+                PaginatedList<QuestionCardDto> newestResult = await newestQuestions
                     .ProjectToType<QuestionCardDto>()
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    List<QuestionCardDto>? cacheResult = await _cache.GetAsync<List<QuestionCardDto>>(key: "question_newest", cancellationToken);
-                    if (cacheResult != null)
-                    {
-                        return result with
-                        {
-                            Result = cacheResult
-                        };
-                    }
-
-                    await _cache.SetAsync(key: "question_newest", result.Result, TimeSpan.FromDays(1), cancellationToken);
+                    await _cache.SetAsync(key: "question_newest", newestResult, TimeSpan.FromDays(1), cancellationToken);
                 }
 
-                LoggerMessage.Define(LogLevel.Information, new EventId(0), request.PageSize.ToString());
-                return result;
+                return newestResult;
 
             default:
                 return Result.Invalid(

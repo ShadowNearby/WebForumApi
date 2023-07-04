@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +39,6 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
         //     return cachedDto;
         // }
 
-        Console.WriteLine($"userId:{userId}");
         IQueryable<AnswerDto> answers = _context.Answers.Where(answer => answer.QuestionId.Equals(request.QuestionId))
             .Select(a =>
                 new AnswerDto

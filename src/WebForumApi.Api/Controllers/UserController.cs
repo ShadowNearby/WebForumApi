@@ -41,11 +41,11 @@ public class UserController : BaseApiController
     [ProducesResponseType(typeof(PaginatedList<UserDetailDto>), StatusCodes.Status200OK)]
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<PaginatedList<UserDetailDto>>> GetUsers(
+    public async Task<Result<PaginatedList<UserDetailDto>>> GetUsers(
         [FromQuery] GetUsersRequest request
     )
     {
-        return Ok(await Mediator.Send(request, cancellationToken: default));
+        return await Mediator.Send(request, cancellationToken: default);
     }
 
     [Authorize]
