@@ -62,7 +62,7 @@ public class TagController : BaseApiController
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
-    public async Task<PaginatedList<TagDto>> GetTags([FromQuery] GetTagsRequest request,
+    public async Task<Result<PaginatedList<TagDto>>> GetTags([FromQuery] GetTagsRequest request,
         CancellationToken cancellationToken)
     {
         PaginatedList<TagDto> result = await Mediator.Send(request, cancellationToken);

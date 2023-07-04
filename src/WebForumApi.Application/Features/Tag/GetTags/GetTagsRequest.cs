@@ -1,11 +1,12 @@
-﻿using MediatR;
+﻿using Ardalis.Result;
+using MediatR;
 using WebForumApi.Application.Common.Requests;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
 
 namespace WebForumApi.Application.Features.Tag.GetTags;
 
-public record GetTagsRequest : PaginatedRequest, IRequest<PaginatedList<TagDto>>
+public record GetTagsRequest : PaginatedRequest, IRequest<Result<PaginatedList<TagDto>>>
 {
-    public string? Keyword { get; set; }
+    public string? Keyword { get; init; }
 }
