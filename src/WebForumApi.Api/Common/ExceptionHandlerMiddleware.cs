@@ -27,13 +27,10 @@ public class ExceptionHandlerMiddleware : IMiddleware
         {
             Exception? exception = ex.Demystify();
             _logger.LogError(exception, message: "An error ocurred: {Message}", exception.Message);
-            HttpStatusCode code;
-            switch (exception)
+            HttpStatusCode code = exception switch
             {
-                default:
-                    code = HttpStatusCode.InternalServerError;
-                    break;
-            }
+                _ => HttpStatusCode.InternalServerError
+            };
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;

@@ -1,23 +1,11 @@
-# dotnet-api-boilerplate
+# web-forum-api
 
-<p align="center">
-  <span>English</span> |
-  <a href="https://github.com/yanpitangui/dotnet-api-boilerplate/tree/main/translations/pt-br/README.md">Português</a>
-</p>
-
-A ``.Net 7.0`` WebApi boilerplate / template project. MediatR, Swagger, ~~AutoMapper~~ Mapster, Serilog and more
+A ``.Net 7.0`` WebApi project. MediatR, Swagger, ~~AutoMapper~~ Mapster, Serilog and more
 implemented.
-
-[![Build](https://github.com/yanpitangui/dotnet-api-boilerplate/actions/workflows/build.yml/badge.svg)](https://github.com/yanpitangui/dotnet-api-boilerplate/actions/workflows/build.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=yanpitangui_dotnet-api-boilerplate&metric=coverage)](https://sonarcloud.io/dashboard?id=yanpitangui_dotnet-api-boilerplate)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=yanpitangui_dotnet-api-boilerplate&metric=alert_status)](https://sonarcloud.io/dashboard?id=yanpitangui_dotnet-api-boilerplate)
-
-The goal of this project is to be a kickstart to your .Net WebApi, implementing the most common used patterns
-and technologies for a restful API in .net, making your work easier.
 
 # How to run
 
-- Use this template(github) or clone/download to your local workplace.
+- Use this clone/download to your local workplace.
 - Download the latest .Net SDK and Visual Studio/Code.
 
 ## Standalone
