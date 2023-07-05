@@ -8,8 +8,8 @@ namespace WebForumApi.Application.Extensions.Cache;
 
 public class LocalCacheService : ICacheService
 {
-    private readonly ILogger<LocalCacheService> _logger;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<LocalCacheService> _logger;
 
     public LocalCacheService(IMemoryCache cache, ILogger<LocalCacheService> logger)
     {
@@ -50,7 +50,6 @@ public class LocalCacheService : ICacheService
 
     public void Set<T>(string key, T value, TimeSpan? slidingExpiration = null)
     {
-        // TODO: add to appsettings?
         slidingExpiration ??= TimeSpan.FromMinutes(10);// Default expiration time of 10 minutes.
 
         _cache.Set(

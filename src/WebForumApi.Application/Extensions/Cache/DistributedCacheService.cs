@@ -27,20 +27,9 @@ public class DistributedCacheService : ICacheService
         return Get(key) is { } data ? Deserialize<T>(data) : default;
     }
 
-    private byte[]? Get(string key)
-    {
-        ArgumentNullException.ThrowIfNull(key);
-        return _cache.Get(key);
-    }
-
     public async Task<T?> GetAsync<T>(string key, CancellationToken token = default)
     {
         return await GetAsync(key, token) is { } data ? Deserialize<T>(data) : default;
-    }
-
-    private async Task<byte[]?> GetAsync(string key, CancellationToken token = default)
-    {
-        return await _cache.GetAsync(key, token);
     }
 
     public void Refresh(string key)
@@ -68,11 +57,6 @@ public class DistributedCacheService : ICacheService
         Set(key, Serialize(value), slidingExpiration);
     }
 
-    private void Set(string key, byte[] value, TimeSpan? slidingExpiration = null)
-    {
-        _cache.Set(key, value, GetOptions(slidingExpiration));
-    }
-
     public Task SetAsync<T>(
         string key,
         T value,
@@ -80,6 +64,22 @@ public class DistributedCacheService : ICacheService
         CancellationToken cancellationToken = default)
     {
         return SetAsync(key, Serialize(value), slidingExpiration, cancellationToken);
+    }
+
+    private byte[]? Get(string key)
+    {
+        ArgumentNullException.ThrowIfNull(key);
+        return _cache.Get(key);
+    }
+
+    private async Task<byte[]?> GetAsync(string key, CancellationToken token = default)
+    {
+        return await _cache.GetAsync(key, token);
+    }
+
+    private void Set(string key, byte[] value, TimeSpan? slidingExpiration = null)
+    {
+        _cache.Set(key, value, GetOptions(slidingExpiration));
     }
 
     private async Task SetAsync(
@@ -110,7 +110,6 @@ public class DistributedCacheService : ICacheService
         }
         else
         {
-            // TODO: add to appsettings?
             // Default expiration time of 10 minutes.
             options.SetSlidingExpiration(TimeSpan.FromMinutes(10));
         }
