@@ -18,7 +18,7 @@ public class RegisterValidator : AbstractValidator<RegisterRequest>
             )
             .WithMessage("A user with this username already exists.");
         RuleFor(x => x.Password).NotEmpty().MinimumLength(5).MaximumLength(255);
-
+        RuleFor(x => x.Location).MaximumLength(255);
         RuleFor(x => x.Email)
             .NotEmpty()
             .MaximumLength(254)

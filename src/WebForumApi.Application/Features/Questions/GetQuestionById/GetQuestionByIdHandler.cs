@@ -12,7 +12,6 @@ using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
-using WebForumApi.Domain.Entities;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionById;
@@ -24,7 +23,9 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
     private readonly ILogger<GetQuestionByIdHandler> _logger;
     private readonly ISession _session;
 
-    public GetQuestionByIdHandler(IContext context, ICacheService cache, ILogger<GetQuestionByIdHandler> logger,
+    public GetQuestionByIdHandler(IContext context,
+        ICacheService cache,
+        ILogger<GetQuestionByIdHandler> logger,
         ISession session)
     {
         _context = context;
@@ -40,18 +41,20 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
         QuestionDto? cachedDto =
             await _cache.GetAsync<QuestionDto?>($"{request.QuestionId}", cancellationToken);
         UserActionDto action = _context.UserQuestionActions
-                                   .Where(x => x.UserId == _session.UserId && x.QuestionId == questionId).Select(
-                                       a =>
-                                           new UserActionDto
-                                           {
-                                               UserLike = a.IsLike, UserDislike = a.IsDislike, UserStar = a.IsStar
-                                           })
-                                   .FirstOrDefault() ??
-                               new UserActionDto { UserDislike = false, UserStar = false, UserLike = false };
+                .Where(x => x.UserId == _session.UserId && x.QuestionId == questionId).Select(
+                    a =>
+                        new UserActionDto
+                        {
+                            UserLike = a.IsLike, UserDislike = a.IsDislike, UserStar = a.IsStar
+                        })
+                .FirstOrDefault() ??
+            new UserActionDto
+            {
+                UserDislike = false, UserStar = false, UserLike = false
+            };
 
         if (cachedDto is not null)
         {
-            _logger.LogCritical("hit question");
             cachedDto.UserAction = action;
             return cachedDto;
         }
@@ -71,7 +74,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                     {
                         Id = q.CreateUserId.ToString(), UserName = q.CreateUserUsername, Avatar = q.CreateUserAvatar
                     },
-                UserAction = new(),
+                UserAction = new UserActionDto(),
                 Tags = q.QuestionTags.Select(t => new TagDto
                 {
                     Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
@@ -79,7 +82,11 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 Answers = new List<AnswerDto>()
             }).FirstOrDefaultAsync(cancellationToken);
         await _cache.SetAsync($"{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
-        if (question is null) return Result.NotFound();
+        if (question is null)
+        {
+            return Result.NotFound();
+        }
+
         question.UserAction = action;
         return question;
     }
