@@ -31,8 +31,10 @@ public class CreateAnswerHandler : IRequestHandler<CreateAnswerRequest, Result>
             CreateUserAvatar = _session.Avatar ?? "",
             QuestionId = new Guid(request.QuestionId)
         };
-        Question question = await _context.Questions.FirstAsync(q => q.Id.ToString() == request.QuestionId, cancellationToken);
-        question.AnswerCount += 1;
+        Question? question =
+            await _context.Questions.FirstOrDefaultAsync(q => q.Id.ToString() == request.QuestionId, cancellationToken);
+        if (question is null) return Result.NotFound("Question not found");
+        question.AnswerCount++;
         await _context.Answers.AddAsync(answer, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

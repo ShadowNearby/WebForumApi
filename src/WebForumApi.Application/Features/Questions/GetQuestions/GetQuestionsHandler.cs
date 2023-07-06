@@ -56,12 +56,23 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
-                PaginatedList<QuestionCardDto> heatResult = await heatQuestions
-                    .ProjectToType<QuestionCardDto>()
+                PaginatedList<QuestionCardDto> heatResult = await heatQuestions.Select(q => new QuestionCardDto
+                    {
+                        Id = q.Id.ToString(),
+                        Title = q.Title,
+                        VoteNumber =
+                            _context.UserQuestionActions.Count(action => action.QuestionId == q.Id && action.IsLike),
+                        CreateTime = q.CreateTime,
+                        AnswerNumber = q.AnswerCount,
+                        Tags = _context.QuestionTags.Where(x => x.QuestionId == q.Id).Select(x => new TagDto
+                        {
+                            Id = x.TagId, Content = x.Tag.Content, Description = x.Tag.Description
+                        }).ToList()
+                    })
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
-                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
+                if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage is 1 or 0)
                 {
-                    await _cache.SetAsync(key: "question_heat", heatResult, TimeSpan.FromMinutes(5), cancellationToken);
+                    await _cache.SetAsync(key: "question_heat", heatResult, TimeSpan.FromMinutes(3), cancellationToken);
                 }
 
                 return heatResult;
