@@ -33,6 +33,8 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
         // Console.WriteLine($"request:{request.Authorization}");
         UserId userId = _session.UserId;
 
+        const double answerVoteWeight = 0.6;
+        const double createTimeWeight = 0.4;
 
         // if (request.CurrentPage is 1 or 0)
         // {
@@ -79,7 +81,8 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
                                 UserLike = action.IsLike, UserDislike = action.IsDislike, UserStar = action.IsStar
                             })
                         .FirstOrDefault() ?? new UserActionDto()
-                });
+                }).OrderByDescending(x =>
+                ((DateTime.Now - x.CreateTime).Seconds * createTimeWeight + x.LikeCount * answerVoteWeight));
         PaginatedList<AnswerDto> result = await answers.OrderByDescending(a => a.LikeCount)
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         // await _cache.SetAsync($"{request.QuestionId}_answers", result, TimeSpan.FromSeconds(30), cancellationToken);

@@ -50,8 +50,12 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                     }
                 }
 
+                const double answerCountWeight = 0.6;
+                const double createTimeWeight = 0.4;
                 IQueryable<Question> heatQuestions = _context.Questions
-                    .OrderByDescending(x => x.AnswerCount)
+                    .OrderByDescending(
+                        x => x.AnswerCount * answerCountWeight +
+                             (DateTime.Now - x.CreateTime).Seconds * createTimeWeight)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
@@ -99,7 +103,19 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                         )
                     ;
                 PaginatedList<QuestionCardDto> unansweredResult = await unansweredQuestions
-                    .ProjectToType<QuestionCardDto>()
+                    .Select(q => new QuestionCardDto
+                    {
+                        Id = q.Id.ToString(),
+                        Title = q.Title,
+                        VoteNumber =
+                            _context.UserQuestionActions.Count(action => action.QuestionId == q.Id && action.IsLike),
+                        CreateTime = q.CreateTime,
+                        AnswerNumber = q.AnswerCount,
+                        Tags = _context.QuestionTags.Where(x => x.QuestionId == q.Id).Select(x => new TagDto
+                        {
+                            Id = x.TagId, Content = x.Tag.Content, Description = x.Tag.Description
+                        }).ToList()
+                    })
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
@@ -130,7 +146,19 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                     );
                 PaginatedList<QuestionCardDto> newestResult = await newestQuestions
-                    .ProjectToType<QuestionCardDto>()
+                    .Select(q => new QuestionCardDto
+                    {
+                        Id = q.Id.ToString(),
+                        Title = q.Title,
+                        VoteNumber =
+                            _context.UserQuestionActions.Count(action => action.QuestionId == q.Id && action.IsLike),
+                        CreateTime = q.CreateTime,
+                        AnswerNumber = q.AnswerCount,
+                        Tags = _context.QuestionTags.Where(x => x.QuestionId == q.Id).Select(x => new TagDto
+                        {
+                            Id = x.TagId, Content = x.Tag.Content, Description = x.Tag.Description
+                        }).ToList()
+                    })
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
