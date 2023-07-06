@@ -8,4 +8,5 @@ public record RegisterRequest : IRequest<Result>
     public string Username { get; init; } = null!;
     public string Email { get; init; } = null!;
     public string Password { get; init; } = null!;
+    public string Location { get; init; } = "";
 }
