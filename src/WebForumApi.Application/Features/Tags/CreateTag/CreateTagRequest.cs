@@ -4,7 +4,7 @@ using MediatR;
 using System.Linq;
 using WebForumApi.Application.Common;
 
-namespace WebForumApi.Application.Features.Tag.CreateTag;
+namespace WebForumApi.Application.Features.Tags.CreateTag;
 
 public class CreateTagRequest : IRequest<Result>
 {

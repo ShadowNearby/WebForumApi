@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,6 +12,7 @@ using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestions;
@@ -119,7 +119,9 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    await _cache.SetAsync(key: "question_unanswered", unansweredResult, TimeSpan.FromMinutes(5),
+                    await _cache.SetAsync(key: "question_unanswered",
+                        unansweredResult,
+                        TimeSpan.FromMinutes(5),
                         cancellationToken);
                 }
 
@@ -162,7 +164,9 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    await _cache.SetAsync(key: "question_newest", newestResult, TimeSpan.FromDays(1),
+                    await _cache.SetAsync(key: "question_newest",
+                        newestResult,
+                        TimeSpan.FromDays(1),
                         cancellationToken);
                 }
 
@@ -172,7 +176,10 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 return Result.Invalid(
                     new List<ValidationError>
                     {
-                        new() { Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab does not match!" }
+                        new()
+                        {
+                            Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab does not match!"
+                        }
                     });
             // select unanswered questions
         }

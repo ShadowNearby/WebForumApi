@@ -4,7 +4,7 @@ using MediatR;
 using System.Linq;
 using WebForumApi.Application.Common;
 
-namespace WebForumApi.Application.Features.Tag.ModifyTag;
+namespace WebForumApi.Application.Features.Tags.ModifyTag;
 
 public record ModifyTagRequest : IRequest<Result>
 {

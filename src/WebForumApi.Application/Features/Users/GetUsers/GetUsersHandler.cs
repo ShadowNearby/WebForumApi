@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
-using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Entities;
 
@@ -43,6 +43,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, Result<Paginated
                 About = u.About,
                 Avatar = u.Avatar,
                 FollowedCount = u.FollowedCount,
+                FollowingCount = u.FollowingCount,
                 RegisterTime = u.RegisterTime,
                 Tags = u.Fields.Select(f => new TagDto
                 {

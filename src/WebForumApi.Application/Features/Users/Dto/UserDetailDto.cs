@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Users.Dto;
@@ -22,6 +22,7 @@ public record UserDetailDto
 
     public string Avatar { get; init; } = null!;
     public long FollowedCount { get; init; }
+    public long FollowingCount { get; init; }
 
     public List<TagDto> Tags { get; init; } = new();
 

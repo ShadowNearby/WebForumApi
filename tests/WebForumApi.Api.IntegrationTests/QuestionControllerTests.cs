@@ -5,12 +5,14 @@ using System.Net.Http;
 using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 
 namespace WebForumApi.Api.IntegrationTests;
 
 public class QuestionControllerTests : BaseTest
 {
+    private const string QuestionId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
     public QuestionControllerTests(CustomWebApplicationFactory apiFactory) : base(apiFactory)
     {
     }
@@ -20,8 +22,6 @@ public class QuestionControllerTests : BaseTest
         await base.InitializeAsync();
         LoginAsAdmin();
     }
-
-    private const string QuestionId = "2e3b7a21-f06e-4c47-b28a-89bdaa3d2a36";
 
     #region GET
 
@@ -39,8 +39,17 @@ public class QuestionControllerTests : BaseTest
         question.LikeCount.Should().Be(1);
         question.DislikeCount.Should().Be(0);
         question.StarCount.Should().Be(1);
-        question.UserAction.Should().Be(new UserActionDto { UserLike = true, UserStar = true, UserDislike = false });
-        question.Tags.Should().Equal(new List<TagDto> { new() { Id = 1, Content = "content", Description = "" } });
+        question.UserAction.Should().Be(new UserActionDto
+        {
+            UserLike = true, UserStar = true, UserDislike = false
+        });
+        question.Tags.Should().Equal(new List<TagDto>
+        {
+            new()
+            {
+                Id = 1, Content = "content", Description = ""
+            }
+        });
     }
 
 
@@ -85,8 +94,11 @@ public class QuestionControllerTests : BaseTest
     public async Task Post_AddNewQuestion()
     {
         LoginAsUser();
-        HttpResponseMessage response = await PostAsync("/api/Question/add",
-            new { Title = "Test title", Content = "Test content" });
+        HttpResponseMessage response = await PostAsync(address: "/api/Question/add",
+            new
+            {
+                Title = "Test title", Content = "Test content"
+            });
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
     }

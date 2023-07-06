@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Domain.Entities.Common;
@@ -79,7 +80,8 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 {
                     Id = t.TagId, Content = t.Tag.Content, Description = t.Tag.Description
                 }).ToList(),
-                Answers = new List<AnswerDto>()
+                Answers = new List<AnswerDto>(),
+                AcceptedAnswerId = q.AcceptAnswerId.ToString()
             }).FirstOrDefaultAsync(cancellationToken);
         await _cache.SetAsync($"{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
         if (question is null)
