@@ -7,11 +7,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Tag.CreateTag;
-using WebForumApi.Application.Features.Tag.Dto;
-using WebForumApi.Application.Features.Tag.GetTags;
-using WebForumApi.Application.Features.Tag.ModifyTag;
-using WebForumApi.Application.Features.Tag.SearchTag;
+using WebForumApi.Application.Features.Tags.CreateTag;
+using WebForumApi.Application.Features.Tags.Dto;
+using WebForumApi.Application.Features.Tags.GetTags;
+using WebForumApi.Application.Features.Tags.ModifyTag;
+using WebForumApi.Application.Features.Tags.SearchTag;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Auth.Interfaces;
 

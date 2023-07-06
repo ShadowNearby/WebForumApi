@@ -2,9 +2,9 @@
 using MediatR;
 using WebForumApi.Application.Common.Requests;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 
-namespace WebForumApi.Application.Features.Tag.GetTags;
+namespace WebForumApi.Application.Features.Tags.GetTags;
 
 public record GetTagsRequest : PaginatedRequest, IRequest<Result<PaginatedList<TagDto>>>
 {

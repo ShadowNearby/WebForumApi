@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Api.Controllers.BaseController;
-using WebForumApi.Application.Features.Tag.CreateTag;
+using WebForumApi.Application.Features.Tags.CreateTag;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Auth.Interfaces;
 

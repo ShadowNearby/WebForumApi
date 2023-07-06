@@ -1,4 +1,4 @@
-namespace WebForumApi.Application.Features.Tag.Dto;
+namespace WebForumApi.Application.Features.Tags.Dto;
 
 public record TagDto
 {

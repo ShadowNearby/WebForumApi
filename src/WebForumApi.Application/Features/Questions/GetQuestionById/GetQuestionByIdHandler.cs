@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Domain.Entities.Common;

@@ -6,9 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
+using WebForumApi.Domain.Entities;
 
-namespace WebForumApi.Application.Features.Tag.SearchTag;
+namespace WebForumApi.Application.Features.Tags.SearchTag;
 
 public class SearchTagHandler : IRequestHandler<SearchTagRequest, PaginatedList<TagDto>>
 {
@@ -23,7 +24,7 @@ public class SearchTagHandler : IRequestHandler<SearchTagRequest, PaginatedList<
     {
         if (request.Keyword.IsNullOrEmpty())
         {
-            DbSet<Domain.Entities.Tag>? tags = _context.Tags;
+            DbSet<Tag>? tags = _context.Tags;
             return tags.Select(t => new TagDto
                 {
                     Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)
@@ -32,7 +33,7 @@ public class SearchTagHandler : IRequestHandler<SearchTagRequest, PaginatedList<
         }
         else
         {
-            IQueryable<Domain.Entities.Tag> tags = _context.Tags.Where(x => x.Content.Contains(request.Keyword ?? ""));
+            IQueryable<Tag> tags = _context.Tags.Where(x => x.Content.Contains(request.Keyword ?? ""));
             return tags.Select(t => new TagDto
                 {
                     Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)

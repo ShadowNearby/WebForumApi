@@ -1,5 +1,4 @@
 using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,7 @@ using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
 using WebForumApi.Application.Extensions.Cache;
 using WebForumApi.Application.Features.Questions.Dto;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Domain.Entities;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestions;
@@ -56,7 +55,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 IQueryable<Question> heatQuestions = _context.Questions
                     .OrderByDescending(
                         x => x.AnswerCount * answerCountWeight +
-                             (DateTime.Now - x.CreateTime).Seconds * createTimeWeight)
+                            (DateTime.Now - x.CreateTime).Seconds * createTimeWeight)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")

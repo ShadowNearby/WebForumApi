@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Auth.Interfaces;
+using WebForumApi.Domain.Entities;
 
-namespace WebForumApi.Application.Features.Tag.CreateTag;
+namespace WebForumApi.Application.Features.Tags.CreateTag;
 
 public class CreateTagHandler : IRequestHandler<CreateTagRequest, Result>
 {
@@ -20,7 +21,10 @@ public class CreateTagHandler : IRequestHandler<CreateTagRequest, Result>
 
     public async Task<Result> Handle(CreateTagRequest request, CancellationToken cancellationToken)
     {
-        Domain.Entities.Tag tag = new() { Content = request.Content, Description = request.Description };
+        Tag tag = new()
+        {
+            Content = request.Content, Description = request.Description
+        };
         await _context.Tags.AddAsync(tag, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

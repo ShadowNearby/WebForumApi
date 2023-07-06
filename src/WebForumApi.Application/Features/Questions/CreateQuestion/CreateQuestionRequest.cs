@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using System.Collections.Generic;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 
 namespace WebForumApi.Application.Features.Questions.CreateQuestion;
 

@@ -5,7 +5,7 @@ using System.Net.Http;
 using WebForumApi.Api.IntegrationTests.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 
 namespace WebForumApi.Api.IntegrationTests;

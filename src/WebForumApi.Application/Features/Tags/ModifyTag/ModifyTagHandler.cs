@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
-using WebForumApi.Domain.Auth.Interfaces;
+using WebForumApi.Domain.Entities;
 
-namespace WebForumApi.Application.Features.Tag.ModifyTag;
+namespace WebForumApi.Application.Features.Tags.ModifyTag;
 
 public class ModifyTagHandler : IRequestHandler<ModifyTagRequest, Result>
 {
@@ -19,7 +19,7 @@ public class ModifyTagHandler : IRequestHandler<ModifyTagRequest, Result>
 
     public async Task<Result> Handle(ModifyTagRequest request, CancellationToken cancellationToken)
     {
-        Domain.Entities.Tag tag = _context.Tags.FirstOrDefault(t => t.Id == request.TagId)!;
+        Tag tag = _context.Tags.FirstOrDefault(t => t.Id == request.TagId)!;
         tag.Description = request.Description;
         await _context.SaveChangesAsync(cancellationToken);
         return Result.Success();

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 
 namespace WebForumApi.Application.Features.Questions.Dto;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Extensions;
-using WebForumApi.Application.Features.Tag.Dto;
+using WebForumApi.Application.Features.Tags.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Domain.Entities;
 
