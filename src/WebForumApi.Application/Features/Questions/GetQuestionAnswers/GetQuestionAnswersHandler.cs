@@ -82,7 +82,7 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
                             })
                         .FirstOrDefault() ?? new UserActionDto()
                 }).OrderByDescending(x =>
-                ((DateTime.Now - x.CreateTime).Seconds * createTimeWeight + x.LikeCount * answerVoteWeight));
+                ((x.CreateTime - DateTime.Now).Seconds * createTimeWeight + x.LikeCount * answerVoteWeight));
         PaginatedList<AnswerDto> result = await answers.OrderByDescending(a => a.LikeCount)
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         // await _cache.SetAsync($"{request.QuestionId}_answers", result, TimeSpan.FromSeconds(30), cancellationToken);

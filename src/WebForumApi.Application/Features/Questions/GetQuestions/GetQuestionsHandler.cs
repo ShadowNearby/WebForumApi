@@ -55,7 +55,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 IQueryable<Question> heatQuestions = _context.Questions
                     .OrderByDescending(
                         x => x.AnswerCount * answerCountWeight +
-                             (DateTime.Now - x.CreateTime).Seconds * createTimeWeight)
+                             (x.CreateTime - DateTime.Now).Seconds * createTimeWeight)
                     .WhereIf(
                         !string.IsNullOrEmpty(request.KeyWord),
                         x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
