@@ -7,7 +7,7 @@ public class Tag : Entity<long>
 {
     public override long Id { get; set; }
     public string Content { get; set; } = null!;
-    public string? Description { get; set; }
+    public string Description { get; set; } = "";
 
     public List<QuestionTag> QuestionTags { get; set; } = new();
 }

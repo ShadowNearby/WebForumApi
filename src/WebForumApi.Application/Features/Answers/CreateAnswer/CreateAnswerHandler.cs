@@ -28,7 +28,7 @@ public class CreateAnswerHandler : IRequestHandler<CreateAnswerRequest, Result>
             Content = request.Content,
             CreateUserId = _session.UserId,
             CreateUserUsername = _session.Username ?? "",
-            CreateUserAvatar = _session.Avatar,
+            CreateUserAvatar = _session.Avatar ?? "",
             QuestionId = new Guid(request.QuestionId)
         };
         Question question = await _context.Questions.FirstAsync(q => q.Id.ToString() == request.QuestionId, cancellationToken);

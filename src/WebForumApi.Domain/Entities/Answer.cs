@@ -13,7 +13,7 @@ public class Answer : Entity<Guid>
     public User CreateUser { get; set; } = null!;
     public UserId CreateUserId { get; set; }
     public string CreateUserUsername { get; set; } = null!;
-    public string? CreateUserAvatar { get; set; }
+    public string CreateUserAvatar { get; set; } = null!;
 
     public DateTime CreateTime { get; set; } = DateTime.Now;
     public List<UserAnswerAction> UserAnswerActions { get; set; } = new();

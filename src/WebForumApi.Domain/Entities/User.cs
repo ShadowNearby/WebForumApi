@@ -19,8 +19,8 @@ public class User : Entity<UserId>
 
     public DateTime LastLogin { get; set; }
 
-    public string? Location { get; set; }
-    public string? About { get; set; }
+    public string Location { get; set; } = "";
+    public string About { get; set; } = "";
     public string Avatar { get; set; } = null!;
     public bool IsBanned { get; set; }
     public Token? Token { get; init; }

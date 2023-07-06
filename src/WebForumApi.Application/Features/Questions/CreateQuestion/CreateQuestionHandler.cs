@@ -34,7 +34,7 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionRequest, Resu
             Content = request.Content,
             CreateUserId = _session.UserId,
             CreateUserUsername = _session.Username ?? "",
-            CreateUserAvatar = _session.Avatar
+            CreateUserAvatar = _session.Avatar ?? ""
         };
         await _context.Questions.AddAsync(question, cancellationToken);
         await _context.QuestionTags.AddRangeAsync(

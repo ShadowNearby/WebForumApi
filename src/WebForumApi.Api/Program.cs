@@ -30,6 +30,9 @@ builder.Services.AddCaching(builder.Configuration);
 // MongoDB
 // builder.Services.Configure<MongoSetup>(builder.Configuration.GetSection("MongoDatabase"));
 
+// httpclient
+
+builder.Services.AddHttpClient();
 // Persistence
 builder.Services.AddPersistenceSetup(builder.Configuration);
 
