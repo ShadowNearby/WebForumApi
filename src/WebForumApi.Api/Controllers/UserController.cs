@@ -15,11 +15,13 @@ using WebForumApi.Application.Features.Users.Dto;
 using WebForumApi.Application.Features.Users.GetAnswersByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersLikedByUserId;
 using WebForumApi.Application.Features.Users.GetAnswersStaredByUserId;
+using WebForumApi.Application.Features.Users.GetFollowUser;
 using WebForumApi.Application.Features.Users.GetQuestionsByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsLikedByUserId;
 using WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;
 using WebForumApi.Application.Features.Users.GetUserById;
 using WebForumApi.Application.Features.Users.GetUsers;
+using WebForumApi.Application.Features.Users.UpdateFollowUser;
 using WebForumApi.Application.Features.Users.UpdateUser;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Auth.Interfaces;
@@ -32,7 +34,45 @@ public class UserController : BaseApiController
     public UserController(IMediator mediator, ISession session) : base(mediator, session)
     {
     }
-
+    [HttpPut]
+    [Route("me/follow")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result<PaginatedList<UserDetailDto>>> UserFollow(
+        [FromBody] UpdateFollowRequest request
+    )
+    {
+        return await Mediator.Send(request, cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("me/follow")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result<PaginatedList<UserDetailDto>>> UserFollow(
+        [FromQuery] PaginatedRequest request
+    )
+    {
+        return await Mediator.Send(request.Adapt<GetFollowUserRequest>() with
+            {
+                UserId = Session.UserId
+            },
+            cancellationToken: default);
+    }
+    [HttpGet]
+    [Route("{id:guid}/follow")]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.Invalid)]
+    public async Task<Result<PaginatedList<UserDetailDto>>> UserFollow(
+        [FromRoute] Guid id,
+        [FromQuery] PaginatedRequest request
+    )
+    {
+        return await Mediator.Send(new GetFollowUserRequest
+            {
+                UserId = id, PageSize = request.PageSize, CurrentPage = request.CurrentPage
+            },
+            cancellationToken: default);
+    }
     /// <summary>
     /// return all user
     /// </summary>

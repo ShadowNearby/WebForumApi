@@ -43,6 +43,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, Result<Paginated
                 About = u.About,
                 Avatar = u.Avatar,
                 FollowedCount = u.FollowedCount,
+                FollowingCount = u.FollowingCount,
                 RegisterTime = u.RegisterTime,
                 Tags = u.Fields.Select(f => new TagDto
                 {

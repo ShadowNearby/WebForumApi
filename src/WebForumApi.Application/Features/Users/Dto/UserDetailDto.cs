@@ -22,6 +22,7 @@ public record UserDetailDto
 
     public string Avatar { get; init; } = null!;
     public long FollowedCount { get; init; }
+    public long FollowingCount { get; init; }
 
     public List<TagDto> Tags { get; init; } = new();
 
