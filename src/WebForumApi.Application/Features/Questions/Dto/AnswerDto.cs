@@ -12,5 +12,5 @@ public record AnswerDto
     public long StarCount { get; init; }
     public long LikeCount { get; init; }
     public long DislikeCount { get; init; }
-    public UserActionDto UserAction { get; init; } = null!;
+    public UserActionDto UserAction { get; set; } = null!;
 }

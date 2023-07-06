@@ -10,4 +10,4 @@ using WebForumApi.Domain.Entities.Common;
 namespace WebForumApi.Application.Features.Questions.GetQuestionAnswers;
 
 public record GetQuestionAnswersRequest(Guid QuestionId) : PaginatedRequest,
-    IRequest<PaginatedList<AnswerDto>>;
+    IRequest<Result<PaginatedList<AnswerDto>>>;

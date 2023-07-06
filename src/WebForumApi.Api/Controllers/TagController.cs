@@ -11,6 +11,7 @@ using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Application.Features.Tag.CreateTag;
 using WebForumApi.Application.Features.Tag.GetTags;
 using WebForumApi.Application.Features.Tag.ModifyTag;
+using WebForumApi.Application.Features.Tag.SearchTag;
 using WebForumApi.Domain.Auth;
 using WebForumApi.Domain.Auth.Interfaces;
 
@@ -58,11 +59,35 @@ public class TagController : BaseApiController
     }
 
 
+    /// <summary>
+    /// get all tags
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet]
     [AllowAnonymous]
     [TranslateResultToActionResult]
     [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
     public async Task<Result<PaginatedList<TagDto>>> GetTags([FromQuery] GetTagsRequest request,
+        CancellationToken cancellationToken)
+    {
+        PaginatedList<TagDto> result = await Mediator.Send(request, cancellationToken);
+        return result;
+    }
+
+    /// <summary>
+    /// search tags through keyword
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("search")]
+    [AllowAnonymous]
+    [TranslateResultToActionResult]
+    [ExpectedFailures(ResultStatus.NotFound, ResultStatus.Invalid)]
+    public async Task<PaginatedList<TagDto>> SearchTag([FromQuery] SearchTagRequest request,
         CancellationToken cancellationToken)
     {
         PaginatedList<TagDto> result = await Mediator.Send(request, cancellationToken);
