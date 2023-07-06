@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tag.Dto;
 
 namespace WebForumApi.Application.Features.Tag.GetTags;
 
@@ -25,17 +24,22 @@ public class GetTagsHandler : IRequestHandler<GetTagsRequest, Result<PaginatedLi
     {
         if (request.Keyword.IsNullOrEmpty())
         {
-            IQueryable<Domain.Entities.Tag> tags = _context.Tags.OrderByDescending(x => x.QuestionTags.Count);
-            return await tags.ProjectToType<TagDto>()
+            IQueryable<Domain.Entities.Tag> tags = _context.Tags;
+            return await tags.Select(t => new TagDto
+                {
+                    Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)
+                }).OrderByDescending(x => x.QuestionCount)
                 .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
         else
         {
             IQueryable<Domain.Entities.Tag> tags = _context.Tags.Where(
                 x => EF.Functions.Like(x.Content, $"%{request.Keyword}%")
-            ).OrderByDescending(x => x.QuestionTags.Count);
-            return await tags.ProjectToType<TagDto>()
-                .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+            );
+            return await tags.Select(t => new TagDto
+            {
+                Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)
+            }).OrderByDescending(x => x.QuestionCount).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }
 }

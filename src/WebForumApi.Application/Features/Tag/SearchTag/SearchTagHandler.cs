@@ -1,13 +1,12 @@
-﻿using Mapster;
-using MediatR;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
-using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tag.Dto;
 
 namespace WebForumApi.Application.Features.Tag.SearchTag;
 
@@ -24,15 +23,20 @@ public class SearchTagHandler : IRequestHandler<SearchTagRequest, PaginatedList<
     {
         if (request.Keyword.IsNullOrEmpty())
         {
-            IOrderedQueryable<Domain.Entities.Tag> tags = _context.Tags.OrderByDescending(x => x.QuestionTags.Count);
-            return tags.ProjectToType<TagDto>()
+            DbSet<Domain.Entities.Tag>? tags = _context.Tags;
+            return tags.Select(t => new TagDto
+                {
+                    Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)
+                }).OrderByDescending(x => x.QuestionCount)
                 .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
         else
         {
-            IOrderedQueryable<Domain.Entities.Tag> tags = _context.Tags.Where(x => x.Content.Contains(request.Keyword))
-                .OrderByDescending(x => x.QuestionTags.Count);
-            return tags.ProjectToType<TagDto>()
+            IQueryable<Domain.Entities.Tag> tags = _context.Tags.Where(x => x.Content.Contains(request.Keyword ?? ""));
+            return tags.Select(t => new TagDto
+                {
+                    Id = t.Id, Content = t.Content, Description = t.Description, QuestionCount = _context.QuestionTags.Count(x => x.TagId == t.Id)
+                }).OrderByDescending(x => x.QuestionCount)
                 .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
         }
     }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WebForumApi.Application.Common;
 using WebForumApi.Application.Common.Responses;
 using WebForumApi.Application.Features.Questions.Dto;
+using WebForumApi.Application.Features.Tag.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
 
 namespace WebForumApi.Application.Features.Users.GetQuestionsStaredByUserId;

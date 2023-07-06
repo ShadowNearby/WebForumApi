@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using WebForumApi.Application.Features.Tag.Dto;
 using WebForumApi.Application.Features.Users.Dto;
 
 namespace WebForumApi.Application.Features.Questions.Dto;
@@ -10,6 +11,8 @@ public record QuestionDto
     public UserCardDto UserCard { get; init; } = null!;
     public string Title { get; init; } = null!;
     public string Content { get; init; } = null!;
+
+    public string? AcceptedAnswerId { get; init; }
     public long StarCount { get; set; }
     public long LikeCount { get; set; }
     public long DislikeCount { get; set; }
