@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Ardalis.Result;
+using MediatR;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ using WebForumApi.Domain.Entities.Common;
 
 namespace WebForumApi.Application.Features.Questions.GetQuestionAnswers;
 
-public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersRequest, PaginatedList<AnswerDto>>
+public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersRequest, Result<PaginatedList<AnswerDto>>>
 {
     private readonly ICacheService _cache;
     private readonly IContext _context;
@@ -25,18 +27,34 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
         _session = session;
     }
 
-    public async Task<PaginatedList<AnswerDto>> Handle(GetQuestionAnswersRequest request,
+    public async Task<Result<PaginatedList<AnswerDto>>> Handle(GetQuestionAnswersRequest request,
         CancellationToken cancellationToken)
     {
         // Console.WriteLine($"request:{request.Authorization}");
         UserId userId = _session.UserId;
-        // Guid userId = request.Authorization is null ? Guid.Empty : Guid.Parse(request.Authorization);
-        // find in cache
-        // PaginatedList<AnswerDto>? cachedDto = await _cache.GetAsync<PaginatedList<AnswerDto>>(
-        //     $"{userId}-{request.QuestionId}-{request.CurrentPage}-{request.PageSize}", cancellationToken);
-        // if (cachedDto is not null)
+
+
+        // if (request.CurrentPage is 1 or 0)
         // {
-        //     return cachedDto;
+        //     PaginatedList<AnswerDto>? cacheRes =
+        //         await _cache.GetAsync<PaginatedList<AnswerDto>?>($"{request.QuestionId}_answers", cancellationToken);
+        //
+        //     cacheRes?.Result.ForEach(dto =>
+        //         {
+        //             dto.UserAction = _context.UserAnswerActions
+        //                 .Where(action => action.AnswerId.Equals(dto.Id) && action.UserId.Equals(userId))
+        //                 .Select(a => new UserActionDto
+        //                 {
+        //                     UserLike = a.IsLike, UserDislike = a.IsDislike, UserStar = a.IsStar
+        //                 }).FirstOrDefault() ?? new UserActionDto();
+        //         }
+        //     );
+        //
+        //     if (cacheRes is not null)
+        //     {
+        //         Console.WriteLine("cache hit");
+        //         return Result<PaginatedList<AnswerDto>>.Success(cacheRes);
+        //     }
         // }
 
         IQueryable<AnswerDto> answers = _context.Answers.Where(answer => answer.QuestionId.Equals(request.QuestionId))
@@ -62,7 +80,10 @@ public class GetQuestionAnswersHandler : IRequestHandler<GetQuestionAnswersReque
                             })
                         .FirstOrDefault() ?? new UserActionDto()
                 });
-        return await answers.OrderByDescending(a => a.LikeCount)
+        PaginatedList<AnswerDto> result = await answers.OrderByDescending(a => a.LikeCount)
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        // await _cache.SetAsync($"{request.QuestionId}_answers", result, TimeSpan.FromSeconds(30), cancellationToken);
+
+        return Result<PaginatedList<AnswerDto>>.Success(result);
     }
 }

@@ -10,11 +10,12 @@ public record QuestionDto
     public UserCardDto UserCard { get; init; } = null!;
     public string Title { get; init; } = null!;
     public string Content { get; init; } = null!;
-    public long StarCount { get; init; }
-    public long LikeCount { get; init; }
-    public long DislikeCount { get; init; }
-    public UserActionDto UserAction { get; init; } = null!;
+    public long StarCount { get; set; }
+    public long LikeCount { get; set; }
+    public long DislikeCount { get; set; }
+    public UserActionDto UserAction { get; set; } = null!;
     public DateTime CreateTime { get; init; }
+
     public DateTime? LastEdit { get; init; }
     public List<AnswerDto> Answers { get; init; } = null!;
     public List<TagDto> Tags { get; init; } = null!;

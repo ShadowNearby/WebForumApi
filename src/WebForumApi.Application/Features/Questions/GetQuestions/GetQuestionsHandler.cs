@@ -41,7 +41,8 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 // order by answer number
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_heat", cancellationToken);
+                    PaginatedList<QuestionCardDto>? cacheResult =
+                        await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_heat", cancellationToken);
                     if (cacheResult != null)
                     {
                         // _logger.LogCritical("hit");
@@ -68,10 +69,12 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
             case "unanswered":
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_answered", cancellationToken);
+                    PaginatedList<QuestionCardDto>? cacheResult =
+                        await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_answered",
+                            cancellationToken);
                     if (cacheResult != null)
                     {
-                        // _logger.LogCritical("hit");
+                        _logger.LogCritical("hit");
                         return cacheResult;
                     }
                 }
@@ -84,11 +87,13 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                             x => EF.Functions.Like(x.Title, $"%{request.KeyWord}%")
                         )
                     ;
-                PaginatedList<QuestionCardDto> unansweredResult = await unansweredQuestions.ProjectToType<QuestionCardDto>()
+                PaginatedList<QuestionCardDto> unansweredResult = await unansweredQuestions
+                    .ProjectToType<QuestionCardDto>()
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    await _cache.SetAsync(key: "question_unanswered", unansweredResult, TimeSpan.FromMinutes(5), cancellationToken);
+                    await _cache.SetAsync(key: "question_unanswered", unansweredResult, TimeSpan.FromMinutes(5),
+                        cancellationToken);
                 }
 
                 return unansweredResult;
@@ -97,7 +102,9 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 // order by create time
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    PaginatedList<QuestionCardDto>? cacheResult = await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_newest", cancellationToken);
+                    PaginatedList<QuestionCardDto>? cacheResult =
+                        await _cache.GetAsync<PaginatedList<QuestionCardDto>>(key: "question_newest",
+                            cancellationToken);
                     if (cacheResult != null)
                     {
                         // _logger.LogCritical("hit");
@@ -116,7 +123,8 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                     .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
                 if (string.IsNullOrEmpty(request.KeyWord) && request.CurrentPage == 1)
                 {
-                    await _cache.SetAsync(key: "question_newest", newestResult, TimeSpan.FromDays(1), cancellationToken);
+                    await _cache.SetAsync(key: "question_newest", newestResult, TimeSpan.FromDays(1),
+                        cancellationToken);
                 }
 
                 return newestResult;
@@ -125,10 +133,7 @@ public class GetQuestionsHandler : IRequestHandler<GetQuestionsRequest, Result<P
                 return Result.Invalid(
                     new List<ValidationError>
                     {
-                        new()
-                        {
-                            Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab does not match!"
-                        }
+                        new() { Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab does not match!" }
                     });
             // select unanswered questions
         }

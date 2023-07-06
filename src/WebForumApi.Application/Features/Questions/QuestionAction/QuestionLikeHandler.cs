@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebForumApi.Application.Common;
+using WebForumApi.Application.Extensions.Cache;
+using WebForumApi.Application.Features.Questions.Dto;
 using WebForumApi.Domain.Auth.Interfaces;
 using WebForumApi.Domain.Entities;
 
@@ -15,11 +17,13 @@ public class QuestionLikeHandler : IRequestHandler<QuestionLikeRequest, Result>
 {
     private readonly IContext _context;
     private readonly ISession _session;
+    private readonly ICacheService _cache;
 
-    public QuestionLikeHandler(IContext context, ISession session)
+    public QuestionLikeHandler(IContext context, ISession session, ICacheService cache)
     {
         _context = context;
         _session = session;
+        _cache = cache;
     }
 
     public async Task<Result> Handle(QuestionLikeRequest request, CancellationToken cancellationToken)
@@ -58,6 +62,14 @@ public class QuestionLikeHandler : IRequestHandler<QuestionLikeRequest, Result>
             // update action
             action.IsLike = !action.IsLike;
             action.IsDislike = false;
+        }
+
+        QuestionDto? questionDto = await _cache.GetAsync<QuestionDto?>(request.Id, cancellationToken);
+        if (questionDto != null)
+        {
+            questionDto.LikeCount = question.LikeCount;
+            questionDto.DislikeCount = question.DislikeCount;
+            await _cache.SetAsync(request.Id, questionDto, TimeSpan.FromMinutes(5), cancellationToken);
         }
 
         await _context.SaveChangesAsync(cancellationToken);

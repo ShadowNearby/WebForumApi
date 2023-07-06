@@ -59,10 +59,7 @@ public class QuestionController : BaseApiController
         CancellationToken cancellationToken)
     {
         GetQuestionAnswersRequest r =
-            new(id)
-            {
-                CurrentPage = request.CurrentPage, PageSize = request.PageSize
-            };
+            new(id) { CurrentPage = request.CurrentPage, PageSize = request.PageSize };
         Result<PaginatedList<AnswerDto>>
             result = await Mediator.Send(r, cancellationToken);
         return result;
