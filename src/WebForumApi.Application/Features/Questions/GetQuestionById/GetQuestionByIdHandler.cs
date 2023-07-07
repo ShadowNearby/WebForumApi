@@ -83,7 +83,7 @@ public class GetQuestionByIdHandler : IRequestHandler<GetQuestionByIdRequest, Re
                 Answers = new List<AnswerDto>(),
                 AcceptedAnswerId = q.AcceptAnswerId.ToString()
             }).FirstOrDefaultAsync(cancellationToken);
-        await _cache.SetAsync($"{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
+        // await _cache.SetAsync($"{request.QuestionId}", question, TimeSpan.FromMinutes(10), cancellationToken);
         if (question is null)
         {
             return Result.NotFound();

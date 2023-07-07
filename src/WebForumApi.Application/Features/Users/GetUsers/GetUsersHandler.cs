@@ -59,7 +59,7 @@ public class GetUsersHandler : IRequestHandler<GetUsersRequest, Result<Paginated
             {
                 new()
                 {
-                    Identifier = $"{nameof(request.Tab)}"
+                    Identifier = $"{nameof(request.Tab)}", ErrorMessage = "tab error"
                 }
             })
         };

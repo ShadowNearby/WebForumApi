@@ -34,7 +34,7 @@ public class UpdateFollowHandler : IRequestHandler<UpdateFollowRequest, Result>
             {
                 new()
                 {
-                    Identifier = $"{userId} or {followId} invalid"
+                    Identifier = $"{userId} or {followId}", ErrorMessage = "userId or followId error"
                 }
             });
         }
