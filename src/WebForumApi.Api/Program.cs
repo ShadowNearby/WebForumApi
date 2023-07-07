@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,7 +8,7 @@ using WebForumApi.Application.Features.Auth;
 using WebForumApi.Application.Features.Auth.TokenService;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseWebRoot(builder.Configuration.GetSection("WebRoot").Value!);
+// builder.WebHost.UseWebRoot(builder.Configuration.GetSection("WebRoot").Value!);
 // Controllers
 builder.Services.UseControllerSetup();
 

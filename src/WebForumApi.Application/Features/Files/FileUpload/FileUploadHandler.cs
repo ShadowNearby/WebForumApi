@@ -11,7 +11,7 @@ namespace WebForumApi.Application.Features.Files.FileUpload;
 
 public class FileUploadHandler : IRequestHandler<FileUploadRequest, Result<FileDto>>
 {
-    private static readonly string DataPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.FullName;
+    private static readonly string DataPath = "";
     public async Task<Result<FileDto>> Handle(FileUploadRequest request, CancellationToken cancellationToken)
     {
         IFormFile file = request.File;
@@ -22,7 +22,7 @@ public class FileUploadHandler : IRequestHandler<FileUploadRequest, Result<FileD
         const string host = "121.37.158.48";
         return new Result<FileDto>(new FileDto
         {
-            Url = $"http://{host}:5000/images/{filename}"
+            Url = $"http://{host}:8000/images/{filename}"
         });
     }
 }
