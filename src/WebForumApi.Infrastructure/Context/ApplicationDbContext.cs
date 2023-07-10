@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using WebForumApi.Application.Common;
 using WebForumApi.Domain.Entities;
 using WebForumApi.Infrastructure.Configuration;
-using TokenConfiguration = WebForumApi.Infrastructure.Configuration.TokenConfiguration;
+using TokenConfiguration=WebForumApi.Infrastructure.Configuration.TokenConfiguration;
 
 namespace WebForumApi.Infrastructure.Context;
 
@@ -32,7 +30,7 @@ public class ApplicationDbContext : DbContext, IContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder
             // .LogTo(Console.WriteLine, LogLevel.Information)
-            .EnableSensitiveDataLogging()
+            // .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
     }
 
