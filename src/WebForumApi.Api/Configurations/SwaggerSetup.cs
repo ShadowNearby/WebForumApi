@@ -87,6 +87,7 @@ public static class SwaggerSetup
                 c.SwaggerEndpoint(url: "/swagger/v1/swagger.json", name: "v1");
                 c.DocExpansion(DocExpansion.List);
                 c.DisplayRequestDuration();
+                c.ConfigObject.PersistAuthorization = true;
             });
         return app;
     }
