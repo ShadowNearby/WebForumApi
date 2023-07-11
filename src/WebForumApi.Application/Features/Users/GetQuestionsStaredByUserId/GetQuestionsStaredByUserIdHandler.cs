@@ -29,6 +29,7 @@ public class GetQuestionsStaredByUserIdHandler : IRequestHandler<GetQuestionsSta
             Title = a.Question.Title,
             VoteNumber = a.Question.LikeCount,
             AnswerNumber = a.Question.AnswerCount,
+            CreateTime = a.Question.CreateTime,
             Tags = _context.QuestionTags.Where(x => x.QuestionId == a.QuestionId).Select(t => new TagDto
             {
                 Id = t.TagId, Content = t.Tag.Content
