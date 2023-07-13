@@ -24,12 +24,14 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    - name: Release
+    - name: Publish
+      run: dotnet publish -c Release -o ~/bin
+    - name: Sftp
       uses: wlixcc/SFTP-Deploy-Action@v1.0
       with:
         username: 'root'
         server: '${{ secrets.SERVER_HOST }}'
         ssh_private_key: '${{ secrets.SERVER_PRIVATE_KEY }}'
-        local_path: 'client-vue/mobile/dist/*'
+        local_path: '~/bin'
         remote_path: '/root/WebForumApi_Release/'
         args: "-o ConnectTimeout=5"
